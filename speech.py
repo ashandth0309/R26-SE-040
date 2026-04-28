@@ -59,17 +59,23 @@ except Exception as e:
     sys.exit(1)
 
 
-MEMORY_FILE = "memory.json"
+import os
+
+# Fix: always save/load memory.json in the SAME folder as speech.py
+# Prevents the bug where memory saves to a different directory depending
+# on where Python is launched from (Set 5 Wednesday fix)
+MEMORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory.json")
 
 # ==========================================
 # MEMORY SYSTEM
 # Set 4 Friday — persistent memory using memory.json
 # Allows assistant to remember user name and preferences
 # across sessions for personalized responses
+# Set 5 Wednesday — fixed: use absolute path + global keyword + error handling
 # ==========================================
 def load_memory():
     """
-    Loads user memory from disk. Returns empty dict if file doesn't exist yet
+    Loads user memory from disk. Returns empty dict if file does not exist yet
     (first run) or if the file is corrupted.
     """
     try:
@@ -81,9 +87,17 @@ def load_memory():
         print("Warning: memory.json is corrupted. Starting with empty memory.")
         return {}
 
-def save_memory(memory):
-    with open(MEMORY_FILE, "w") as f:
-        json.dump(memory, f)
+def save_memory(data):
+    """
+    Saves memory dict to disk. Uses indent=2 for human-readable output.
+    Prints confirmation so you can verify it is working.
+    """
+    try:
+        with open(MEMORY_FILE, "w") as f:
+            json.dump(data, f, indent=2)
+        print(f"[Memory] Saved to {MEMORY_FILE}: {data}")
+    except Exception as e:
+        print(f"[Memory] ERROR - could not save: {e}")
 
 memory = load_memory()
 
@@ -224,7 +238,7 @@ def add_to_history(role, text):
 # Set 5 Thursday — full pipeline tested: wake word → STT → ML → memory → TTS
 # ==========================================
 def get_response(text):
-    global user_name, current_voice_profile
+    global user_name, current_voice_profile, memory  # memory must be global to update and save
 
     text = text.lower().strip()
 
@@ -263,7 +277,7 @@ def get_response(text):
         if name:
             response = f"Your name is {name}"
         else:
-            response = "I don't know your name yet."
+            response = "I don't know your name yet. Please tell me your name!"
         add_to_history("bot", response)
         return response
 
@@ -273,12 +287,221 @@ def get_response(text):
         add_to_history("bot", response)
         return response
 
+    elif intent == "date":
+        current_date = datetime.datetime.now().strftime("%B %d, %Y")
+        day_of_week = datetime.datetime.now().strftime("%A")
+        response = f"Today is {day_of_week}, {current_date}."
+        add_to_history("bot", response)
+        return response
+
     elif intent == "joke":
         response = random.choice([
             "Why did the computer get cold? Because it left its Windows open!",
-            "Why was the math book sad? Too many problems!"
+            "Why was the math book sad? Too many problems!",
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "What do you call a fish wearing a bowtie? Sofishticated!",
+            "Why did the scarecrow win an award? He was outstanding in his field!"
         ])
         add_to_history("bot", response)
+        return response
+
+    elif intent == "wellbeing_ask":
+        response = random.choice([
+            "I'm doing great, thanks for asking! How about you?",
+            "All systems running perfectly! How are you today?",
+            "I'm functioning wonderfully! How are things on your end?",
+            "I'm fantastic! Hope you're having a wonderful day too.",
+            "Doing well and ready to help! How are you?"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "wellbeing_good":
+        response = random.choice([
+            "That's wonderful to hear! What's making your day good?",
+            "Great! I'm glad you're doing well.",
+            "Excellent! Keep that positive energy going.",
+            "That's fantastic news! Anything exciting happening?",
+            "Awesome! Happy to hear that."
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "wellbeing_bad":
+        last_topic = get_last_bot_topic()
+        response = random.choice([
+            "I'm sorry to hear that. Would you like to talk about what's bothering you?",
+            "Oh no, I'm here for you. What's going on?",
+            "That sounds really tough. I'm here to listen if you need to vent.",
+            "I'm sorry you're having a hard time. Remember, this too shall pass.",
+            "I understand. Sometimes things can be really difficult. Want to share more?"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "encourage":
+        response = random.choice([
+            "You can do it! Take it one step at a time.",
+            "It might be hard right now, but you'll get through it. I believe in you!",
+            "Every expert was once a beginner. Don't give up!",
+            "You've overcome challenges before and you'll overcome this one too.",
+            "Progress, not perfection. You're doing better than you think!"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "greeting":
+        name = memory.get("name")
+        if name:
+            response = random.choice([
+                f"Hello {name}! Great to hear from you. How can I help?",
+                f"Hi {name}! Lovely to chat with you again.",
+                f"Hey {name}! What's on your mind today?"
+            ])
+        else:
+            response = random.choice([
+                "Hello there! How can I help you today?",
+                "Hi! Lovely to hear from you.",
+                "Hey! What brings you here today?"
+            ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "farewell":
+        name = memory.get("name")
+        if name:
+            response = random.choice([
+                f"Goodbye, {name}! It was great talking with you!",
+                f"See you later, {name}! Have a wonderful day!",
+                f"Take care, {name}! Come back anytime!"
+            ])
+        else:
+            response = random.choice([
+                "Goodbye! It was nice talking to you!",
+                "See you later! Have a great day!",
+                "Take care! Come back anytime!"
+            ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "thanks":
+        response = random.choice([
+            "You're welcome!", "My pleasure!", "Happy to help!",
+            "Anytime!", "Glad I could help!", "No problem at all!"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "apology":
+        response = random.choice([
+            "No need to apologize! We all make mistakes.",
+            "That's perfectly okay!", "No worries at all!",
+            "It's completely fine! Don't worry about it."
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "compliment_bot":
+        response = random.choice([
+            "Thank you! That's very kind of you to say.",
+            "You're making me blush! Thank you!",
+            "That's so sweet of you! I appreciate it.",
+            "Thank you! You're pretty awesome yourself!"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "ask_age":
+        response = random.choice([
+            "Age is just a number! As an AI, I don't have an age in the traditional sense.",
+            "I'm ageless! I exist to help and chat whenever you need me.",
+            "In AI years, I'm forever young! How about you?"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "ask_creator":
+        response = random.choice([
+            "I was created by a developer who wanted to make a helpful offline voice assistant!",
+            "A programmer built me to be a friendly conversational partner.",
+            "I was developed by someone who loves creating helpful AI assistants!"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "ask_name_bot":
+        response = random.choice([
+            f"My name is {chatbot_name}! Nice to meet you.",
+            f"I'm {chatbot_name}, your offline voice assistant!",
+            f"You can call me {chatbot_name}! What's your name?"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "ask_capabilities":
+        response = (f"I can chat with you, tell jokes, check the time and date, "
+                    f"remember your name, change my voice style, and more! "
+                    f"Try saying 'tell me a joke' or 'what time is it'.")
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "help":
+        response = random.choice([
+            "I'd be happy to help! What do you need assistance with?",
+            "I'm here to help! What can I do for you?",
+            "Of course! Tell me what you need."
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "weather":
+        response = random.choice([
+            "I don't have real-time weather data, but you can check your local weather app!",
+            "Weather updates aren't in my current programming, but I hope it's nice where you are!",
+            "For accurate weather, I'd recommend checking a weather service online."
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "music":
+        response = random.choice([
+            "Music is universal! What type of music do you enjoy listening to?",
+            "I love the concept of music! It can change moods and bring back memories. What's your favourite genre?",
+            "Music is such a powerful form of expression! Who are your favourite artists?"
+        ])
+        add_to_history("bot", response)
+        return response
+
+    elif intent == "voice_faster":
+        current_voice_profile = "energetic"
+        response = "Sure! Switching to energetic mode. How's this speed for you?"
+        add_to_history("bot", response)
+        speak(response)
+        reset_wake_timer()
+        return response
+
+    elif intent == "voice_slower":
+        current_voice_profile = "calm"
+        response = "Alright, slowing down and staying calm. How's this?"
+        add_to_history("bot", response)
+        speak(response)
+        reset_wake_timer()
+        return response
+
+    elif intent == "voice_whisper":
+        current_voice_profile = "whisper"
+        response = "Okay, switching to a quieter voice for you."
+        add_to_history("bot", response)
+        speak(response)
+        reset_wake_timer()
+        return response
+
+    elif intent == "voice_normal":
+        current_voice_profile = "default"
+        response = "Back to my normal voice! How can I help you?"
+        add_to_history("bot", response)
+        speak(response)
+        reset_wake_timer()
         return response
 
     # ==========================================
