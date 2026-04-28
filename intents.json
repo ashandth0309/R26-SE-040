@@ -1,0 +1,403 @@
+{
+  "intents": [
+    {
+      "intent": "set_name",
+      "examples": [
+        "my name is Ashan",
+        "my name is Uthayashanakr",
+        "my name is ashan uthayashanakar",
+        "call me ashan",
+        "call me buddy",
+        "call me mr ashan",
+        "you can call me john",
+        "i am ashan",
+        "i am called sarah",
+        "my friends call me jake",
+        "people call me alex",
+        "refer to me as tom",
+        "my name is sarah lee",
+        "call me doctor raj",
+        "i go by mike"
+      ]
+    },
+    {
+      "intent": "get_name",
+      "examples": [
+        "what is my name",
+        "do you know my name",
+        "what did i tell you my name was",
+        "remember my name",
+        "tell me my name",
+        "what do you call me",
+        "do you remember what i am called",
+        "what have you saved as my name",
+        "who am i",
+        "do you know who i am"
+      ]
+    },
+    {
+      "intent": "greeting",
+      "examples": [
+        "hello",
+        "hi",
+        "hey",
+        "good morning",
+        "good afternoon",
+        "good evening",
+        "hey there",
+        "hi there",
+        "howdy",
+        "what is up",
+        "greetings",
+        "hello buddy",
+        "hi usha",
+        "hey usha",
+        "morning",
+        "evening",
+        "yo",
+        "sup"
+      ]
+    },
+    {
+      "intent": "farewell",
+      "examples": [
+        "bye",
+        "goodbye",
+        "see you later",
+        "farewell",
+        "take care",
+        "see you",
+        "later",
+        "good night",
+        "catch you later",
+        "i am leaving",
+        "got to go",
+        "talk to you later",
+        "until next time",
+        "peace out",
+        "i will talk to you later"
+      ]
+    },
+    {
+      "intent": "time",
+      "examples": [
+        "what time is it",
+        "what is the time",
+        "current time",
+        "tell me the time",
+        "time now",
+        "what time is it now",
+        "can you tell me the time",
+        "do you know the time",
+        "what is the current time",
+        "time check",
+        "clock"
+      ]
+    },
+    {
+      "intent": "date",
+      "examples": [
+        "what is today's date",
+        "what date is it",
+        "what day is today",
+        "current date",
+        "tell me the date",
+        "what is the current date",
+        "what day is it today",
+        "what month is it",
+        "what year is it",
+        "today's date"
+      ]
+    },
+    {
+      "intent": "joke",
+      "examples": [
+        "tell me a joke",
+        "say something funny",
+        "make me laugh",
+        "give me a joke",
+        "do you know any jokes",
+        "say a joke",
+        "tell me something funny",
+        "i want to hear a joke",
+        "funny joke please",
+        "can you joke"
+      ]
+    },
+    {
+      "intent": "ask_wellbeing",
+      "examples": [
+        "how are you",
+        "how are you doing",
+        "how do you do",
+        "how is it going",
+        "how are things",
+        "are you okay",
+        "how have you been",
+        "how is everything",
+        "you doing okay",
+        "how are you feeling"
+      ]
+    },
+    {
+      "intent": "positive_wellbeing",
+      "examples": [
+        "i am good",
+        "i am fine",
+        "i am okay",
+        "doing well",
+        "i am great",
+        "feeling good",
+        "pretty good",
+        "not bad",
+        "i am doing well",
+        "things are good",
+        "feeling wonderful",
+        "i am happy",
+        "all good"
+      ]
+    },
+    {
+      "intent": "negative_wellbeing",
+      "examples": [
+        "i am not good",
+        "i am sad",
+        "feeling down",
+        "not well",
+        "having a bad day",
+        "i am tired",
+        "feeling terrible",
+        "i feel awful",
+        "not doing great",
+        "i am stressed",
+        "feeling low",
+        "things are bad",
+        "i am depressed",
+        "i feel lonely",
+        "i am upset"
+      ]
+    },
+    {
+      "intent": "ask_name_bot",
+      "examples": [
+        "what is your name",
+        "who are you",
+        "what are you called",
+        "tell me your name",
+        "what should i call you",
+        "do you have a name",
+        "introduce yourself",
+        "what do people call you",
+        "are you usha",
+        "who am i talking to"
+      ]
+    },
+    {
+      "intent": "ask_capabilities",
+      "examples": [
+        "what can you do",
+        "what are your capabilities",
+        "what do you do",
+        "how can you help me",
+        "what are your functions",
+        "what are you able to do",
+        "what features do you have",
+        "tell me what you can do",
+        "what are you capable of",
+        "help me understand what you do"
+      ]
+    },
+    {
+      "intent": "thanks",
+      "examples": [
+        "thank you",
+        "thanks",
+        "thank you so much",
+        "thanks a lot",
+        "i appreciate it",
+        "cheers",
+        "many thanks",
+        "grateful",
+        "that was helpful",
+        "thanks for that",
+        "you are helpful",
+        "appreciate your help"
+      ]
+    },
+    {
+      "intent": "apology",
+      "examples": [
+        "sorry",
+        "i am sorry",
+        "my bad",
+        "i apologize",
+        "forgive me",
+        "pardon me",
+        "excuse me",
+        "i did not mean that",
+        "i am so sorry",
+        "oops sorry"
+      ]
+    },
+    {
+      "intent": "compliment_bot",
+      "examples": [
+        "you are great",
+        "you are amazing",
+        "you are smart",
+        "you are nice",
+        "i like you",
+        "you are helpful",
+        "you are the best",
+        "well done",
+        "good job",
+        "you are fantastic",
+        "i love talking to you",
+        "you are awesome"
+      ]
+    },
+    {
+      "intent": "ask_age",
+      "examples": [
+        "how old are you",
+        "what is your age",
+        "when were you born",
+        "what age are you",
+        "are you old",
+        "how long have you existed",
+        "how long have you been around",
+        "when did you start"
+      ]
+    },
+    {
+      "intent": "ask_creator",
+      "examples": [
+        "who made you",
+        "who created you",
+        "who built you",
+        "who developed you",
+        "who is your creator",
+        "who programmed you",
+        "who wrote your code",
+        "who is behind you",
+        "who designed you"
+      ]
+    },
+    {
+      "intent": "voice_faster",
+      "examples": [
+        "speak faster",
+        "talk faster",
+        "be energetic",
+        "sound energetic",
+        "speed up",
+        "talk quicker",
+        "faster please",
+        "be more energetic",
+        "increase your speed"
+      ]
+    },
+    {
+      "intent": "voice_slower",
+      "examples": [
+        "speak slower",
+        "talk slower",
+        "calm down",
+        "be calm",
+        "relax your voice",
+        "slow down",
+        "talk more slowly",
+        "slower please",
+        "be more calm"
+      ]
+    },
+    {
+      "intent": "voice_whisper",
+      "examples": [
+        "speak quietly",
+        "whisper",
+        "be quiet",
+        "lower your voice",
+        "talk softly",
+        "quieter please",
+        "speak softly",
+        "use a quiet voice",
+        "shh"
+      ]
+    },
+    {
+      "intent": "voice_normal",
+      "examples": [
+        "normal voice",
+        "default voice",
+        "reset voice",
+        "speak normally",
+        "go back to normal",
+        "use your normal voice",
+        "reset your voice",
+        "return to normal",
+        "speak in your normal way"
+      ]
+    },
+    {
+      "intent": "music",
+      "examples": [
+        "tell me about music",
+        "what music do you like",
+        "do you like songs",
+        "what is your favourite song",
+        "talk about music",
+        "what kind of music is there",
+        "recommend a song",
+        "do you know any bands",
+        "tell me about artists",
+        "what is your favourite band"
+      ]
+    },
+    {
+      "intent": "weather",
+      "examples": [
+        "what is the weather",
+        "is it raining",
+        "how is the weather today",
+        "will it rain",
+        "what is the temperature",
+        "is it hot outside",
+        "is it cold today",
+        "what is the forecast",
+        "how sunny is it",
+        "tell me the weather"
+      ]
+    },
+    {
+      "intent": "help",
+      "examples": [
+        "help me",
+        "i need help",
+        "can you help",
+        "please help",
+        "i need assistance",
+        "support me",
+        "i need support",
+        "guide me",
+        "i need guidance",
+        "assist me"
+      ]
+    },
+    {
+      "intent": "unknown",
+      "examples": [
+        "blah blah blah",
+        "something random",
+        "xyzzy",
+        "asdfghjkl",
+        "nothing in particular",
+        "random stuff",
+        "i do not know what to say",
+        "hmm",
+        "uh",
+        "testing testing"
+      ]
+    }
+  ]
+}
