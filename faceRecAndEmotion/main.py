@@ -80,7 +80,7 @@ class SmartAIDogRobot:
         ]
         
         # Try different camera IDs
-        camera_ids = [CAMERA_ID, 0, 1]
+        camera_ids = [0]
         if isinstance(CAMERA_ID, str) and CAMERA_ID.startswith('http'):
             camera_ids = [CAMERA_ID]  # IP camera
         
@@ -91,7 +91,7 @@ class SmartAIDogRobot:
                     
                     # Open camera with specific backend
                     if backend != cv2.CAP_ANY:
-                        self.cap = cv2.VideoCapture(cam_id, backend)
+                        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
                     else:
                         self.cap = cv2.VideoCapture(cam_id)
                     
