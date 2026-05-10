@@ -22,8 +22,8 @@ class EmotionLogger:
         # =========================
         # TELEGRAM CONFIG
         # =========================
-        self.TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN"
-        self.TELEGRAM_CHAT_ID = "YOUR_CHAT_ID"
+        self.TELEGRAM_BOT_TOKEN = "8546984008:AAFzK-kgMe3feW7ob8okmr0Ck0EeZMzblJQ"
+        self.TELEGRAM_CHAT_ID = "8706374419"
 
     # =========================
     # LOG EMOTION
