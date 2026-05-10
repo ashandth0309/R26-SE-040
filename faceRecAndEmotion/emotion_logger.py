@@ -1,5 +1,7 @@
 """
-Emotion Logger with Telegram Alert System
+Emotion Logger with Telegram Alert System (Upgraded)
+- Added UNKNOWN alert support
+- Cleaner alert logic
 """
 
 import pandas as pd
@@ -18,17 +20,18 @@ class EmotionLogger:
         self.last_log_time = {}
 
         # =========================
-        # TELEGRAM CONFIG (ADD HERE)
+        # TELEGRAM CONFIG
         # =========================
-        self.TELEGRAM_BOT_TOKEN = "8546984008:AAFzK-kgMe3feW7ob8okmr0Ck0EeZMzblJQ"
-        self.TELEGRAM_CHAT_ID = "8706374419"
+        self.TELEGRAM_BOT_TOKEN = "YOUR_BOT_TOKEN"
+        self.TELEGRAM_CHAT_ID = "YOUR_CHAT_ID"
 
     # =========================
-    # LOG EMOTION (NO CHANGE)
+    # LOG EMOTION
     # =========================
     def log_emotion(self, name, emotion, confidence):
         current_time = datetime.now()
 
+        # anti spam per user
         if name in self.last_log_time:
             diff = (current_time - self.last_log_time[name]).total_seconds()
             if diff < self.log_interval:
@@ -37,50 +40,60 @@ class EmotionLogger:
         self.db.log_emotion(name, emotion, confidence)
         self.last_log_time[name] = current_time
 
-        # ALERT CHECK
+        # check alerts
         self.check_alerts(name, emotion, confidence)
 
         return True
 
     # =========================
-    # TELEGRAM FUNCTION (ADD THIS)
+    # TELEGRAM SENDER
     # =========================
     def send_telegram(self, message):
         try:
             url = f"https://api.telegram.org/bot{self.TELEGRAM_BOT_TOKEN}/sendMessage"
 
-            requests.post(url, data={
+            response = requests.post(url, data={
                 "chat_id": self.TELEGRAM_CHAT_ID,
                 "text": message
             })
 
-            print("📨 Telegram sent")
+            print("Telegram Response:", response.text)
 
         except Exception as e:
             print("Telegram error:", e)
 
     # =========================
-    # ALERT SYSTEM (MODIFIED)
+    # ALERT SYSTEM (UPGRADED)
     # =========================
     def check_alerts(self, name, emotion, confidence):
 
-        if emotion in ["angry", "sad", "fear"] and confidence > 75:
+        alert_emotions = ["angry", "sad", "fear", "unknown"]
 
-            message = f"""
-🚨 Emotion Alert 🚨
-Name: {name}
-Emotion: {emotion}
-Confidence: {confidence}%
-Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
-            """
+        if emotion in alert_emotions and confidence > 75:
+
+            # special unknown handling
+            if emotion == "unknown":
+                message = (
+                    f"⚠️ UNKNOWN EMOTION ALERT ⚠️\n\n"
+                    f"👤 Name: {name}\n"
+                    f"❓ Emotion: UNKNOWN (not clearly detected)\n"
+                    f"📊 Confidence: {confidence}%\n"
+                    f"🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                )
+            else:
+                message = (
+                    f"🚨 EMOTION ALERT 🚨\n\n"
+                    f"👤 Name: {name}\n"
+                    f"🙂 Emotion: {emotion}\n"
+                    f"📊 Confidence: {confidence}%\n"
+                    f"🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                )
 
             print(message)
-
-            # SEND TO TELEGRAM
             self.send_telegram(message)
 
     # =========================
-    # DAILY SUMMARY (NO CHANGE)
+    # DAILY SUMMARY
     # =========================
     def get_daily_summary(self):
         logs = self.db.emotion_logs.get("logs", [])
