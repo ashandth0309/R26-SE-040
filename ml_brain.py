@@ -1,21 +1,3 @@
-"""
-ml_brain.py — Machine Learning Intent Prediction Module
-========================================================
-Set 4 Wednesday — Created this module to separate ML logic from main assistant code.
-                  Keeps the codebase modular and organised.
-Set 4 Sunday   — Added fallback: returns "unknown" if model is not loaded.
-Set 5 Tuesday  — Added confidence threshold (0.6). If the model is less than
-                  60% confident, it returns "unknown" so the rule-based system
-                  handles the input instead. This prevents wrong responses.
-Set 5 Thursday — Verified full pipeline: speech.py calls predict_intent() and
-                  handles "unknown" with rule-based fallback correctly.
-
-WHY THIS MODULE EXISTS (viva explanation):
-  - ML logic is kept here so main code (speech.py) stays clean and readable.
-  - predict_intent() is the only function speech.py needs to call.
-  - If model files are missing, the system degrades gracefully (returns "unknown").
-"""
-
 import pickle
 import os
 

@@ -7,7 +7,10 @@
         "my name is uthayashankar",
         "my name is ashan uthayashankar",
         "call me ashan",
-        "call me buddy",
+        "call me boss",
+        "call me genius",
+        "call me you are perfect",
+        "call me mr perfect",
         "call me mr ashan",
         "you can call me john",
         "i am ashan",
@@ -738,6 +741,28 @@
         "just testing the system",
         "random input here"
       ]
-    }
+    },
+    {
+  "tag": "date",
+  "patterns": [
+    "what is the date",
+    "today's date",
+    "what day is today",
+    "tell me the date",
+    "current date",
+    "date today",
+    "what date is it",
+    "which day is today"
+  ]
+},
+{
+  "tag": "time",
+  "patterns": [
+    "what time is it",
+    "current time",
+    "tell me the time",
+    "time now"
+  ]
+}
   ]
 }
