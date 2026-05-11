@@ -65,6 +65,12 @@
       "name": "sobiya",
       "emotion": "neutral",
       "confidence": 88.41496706008911
+    },
+    {
+      "timestamp": "20260511_083645_539379",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6284508109092712
     }
   ]
 }

@@ -21,6 +21,8 @@ class EmotionLogger:
 
         # =========================
         # TELEGRAM CONFIG
+
+        
         # =========================
         self.TELEGRAM_BOT_TOKEN = "8546984008:AAFzK-kgMe3feW7ob8okmr0Ck0EeZMzblJQ"
         self.TELEGRAM_CHAT_ID = "8706374419"
