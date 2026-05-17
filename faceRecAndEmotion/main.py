@@ -19,10 +19,9 @@ from emotion_detection import EmotionDetector
 from database_manager import DatabaseManager
 from frame_manager import FrameManager
 from display_manager import DisplayManager
-from voice_manager import VoiceManager
 from robot_controller import RobotController
 from emotion_logger import EmotionLogger
-
+from speech import speak
 
 class SmartAIDogRobot:
 
@@ -37,7 +36,7 @@ class SmartAIDogRobot:
         self.database = DatabaseManager()
         self.frame_manager = FrameManager()
         self.display = DisplayManager()
-        self.voice = VoiceManager()
+       
         self.robot = RobotController()
         self.emotion_logger = EmotionLogger()
 
@@ -112,7 +111,7 @@ class SmartAIDogRobot:
                     )
 
                     self.robot.react_to_emotion(emotion, name)
-                    self.voice.greet_person(name, emotion)
+                    speak(f"Hello {name}, I sense you are feeling {emotion}")
 
             # ---------------- UNKNOWN PERSON ----------------
             else:

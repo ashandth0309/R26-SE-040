@@ -37,7 +37,7 @@ CAMERA_FPS = 20   # Reduced from 30 for lower CPU usage
 # Face recognition settings
 FACE_RECOGNITION_MODEL = "Facenet"
 FACE_DETECTION_MODEL = "mtcnn"
-SIMILARITY_THRESHOLD = 0.6
+SIMILARITY_THRESHOLD = 0.8
 EMBEDDING_SIZE = 128
 
 # Emotion detection settings

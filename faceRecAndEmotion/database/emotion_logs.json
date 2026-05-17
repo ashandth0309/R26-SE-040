@@ -71,6 +71,72 @@
       "name": "sobiya",
       "emotion": "angry",
       "confidence": 0.6284508109092712
+    },
+    {
+      "timestamp": "20260511_092233_716516",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 61.98728680610657
+    },
+    {
+      "timestamp": "20260511_093812_770356",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 99.16399717330933
+    },
+    {
+      "timestamp": "20260511_094918_946722",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 97.3323404788971
+    },
+    {
+      "timestamp": "20260511_115523_435903",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 50.9646475315094
+    },
+    {
+      "timestamp": "20260511_120520_245688",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.10036154417321086
+    },
+    {
+      "timestamp": "20260511_123012_159744",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 60.438936948776245
+    },
+    {
+      "timestamp": "20260511_123648_371764",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 39.767998456954956
+    },
+    {
+      "timestamp": "20260511_123804_817129",
+      "name": "Ashandth",
+      "emotion": "sad",
+      "confidence": 64.40478563308716
+    },
+    {
+      "timestamp": "20260511_132911_580850",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 45.540907979011536
+    },
+    {
+      "timestamp": "20260511_132923_462866",
+      "name": "Ashandth",
+      "emotion": "sad",
+      "confidence": 25.508835911750793
+    },
+    {
+      "timestamp": "20260517_203235_964137",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 98.6029326915741
     }
   ]
 }
