@@ -741,28 +741,6 @@
         "just testing the system",
         "random input here"
       ]
-    },
-    {
-  "tag": "date",
-  "patterns": [
-    "what is the date",
-    "today's date",
-    "what day is today",
-    "tell me the date",
-    "current date",
-    "date today",
-    "what date is it",
-    "which day is today"
-  ]
-},
-{
-  "tag": "time",
-  "patterns": [
-    "what time is it",
-    "current time",
-    "tell me the time",
-    "time now"
-  ]
-}
+    }
   ]
 }

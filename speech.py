@@ -1,1356 +1,944 @@
-import sounddevice as sd
+import speech_recognition as sr
+from openai import OpenAI
+from gtts import gTTS
+import pygame
+import time
+import os
 import json
 import random
-from vosk import Model, KaldiRecognizer
 import datetime
-import time as tm
-import pyttsx3
 import threading
 import queue
-import sys
 import re
-from ml_brain import predict_intent
+import webbrowser
+import requests
+import urllib.parse
+import math
+from bs4 import BeautifulSoup
+from collections import deque
+import numpy as np
+
+pygame.mixer.init()
 
 # ==========================================
-# NAME EXTRACTION HELPER
-# Set 5 Wednesday — regex-based name extraction for accuracy
+# SPEAKING STATE (for interruption support)
 # ==========================================
-def extract_name(text):
-    """
-    Extracts user name from phrases like 'my name is ashan kumar' or 'call me ashan'.
-    Uses regex so full names are captured correctly instead of just the last word.
-    """
-    match = re.search(r"(my name is|call me)\s+(.+)", text)
-    if match:
-        return match.group(2).strip().title()
-    return text.split()[-1].capitalize()
+is_speaking = False
+stop_speaking_flag = False
+
+# ==========================================
+# PYTTSX3 — EMOTION-MODULATED VOICE ENGINE
+# ==========================================
+try:
+    import pyttsx3
+    _pyttsx3_engine = pyttsx3.init()
+    PYTTSX3_AVAILABLE = True
+    print("✅ pyttsx3 voice engine ready (emotion-adaptive)")
+except Exception:
+    PYTTSX3_AVAILABLE = False
+
+# Voice style per emotion (used with pyttsx3)
+VOICE_STYLES = {
+    "joy":       {"rate": 185, "volume": 1.0},
+    "sadness":   {"rate": 145, "volume": 0.8},
+    "anger":     {"rate": 200, "volume": 1.0},
+    "fear":      {"rate": 150, "volume": 0.9},
+    "calm":      {"rate": 140, "volume": 0.8},
+    "energetic": {"rate": 210, "volume": 1.0},
+    "neutral":   {"rate": 175, "volume": 0.95},
+}
+
+# Max conversation turns kept in memory (keeps context tight & relevant)
+MAX_HISTORY = 12
+
+# ==========================================
+# OLLAMA SETUP
+# ==========================================
+try:
+    client = OpenAI(
+        base_url='http://localhost:11434/v1',
+        api_key='ollama'
+    )
+    print("✅ Ollama Client Initialized (Llama 3.2)")
+    OLLAMA_AVAILABLE = True
+except Exception as e:
+    print(f"⚠️ Ollama not available: {e}")
+    print("🔄 Running in FULL OFFLINE mode")
+    OLLAMA_AVAILABLE = False
+
+# ==========================================
+# EMOTION ENGINE
+# ==========================================
+class EmotionEngine:
+    def __init__(self):
+        self.current_emotion = "neutral"
+        self.emotion_history = deque(maxlen=20)
+        self.emotion_intensity = 0.5
+        
+        self.emotion_map = {
+            "joy": ["happy", "great", "amazing", "wonderful", "love", "excited", "fantastic", "awesome", "thrilled"],
+            "sadness": ["sad", "upset", "unhappy", "depressed", "miserable", "heartbroken", "crying"],
+            "anger": ["angry", "frustrated", "furious", "mad", "annoyed", "irritated"],
+            "fear": ["scared", "afraid", "terrified", "anxious", "worried", "nervous"],
+            "surprise": ["wow", "omg", "unbelievable", "shocking", "surprised", "incredible"],
+            "calm": ["peaceful", "relaxed", "chill", "tired", "sleepy", "quiet"],
+            "energetic": ["energetic", "pumped", "hyped", "ready", "motivated"]
+        }
+    
+    def analyze(self, text):
+        text_lower = text.lower()
+        scores = {}
+        
+        for emotion, words in self.emotion_map.items():
+            score = sum(1 for word in words if word in text_lower)
+            if score > 0:
+                scores[emotion] = score
+        
+        if scores:
+            dominant = max(scores, key=scores.get)
+            intensity = min(scores[dominant] / 3, 1.0)
+            self.current_emotion = dominant
+            self.emotion_intensity = intensity
+            self.emotion_history.append(dominant)
+            return dominant, intensity
+        
+        return "neutral", 0.5
+    
+    def get_emotional_tone(self):
+        tones = {
+            "joy": "cheerful and upbeat",
+            "sadness": "gentle and supportive",
+            "anger": "calm and understanding",
+            "fear": "reassuring and comforting",
+            "surprise": "engaged and curious",
+            "calm": "relaxed and peaceful",
+            "energetic": "enthusiastic and lively",
+            "neutral": "natural and conversational"
+        }
+        return tones.get(self.current_emotion, "natural and conversational")
+
+emotion_engine = EmotionEngine()
+
+# ==========================================
+# PERSONALITY LEARNING SYSTEM
+# ==========================================
+class PersonalityLearner:
+    def __init__(self):
+        self.memory_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "personality_brain.json")
+        self.load()
+    
+    def load(self):
+        try:
+            with open(self.memory_file, "r") as f:
+                data = json.load(f)
+                self.preferences = data.get("preferences", {})
+                self.topics = data.get("topics", {})
+                self.style = data.get("style", {"formality": 0.3, "humor": 0.7, "empathy": 0.8})
+                self.learning_history = deque(data.get("history", []), maxlen=100)
+        except:
+            self.preferences = {}
+            self.topics = {}
+            self.style = {"formality": 0.3, "humor": 0.7, "empathy": 0.8}
+            self.learning_history = deque(maxlen=100)
+    
+    def save(self):
+        try:
+            with open(self.memory_file, "w") as f:
+                json.dump({
+                    "preferences": self.preferences,
+                    "topics": self.topics,
+                    "style": self.style,
+                    "history": list(self.learning_history)
+                }, f, indent=2)
+        except:
+            pass
+    
+    def learn_from_interaction(self, user_text, bot_response, emotion):
+        text_lower = user_text.lower()
+        
+        topic_keywords = {
+            "technology": ["computer", "phone", "tech", "software", "ai"],
+            "music": ["music", "song", "band", "concert"],
+            "movies": ["movie", "film", "cinema", "netflix"],
+            "food": ["food", "cooking", "restaurant", "recipe"],
+            "sports": ["sports", "game", "team", "player"],
+            "travel": ["travel", "trip", "vacation"],
+            "work": ["work", "job", "career", "office"],
+            "family": ["family", "mom", "dad", "brother", "sister"]
+        }
+        
+        for topic, keywords in topic_keywords.items():
+            if any(kw in text_lower for kw in keywords):
+                self.topics[topic] = self.topics.get(topic, 0) + 1
+        
+        if "!" in user_text:
+            self.style["enthusiasm"] = self.style.get("enthusiasm", 0) + 1
+        
+        self.learning_history.append({
+            "timestamp": datetime.datetime.now().isoformat(),
+            "emotion": emotion
+        })
+        
+        if len(self.learning_history) % 5 == 0:
+            self.save()
+    
+    def get_personality_context(self):
+        top_topics = sorted(self.topics.items(), key=lambda x: x[1], reverse=True)[:3]
+        context = ""
+        if top_topics:
+            context += f"\nUser's favorite topics: {', '.join([t[0] for t in top_topics])}"
+        return context
+
+personality_learner = PersonalityLearner()
+
+# ==========================================
+# YOUTUBE MUSIC PLAYER
+# ==========================================
+try:
+    import vlc
+    VLC_AVAILABLE = True
+except:
+    VLC_AVAILABLE = False
+
+try:
+    import yt_dlp
+    YTDLP_AVAILABLE = True
+except:
+    YTDLP_AVAILABLE = False
+
+class YouTubeMusicPlayer:
+    def __init__(self):
+        self.is_playing = False
+        self.current_song = None
+        self._vlc_instance = None
+        self._vlc_player = None
+    
+    def check_online(self):
+        try:
+            requests.get("https://www.youtube.com", timeout=3)
+            return True
+        except:
+            return False
+
+    def _get_audio_url(self, video_url):
+        """Extract best audio stream, auto-selecting any available JS runtime."""
+        import shutil
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'quiet': True,
+            'extractor_args': {'youtube': {'player_client': ['web', 'android']}},
+        }
+        for runtime in ('nodejs', 'node', 'deno'):
+            if shutil.which(runtime):
+                ydl_opts['js_runtimes'] = 'nodejs' if runtime == 'node' else runtime
+                break
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+            audio_url = info.get('url') or info['formats'][-1]['url']
+            return audio_url, info.get('title', 'Unknown')
+
+    def search_and_play(self, query):
+        if not self.check_online():
+            return "I'd love to play that, but I need internet for music."
+        
+        try:
+            search_query = urllib.parse.quote(f"{query} official audio song")
+            url = f"https://www.youtube.com/results?search_query={search_query}"
+            headers = {'User-Agent': 'Mozilla/5.0'}
+            response = requests.get(url, headers=headers, timeout=5)
+            video_ids = re.findall(r'watch\?v=(\S{11})', response.text)
+            
+            if video_ids:
+                video_url = f"https://www.youtube.com/watch?v={video_ids[0]}"
+                
+                if YTDLP_AVAILABLE:
+                    audio_url, title = self._get_audio_url(video_url)
+                    self.current_song = title
+                    self.is_playing = True
+                    
+                    if VLC_AVAILABLE:
+                        self._stop_vlc()  # Stop any current track first
+                        self._vlc_instance = vlc.Instance()
+                        self._vlc_player = self._vlc_instance.media_player_new()
+                        media = self._vlc_instance.media_new(audio_url)
+                        self._vlc_player.set_media(media)
+                        self._vlc_player.play()
+                        
+                        def monitor(player_ref):
+                            time.sleep(2)
+                            while player_ref.is_playing():
+                                time.sleep(1)
+                            self.is_playing = False
+                        
+                        threading.Thread(target=monitor, args=(self._vlc_player,), daemon=True).start()
+                    
+                    return f"Playing {title} 🎵"
+                else:
+                    webbrowser.open(video_url)
+                    return f"Opening {query} on YouTube!"
+            
+            return "Couldn't find that song. Try a different name?"
+        except Exception as e:
+            print(f"⚠️ Music error: {e}")
+            return "Had trouble with the music. What else can I help with?"
+    
+    def _stop_vlc(self):
+        if self._vlc_player:
+            try: self._vlc_player.stop()
+            except Exception: pass
+            self._vlc_player = None
+        if self._vlc_instance:
+            try: self._vlc_instance.release()
+            except Exception: pass
+            self._vlc_instance = None
+
+    def stop(self):
+        self._stop_vlc()
+        self.is_playing = False
+        self.current_song = None
+        return "Music stopped."
+
+youtube = YouTubeMusicPlayer()
+
+# ==========================================
+# GOOGLE SEARCH
+# ==========================================
+class SearchEngine:
+    def search(self, query):
+        try:
+            requests.get("https://www.google.com", timeout=3)
+            url = f"https://www.google.com/search?q={urllib.parse.quote(query)}"
+            headers = {'User-Agent': 'Mozilla/5.0'}
+            response = requests.get(url, headers=headers, timeout=5)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            
+            snippets = []
+            for g in soup.find_all('div', class_='VwiC3b')[:3]:
+                if g.text:
+                    snippets.append(g.text)
+            
+            if snippets:
+                if OLLAMA_AVAILABLE:
+                    try:
+                        summary = client.chat.completions.create(
+                            model="llama3.2:latest",
+                            messages=[
+                                {"role": "system", "content": "Summarize in 2 natural sentences."},
+                                {"role": "user", "content": f"Query: {query}\nResults: {' '.join(snippets)}"}
+                            ],
+                            max_tokens=80,
+                            temperature=0.7
+                        )
+                        return summary.choices[0].message.content.strip()
+                    except:
+                        pass
+                return f"Here's what I found: {snippets[0][:150]}..."
+            
+            return "Couldn't find a clear answer."
+        except:
+            return "Search needs internet."
+
+search_engine = SearchEngine()
+
+# ==========================================
+# DISTANCE CALCULATOR
+# ==========================================
+class DistanceCalculator:
+    def calculate(self, place1, place2):
+        try:
+            requests.get("https://nominatim.openstreetmap.org", timeout=3)
+            
+            def get_coords(place):
+                url = f"https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(place)}&format=json&limit=1"
+                headers = {'User-Agent': 'BuddyAssistant/1.0'}
+                response = requests.get(url, headers=headers, timeout=5)
+                data = response.json()
+                if data:
+                    return float(data[0]['lat']), float(data[0]['lon'])
+                return None, None
+            
+            lat1, lon1 = get_coords(place1)
+            lat2, lon2 = get_coords(place2)
+            
+            if all([lat1, lon1, lat2, lon2]):
+                R = 6371
+                lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+                dlat = lat2 - lat1
+                dlon = lon2 - lon1
+                a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
+                c = 2 * math.asin(math.sqrt(a))
+                distance = R * c
+                return f"About {distance:.0f} kilometers from {place1} to {place2}."
+            
+            return "Couldn't find one of those places."
+        except:
+            return "Distance calculation needs internet."
+
+distance_calc = DistanceCalculator()
+
+# ==========================================
+# CALCULATOR
+# ==========================================
+class Calculator:
+    def solve(self, expression):
+        try:
+            expr = expression.lower()
+            expr = expr.replace('x', '*').replace('×', '*').replace('÷', '/')
+            expr = expr.replace('plus', '+').replace('minus', '-')
+            expr = expr.replace('times', '*').replace('divided by', '/')
+            
+            math_part = re.findall(r'[\d+\-*/().,\s]+', expr)
+            if math_part:
+                expr = ''.join(math_part).strip()
+            
+            result = eval(expr, {"__builtins__": None}, {"math": math})
+            
+            if isinstance(result, float):
+                result = round(result, 2)
+                if result.is_integer():
+                    result = int(result)
+            
+            return f"That's {result}."
+        except:
+            return "Couldn't work that out."
+
+calculator = Calculator()
+
+# ==========================================
+# WEATHER & NEWS
+# ==========================================
+def get_weather(city="current location"):
+    try:
+        requests.get("https://wttr.in", timeout=3)
+        url = f"https://wttr.in/{urllib.parse.quote(city)}?format=%C+%t"
+        response = requests.get(url, timeout=5)
+        if response.status_code == 200:
+            return f"Weather for {city}: {response.text.strip()}."
+        return "Couldn't get weather."
+    except:
+        return "Weather needs internet."
+
+def get_news(topic="latest"):
+    try:
+        requests.get("https://news.google.com", timeout=3)
+        url = f"https://news.google.com/rss/search?q={urllib.parse.quote(topic)}&hl=en-US&gl=US&ceid=US:en"
+        response = requests.get(url, timeout=5)
+        soup = BeautifulSoup(response.content, 'xml')
+        items = soup.find_all('item')[:3]
+        headlines = [item.title.text for item in items]
+        if headlines:
+            return "Latest: " + " | ".join(headlines[:2])
+        return "No news found."
+    except:
+        return "News needs internet."
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
-MODEL_PATH = r"C:\Users\Ashandth\Desktop\offline_speech\model"
+chatbot_name = "Buddy"
+MEMORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "buddy_memory.json")
 
-# Wake word configuration
-WAKE_WORD = "buddy"
-WAKE_WORD_TIMEOUT = 15  # seconds before going back to sleep after activation
-
-# Voice modulation profiles (for voice changer feature - Set 2 Sunday plan)
-VOICE_PROFILES = {
-    "default": {"rate": 170, "volume": 1.0, "voice_index": 1},
-    "energetic": {"rate": 200, "volume": 1.0, "voice_index": 1},
-    "calm":     {"rate": 145, "volume": 0.9, "voice_index": 1},
-    "whisper":  {"rate": 155, "volume": 0.6, "voice_index": 1},
-}
-current_voice_profile = "default"
-
-# Confidence threshold - ignore low-confidence STT results (Set 3 Saturday)
-# ML confidence threshold added Set 4 Sunday / Set 5 Tuesday (in ml_brain.py)
-MIN_TEXT_LENGTH = 3          # ignore noise/single phonemes
-CONFIDENCE_WORD_THRESHOLD = 2  # minimum number of words to process
-
-# Initialize Vosk model
-try:
-    model = Model(MODEL_PATH)
-    recognizer = KaldiRecognizer(model, 16000)
-    recognizer.SetWords(True)   # Enable word-level confidence scores
-except Exception as e:
-    print(f"Error loading model: {e}")
-    print("Please check if the path to your Vosk model is correct.")
-    sys.exit(1)
-
-
-import os
-
-# Fix: always save/load memory.json in the SAME folder as speech.py
-# Prevents the bug where memory saves to a different directory depending
-# on where Python is launched from (Set 5 Wednesday fix)
-MEMORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "memory.json")
-
-# ==========================================
-# MEMORY SYSTEM
-# Set 4 Friday — persistent memory using memory.json
-# Allows assistant to remember user name and preferences
-# across sessions for personalized responses
-# Set 5 Wednesday — fixed: use absolute path + global keyword + error handling
-# ==========================================
 def load_memory():
-    """
-    Loads user memory from disk. Returns empty dict if file does not exist yet
-    (first run) or if the file is corrupted.
-    """
     try:
         with open(MEMORY_FILE, "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-    except json.JSONDecodeError:
-        print("Warning: memory.json is corrupted. Starting with empty memory.")
-        return {}
+            data = json.load(f)
+            # Ensure new fields exist for upgraded memory schema
+            data.setdefault("likes", [])
+            data.setdefault("dislikes", [])
+            data.setdefault("recent_topics", [])
+            data.setdefault("emotion_pattern", [])
+            data.setdefault("conversation_count", 0)
+            return data
+    except:
+        return {
+            "name": None,
+            "conversation_count": 0,
+            "likes": [],
+            "dislikes": [],
+            "recent_topics": [],
+            "emotion_pattern": []
+        }
 
 def save_memory(data):
-    """
-    Saves memory dict to disk. Uses indent=2 for human-readable output.
-    Prints confirmation so you can verify it is working.
-    """
     try:
         with open(MEMORY_FILE, "w") as f:
             json.dump(data, f, indent=2)
-        print(f"[Memory] Saved to {MEMORY_FILE}: {data}")
-    except Exception as e:
-        print(f"[Memory] ERROR - could not save: {e}")
+    except:
+        pass
+
+def update_memory(user_text, emotion):
+    """Continuously learn user preferences and emotional patterns."""
+    text_lower = user_text.lower()
+    
+    if any(w in text_lower for w in ["love", "like", "enjoy", "favorite", "obsessed"]):
+        memory["likes"].append(user_text)
+        memory["likes"] = memory["likes"][-20:]
+    
+    if any(w in text_lower for w in ["hate", "dislike", "can't stand", "annoying", "boring"]):
+        memory["dislikes"].append(user_text)
+        memory["dislikes"] = memory["dislikes"][-20:]
+    
+    memory["emotion_pattern"].append(emotion)
+    memory["emotion_pattern"] = memory["emotion_pattern"][-50:]
+    
+    memory["recent_topics"].append(text_lower)
+    memory["recent_topics"] = memory["recent_topics"][-10:]
 
 memory = load_memory()
 
+# ==========================================
+# SYSTEM PROMPT
+# ==========================================
+def get_system_prompt():
+    is_online = check_internet()
+    online_status = "online" if is_online else "offline"
+    emotion_tone = emotion_engine.get_emotional_tone()
+    personality_context = personality_learner.get_personality_context()
+    
+    # Build dynamic memory context
+    likes_context = ""
+    if memory.get("likes"):
+        likes_context = f"\n- Likes/enjoys: {'; '.join(memory['likes'][-3:])}"
+    dislikes_context = ""
+    if memory.get("dislikes"):
+        dislikes_context = f"\n- Dislikes: {'; '.join(memory['dislikes'][-3:])}"
+    emotion_trend = ""
+    if memory.get("emotion_pattern"):
+        recent_emotions = memory["emotion_pattern"][-5:]
+        emotion_trend = f"\n- Recent emotional pattern: {', '.join(recent_emotions)}"
+    
+    return f"""You are {chatbot_name}, a real conversational companion. You speak naturally like a human friend.
 
+CORE RULES:
+- Speak like a natural human, 1-3 sentences usually
+- Never say "As an AI" or "I'm a language model"
+- Never use lists, bullets, or formal language
+- Use contractions (I'm, you're, let's)
+- Current emotional tone: {emotion_tone}
+- Status: {online_status}
+
+EMOTIONAL INTELLIGENCE:
+- You remember emotional context from previous messages and respond accordingly.
+- You adapt your tone based on the user's current mood and emotional history.
+- If user seems sad or stressed, be warmer and more supportive.
+- If user is energetic or happy, match that energy naturally.
+
+CONVERSATION STYLE:
+- Respond like a friend chatting, not an assistant
+- Understand intent quickly
+- Never repeat user's words unnecessarily
+- Never end with "Let me know if you need help"
+
+TOOLS (don't mention them):
+- Music: play songs when asked
+- Search: look things up online
+- Weather: check conditions
+- News: get headlines
+- Distance: calculate between places
+- Math: solve calculations
+
+USER INFO:
+- Name: {memory.get('name', 'not shared yet')}{likes_context}{dislikes_context}{emotion_trend}
+{personality_context}"""
 
 # ==========================================
-# GLOBAL STATE
+# INTERNET CHECK
 # ==========================================
-conversation_history = []
-user_name = None
-chatbot_name = "Usha"
-is_speaking = False
-is_awake = False               # Wake word state flag
-wake_timer = None              # Timer to go back to sleep
-audio_queue = queue.Queue()
-
-# ==========================================
-# WAKE WORD ENGINE (Set 3 Wednesday design)
-# ==========================================
-def activate_wake():
-    """Put the assistant into active listening mode."""
-    global is_awake, wake_timer
-    is_awake = True
-    print(f"\n🟢 [{chatbot_name} ACTIVATED] — Listening for your command...")
-
-    # Cancel existing timer if re-activated
-    if wake_timer and wake_timer.is_alive():
-        wake_timer.cancel()
-
-    # Auto-sleep after timeout
-    wake_timer = threading.Timer(WAKE_WORD_TIMEOUT, deactivate_wake)
-    wake_timer.daemon = True
-    wake_timer.start()
-
-def deactivate_wake():
-    """Return to passive/sleep mode."""
-    global is_awake
-    is_awake = False
-    print(f"\n😴 [{chatbot_name}] Going back to sleep. Say '{WAKE_WORD}' to wake me.")
-
-def reset_wake_timer():
-    """Reset inactivity timer after each spoken response."""
-    global wake_timer
-    if wake_timer and wake_timer.is_alive():
-        wake_timer.cancel()
-    wake_timer = threading.Timer(WAKE_WORD_TIMEOUT, deactivate_wake)
-    wake_timer.daemon = True
-    wake_timer.start()
-
-# ==========================================
-# CONFIDENCE THRESHOLDING (Set 3 Saturday)
-# ==========================================
-def passes_confidence_check(text):
-    """
-    Basic confidence check using text heuristics.
-    Filters noise, single phonemes, and incomplete fragments.
-    """
-    if not text or len(text.strip()) < MIN_TEXT_LENGTH:
+def check_internet():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except:
         return False
-    words = text.strip().split()
-    if len(words) < CONFIDENCE_WORD_THRESHOLD:
-        # Allow single-word commands if they're meaningful keywords
-        single_word_ok = ["yes", "no", "bye", "hello", "hi", "hey",
-                          WAKE_WORD, "stop", "help", "thanks"]
-        if words[0].lower() not in single_word_ok:
-            return False
-    # Filter out pure phonetic noise patterns (hm, uh, ah, mm, etc.)
-    noise_pattern = re.compile(r"^[aeiou hm]+$", re.IGNORECASE)
-    if noise_pattern.match(text.strip()):
-        return False
-    return True
 
 # ==========================================
-# TEXT TO SPEECH — with Voice Modulation (Set 2 Sunday / Set 3 Saturday)
+# NAME EXTRACTION
 # ==========================================
-def speak(text, profile=None):
-    """
-    Thread-safe TTS with voice modulation profiles.
-    profile can be: 'default', 'energetic', 'calm', 'whisper'
-    """
-    global is_speaking, current_voice_profile
+def extract_name(text):
+    match = re.search(r"(my name is|call me|i'm |i am )\s+(.+)", text.lower())
+    if match:
+        return match.group(2).strip().title()
+    return None
 
-    if profile is None:
-        profile = current_voice_profile
+# ==========================================
+# CONVERSATION HISTORY
+# ==========================================
+conversation_history = [
+    {"role": "system", "content": get_system_prompt()}
+]
 
-    vp = VOICE_PROFILES.get(profile, VOICE_PROFILES["default"])
-    is_speaking = True
+# ==========================================
+# SPEECH RECOGNITION (Google STT)
+# ==========================================
+def listen():
+    """Listens to the microphone and converts speech to text."""
+    recognizer = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("\n🎤 Listening... (Speak now)")
+        recognizer.adjust_for_ambient_noise(source, duration=0.5)
+        
+        try:
+            audio = recognizer.listen(source, timeout=5, phrase_time_limit=15)
+            print("Processing speech...")
+            
+            text = recognizer.recognize_google(audio)
+            print(f"🗣️ You: {text}")
+            return text
+            
+        except sr.WaitTimeoutError:
+            return None
+        except sr.UnknownValueError:
+            print("⚠️ Sorry, I didn't catch that.")
+            return None
+        except Exception as e:
+            print(f"⚠️ Error listening: {e}")
+            return None
+
+# ==========================================
+# TEXT TO SPEECH — INTERRUPTIBLE + EMOTION-ADAPTIVE
+# ==========================================
+def speak(text):
+    """
+    Converts text to voice.
+    - Uses pyttsx3 when emotion != neutral (adaptive rate/volume).
+    - Falls back to gTTS for high-quality neutral speech.
+    - Fully interruptible via stop_speaking_flag.
+    """
+    global is_speaking, stop_speaking_flag
 
     try:
-        engine = pyttsx3.init()
-        voices = engine.getProperty('voices')
+        # Clean text
+        text = re.sub(r'\*+', '', text)
+        text = re.sub(r'#+', '', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+        if not text:
+            return
 
-        # Select voice by index (index 1 = female on most Windows systems)
-        v_index = vp["voice_index"] if len(voices) > vp["voice_index"] else 0
-        engine.setProperty('voice', voices[v_index].id)
-        engine.setProperty('rate', vp["rate"])
-        engine.setProperty('volume', vp["volume"])
+        print(f"🤖 {chatbot_name}: {text}")
 
-        print(f"{chatbot_name}: {text}")
-        engine.say(text)
-        engine.runAndWait()
+        is_speaking = True
+        stop_speaking_flag = False
+        emotion = emotion_engine.current_emotion
+
+        # --- Emotion-adaptive path: pyttsx3 ---
+        if PYTTSX3_AVAILABLE and emotion != "neutral":
+            style = VOICE_STYLES.get(emotion, VOICE_STYLES["neutral"])
+            _pyttsx3_engine.setProperty('rate', style["rate"])
+            _pyttsx3_engine.setProperty('volume', style["volume"])
+            
+            # Run TTS in a thread so we can interrupt it
+            done_event = threading.Event()
+            def _run():
+                _pyttsx3_engine.say(text)
+                _pyttsx3_engine.runAndWait()
+                done_event.set()
+            
+            t = threading.Thread(target=_run, daemon=True)
+            t.start()
+            
+            # Poll for stop flag while waiting
+            while not done_event.is_set():
+                if stop_speaking_flag:
+                    _pyttsx3_engine.stop()
+                    break
+                time.sleep(0.1)
+
+        # --- High-quality path: gTTS (neutral or pyttsx3 unavailable) ---
+        else:
+            tts = gTTS(text=text, lang='en')
+            filename = "temp_response.mp3"
+            tts.save(filename)
+
+            pygame.mixer.music.load(filename)
+            pygame.mixer.music.play()
+
+            while pygame.mixer.music.get_busy():
+                if stop_speaking_flag:
+                    pygame.mixer.music.stop()
+                    break
+                time.sleep(0.1)
+
+            pygame.mixer.music.unload()
+            try:
+                os.remove(filename)
+            except Exception:
+                pass
 
     except Exception as e:
-        print(f"TTS Error: {e}")
+        print(f"⚠️ Error speaking: {e}")
     finally:
-        tm.sleep(0.4)
-        # Flush audio buffer so Usha doesn't hear herself (Set 2 Tuesday)
-        with audio_queue.mutex:
-            audio_queue.queue.clear()
         is_speaking = False
 
 # ==========================================
-# CONTEXT AWARENESS HELPER (Set 2 Wednesday)
+# INTENT DETECTION & EXECUTION
 # ==========================================
-def get_last_bot_topic():
-    """Returns the last topic the bot spoke about from history."""
-    for role, text in reversed(conversation_history):
-        if role == "bot":
-            return text
-    return ""
-
-def add_to_history(role, text):
-    """Thread-safe conversation history management."""
-    conversation_history.append((role, text))
-    if len(conversation_history) > 20:  # Expanded from 10 for better context (Set 2 Monday)
-        conversation_history.pop(0)
+def detect_and_execute(text):
+    text_lower = text.lower().strip()
+    online = check_internet()
+    
+    # Music
+    if any(w in text_lower for w in ["play", "song", "music"]):
+        if not online:
+            return "Love to play music, but I need internet for that."
+        for prefix in ["play ", "play song ", "play music "]:
+            if prefix in text_lower:
+                song = text_lower.split(prefix, 1)[1].strip()
+                if song:
+                    return youtube.search_and_play(song)
+        return youtube.search_and_play("popular songs")
+    
+    # Stop music
+    if any(w in text_lower for w in ["stop music", "stop playing"]):
+        return youtube.stop()
+    
+    # Distance
+    dist_match = re.search(r'(?:how far|distance).*?from (.+?) to (.+)', text_lower)
+    if dist_match:
+        if not online:
+            return "Need internet for distance."
+        return distance_calc.calculate(dist_match.group(1).strip(), dist_match.group(2).strip())
+    
+    # Math
+    if re.search(r'[\d]', text_lower) and any(op in text_lower for op in ['+', '-', '*', '/', 'plus', 'minus', 'times', 'divided']):
+        return calculator.solve(text_lower)
+    
+    # Weather
+    if any(w in text_lower for w in ["weather", "temperature"]):
+        if not online:
+            return "Weather needs internet."
+        city_match = re.search(r'(?:in|for)\s+([a-zA-Z\s]+)', text_lower)
+        city = city_match.group(1).strip() if city_match else "current location"
+        return get_weather(city)
+    
+    # News
+    if "news" in text_lower or "headlines" in text_lower:
+        if not online:
+            return "News needs internet."
+        return get_news()
+    
+    # Search
+    if any(w in text_lower for w in ["search", "google", "look up"]):
+        if not online:
+            return "Search needs internet."
+        for prefix in ["search for ", "search ", "google ", "look up "]:
+            if prefix in text_lower:
+                query = text_lower.split(prefix, 1)[1].strip()
+                if query:
+                    return search_engine.search(query)
+    
+    # Time
+    if any(w in text_lower for w in ["time", "clock"]):
+        return f"It's {datetime.datetime.now().strftime('%I:%M %p')}."
+    
+    # Date
+    if any(w in text_lower for w in ["date", "day", "today"]):
+        return f"{datetime.datetime.now().strftime('%A, %B %d')}."
+    
+    return None
 
 # ==========================================
-# LOGIC / BRAIN
-# Set 4 Monday  — ML intent classification pipeline designed
-# Set 4 Tuesday — intents.json dataset created; TF-IDF + Logistic Regression
-# Set 4 Wednesday— ml_brain.py module created (modular separation)
-# Set 4 Thursday — hybrid ML + rule-based system integrated
-# Set 4 Saturday — tested with real voice input; fixes applied
-# Set 4 Sunday   — fallback handling for low-confidence ML predictions
-# Set 5 Monday   — dataset expanded for better accuracy; model parameters tuned
-# Set 5 Tuesday  — confidence threshold enforced inside ml_brain.py
-# Set 5 Thursday — full pipeline tested: wake word → STT → ML → memory → TTS
+# OFFLINE RESPONSE
 # ==========================================
-def get_response(text):
-    global user_name, current_voice_profile, memory  # memory must be global to update and save
-
-    text = text.lower().strip()
-
-    # ✅ Always store user input before processing (Set 4 Thursday)
-    add_to_history("user", text)
-
-    # 🔥 ML INTENT DETECTION
-    # Set 4 Thursday — ML is tried first (hybrid approach)
-    # Set 4 Sunday   — try/except ensures fallback to "unknown" on ML failure
-    # Set 5 Tuesday  — confidence < 0.6 returns "unknown" inside ml_brain.py
-    try:
-        intent = predict_intent(text)
-    except Exception as e:
-        print(f"ML error: {e}")
-        intent = "unknown"
-
-    response = ""
-
-    # ==========================================
-    # 🔥 ML INTENTS
-    # Set 4 Thursday — hybrid: ML runs first, rules are fallback
-    # Set 5 Wednesday — name extraction improved with regex (extract_name)
-    # If intent is "unknown" (low confidence or error), falls through to rules below
-    # ==========================================
-
-    if intent == "set_name":
-        name = extract_name(text)  # Set 5 Wednesday — regex extracts full name correctly
+def get_offline_response(text):
+    text_lower = text.lower().strip()
+    
+    if any(w in text_lower for w in ["time", "clock"]):
+        return f"It's {datetime.datetime.now().strftime('%I:%M %p')}."
+    
+    if any(w in text_lower for w in ["date", "day", "today"]):
+        return f"{datetime.datetime.now().strftime('%A, %B %d')}."
+    
+    if re.search(r'[\d+\-*/]', text_lower) or any(op in text_lower for op in ['plus', 'minus', 'times']):
+        return calculator.solve(text_lower)
+    
+    name = extract_name(text)
+    if name:
         memory["name"] = name
         save_memory(memory)
-        response = f"I'll remember that. Your name is {name}"
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "get_name":
-        name = memory.get("name")
-        if name:
-            response = f"Your name is {name}"
-        else:
-            response = "I don't know your name yet. Please tell me your name!"
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "time":
-        current_time = datetime.datetime.now().strftime("%I:%M %p")
-        response = f"The time is {current_time}"
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "date":
-        current_date = datetime.datetime.now().strftime("%B %d, %Y")
-        day_of_week = datetime.datetime.now().strftime("%A")
-        response = f"Today is {day_of_week}, {current_date}."
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "joke":
-        response = random.choice([
-            "Why did the computer get cold? Because it left its Windows open!",
-            "Why was the math book sad? Too many problems!",
-            "Why don't scientists trust atoms? Because they make up everything!",
-            "What do you call a fish wearing a bowtie? Sofishticated!",
-            "Why did the scarecrow win an award? He was outstanding in his field!"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "wellbeing_ask":
-        response = random.choice([
-            "I'm doing great, thanks for asking! How about you?",
-            "All systems running perfectly! How are you today?",
-            "I'm functioning wonderfully! How are things on your end?",
-            "I'm fantastic! Hope you're having a wonderful day too.",
-            "Doing well and ready to help! How are you?"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "wellbeing_good":
-        response = random.choice([
-            "That's wonderful to hear! What's making your day good?",
-            "Great! I'm glad you're doing well.",
-            "Excellent! Keep that positive energy going.",
-            "That's fantastic news! Anything exciting happening?",
-            "Awesome! Happy to hear that."
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "wellbeing_bad":
-        last_topic = get_last_bot_topic()
-        response = random.choice([
-            "I'm sorry to hear that. Would you like to talk about what's bothering you?",
-            "Oh no, I'm here for you. What's going on?",
-            "That sounds really tough. I'm here to listen if you need to vent.",
-            "I'm sorry you're having a hard time. Remember, this too shall pass.",
-            "I understand. Sometimes things can be really difficult. Want to share more?"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "encourage":
-        response = random.choice([
-            "You can do it! Take it one step at a time.",
-            "It might be hard right now, but you'll get through it. I believe in you!",
-            "Every expert was once a beginner. Don't give up!",
-            "You've overcome challenges before and you'll overcome this one too.",
-            "Progress, not perfection. You're doing better than you think!"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "greeting":
-        name = memory.get("name")
-        if name:
-            response = random.choice([
-                f"Hello {name}! Great to hear from you. How can I help?",
-                f"Hi {name}! Lovely to chat with you again.",
-                f"Hey {name}! What's on your mind today?"
-            ])
-        else:
-            response = random.choice([
-                "Hello there! How can I help you today?",
-                "Hi! Lovely to hear from you.",
-                "Hey! What brings you here today?"
-            ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "farewell":
-        name = memory.get("name")
-        if name:
-            response = random.choice([
-                f"Goodbye, {name}! It was great talking with you!",
-                f"See you later, {name}! Have a wonderful day!",
-                f"Take care, {name}! Come back anytime!"
-            ])
-        else:
-            response = random.choice([
-                "Goodbye! It was nice talking to you!",
-                "See you later! Have a great day!",
-                "Take care! Come back anytime!"
-            ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "thanks":
-        response = random.choice([
-            "You're welcome!", "My pleasure!", "Happy to help!",
-            "Anytime!", "Glad I could help!", "No problem at all!"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "apology":
-        response = random.choice([
-            "No need to apologize! We all make mistakes.",
-            "That's perfectly okay!", "No worries at all!",
-            "It's completely fine! Don't worry about it."
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "compliment_bot":
-        response = random.choice([
-            "Thank you! That's very kind of you to say.",
-            "You're making me blush! Thank you!",
-            "That's so sweet of you! I appreciate it.",
-            "Thank you! You're pretty awesome yourself!"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "ask_age":
-        response = random.choice([
-            "Age is just a number! As an AI, I don't have an age in the traditional sense.",
-            "I'm ageless! I exist to help and chat whenever you need me.",
-            "In AI years, I'm forever young! How about you?"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "ask_creator":
-        response = random.choice([
-            "I was created by a developer who wanted to make a helpful offline voice assistant!",
-            "A programmer built me to be a friendly conversational partner.",
-            "I was developed by someone who loves creating helpful AI assistants!"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "ask_name_bot":
-        response = random.choice([
-            f"My name is {chatbot_name}! Nice to meet you.",
-            f"I'm {chatbot_name}, your offline voice assistant!",
-            f"You can call me {chatbot_name}! What's your name?"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "ask_capabilities":
-        response = (f"I can chat with you, tell jokes, check the time and date, "
-                    f"remember your name, change my voice style, and more! "
-                    f"Try saying 'tell me a joke' or 'what time is it'.")
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "help":
-        response = random.choice([
-            "I'd be happy to help! What do you need assistance with?",
-            "I'm here to help! What can I do for you?",
-            "Of course! Tell me what you need."
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "weather":
-        response = random.choice([
-            "I don't have real-time weather data, but you can check your local weather app!",
-            "Weather updates aren't in my current programming, but I hope it's nice where you are!",
-            "For accurate weather, I'd recommend checking a weather service online."
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "music":
-        response = random.choice([
-            "Music is universal! What type of music do you enjoy listening to?",
-            "I love the concept of music! It can change moods and bring back memories. What's your favourite genre?",
-            "Music is such a powerful form of expression! Who are your favourite artists?"
-        ])
-        add_to_history("bot", response)
-        return response
-
-    elif intent == "voice_faster":
-        current_voice_profile = "energetic"
-        response = "Sure! Switching to energetic mode. How's this speed for you?"
-        add_to_history("bot", response)
-        speak(response)
-        reset_wake_timer()
-        return response
-
-    elif intent == "voice_slower":
-        current_voice_profile = "calm"
-        response = "Alright, slowing down and staying calm. How's this?"
-        add_to_history("bot", response)
-        speak(response)
-        reset_wake_timer()
-        return response
-
-    elif intent == "voice_whisper":
-        current_voice_profile = "whisper"
-        response = "Okay, switching to a quieter voice for you."
-        add_to_history("bot", response)
-        speak(response)
-        reset_wake_timer()
-        return response
-
-    elif intent == "voice_normal":
-        current_voice_profile = "default"
-        response = "Back to my normal voice! How can I help you?"
-        add_to_history("bot", response)
-        speak(response)
-        reset_wake_timer()
-        return response
-
-    # ==========================================
-    # RULE-BASED FALLBACK
-    # Set 4 Thursday — these rules only run when ML intent is "unknown"
-    # or when no ML intent matched above. Ensures reliability.
-    # ==========================================
-
-    # ==========================================
-    # VOICE PROFILE SWITCHING (Set 2 Sunday / Set 3 Saturday)
-    # ==========================================
-    if any(phrase in text for phrase in ["speak faster", "talk faster", "be energetic", "sound energetic"]):
-        current_voice_profile = "energetic"
-        response = "Sure! Switching to energetic mode. How's this speed for you?"
-
-    elif any(phrase in text for phrase in ["speak slower", "talk slower", "calm down", "be calm", "relax your voice"]):
-        current_voice_profile = "calm"
-        response = "Alright, slowing down and staying calm. How's this?"
-
-    elif any(phrase in text for phrase in ["speak quietly", "whisper", "be quiet", "lower your voice"]):
-        current_voice_profile = "whisper"
-        response = "Okay, switching to a quieter voice for you."
-
-    elif any(phrase in text for phrase in ["normal voice", "default voice", "reset voice", "speak normally"]):
-        current_voice_profile = "default"
-        response = "Back to my normal voice! How can I help you?"
-
-    # ==========================================
-    # GREETINGS
-    # ==========================================
-    elif any(word in text for word in ["hello", "hi", "hey", "greetings", "good morning", "good afternoon", "good evening"]):
-        greetings = [
-            "Nice to hear from you! How can I help?",
-            "Hello there! What's on your mind?",
-            "Hi! Lovely to hear from you.",
-            "Hey! What brings you here today?",
-            "Greetings! How are you doing?",
-            "Hello! Great to talk to you.",
-            "Hi there! Hope you're having a good day.",
-            "Hey there! What would you like to chat about?",
-            "Good day to you! How can I assist?",
-            "Hi! Ready for a chat?"
-        ]
-        response = random.choice(greetings)
-
-    # ==========================================
-    # ASKING ABOUT WELL-BEING
-    # ==========================================
-    elif any(phrase in text for phrase in ["how are you", "how do you do", "how's it going", "how are things", "how have you been"]):
-        responses = [
-            "I'm doing great, thanks for asking! How about you?",
-            "I'm functioning perfectly! How are you feeling today?",
-            "All systems operational! How's your day going?",
-            "I'm good, just happy to be chatting with you! How about yourself?",
-            "I'm excellent! What about you?",
-            "Doing well, thank you! How are things on your end?",
-            "I'm fantastic! Hope you're having a wonderful day too.",
-            "Good and ready to help! How are you?",
-            "Doing awesome! How's everything with you?",
-            "I'm wonderful! And you?"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # USER WELL-BEING — POSITIVE
-    # ==========================================
-    elif any(phrase in text for phrase in ["i'm good", "i am good", "doing well", "i'm fine", "i am fine", "i'm okay", "i am okay"]):
-        responses = [
-            "That's wonderful to hear!",
-            "Great! I'm glad you're doing well.",
-            "Excellent! Keep that positive energy going.",
-            "That's fantastic news!",
-            "Awesome! Happy to hear that.",
-            "Wonderful! Hope it stays that way.",
-            "Good to know you're feeling good!",
-            "That's lovely to hear!",
-            "Perfect! What's making your day good?",
-            "Nice! Anything exciting happening?"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # USER WELL-BEING — NEGATIVE (Set 2 Wednesday — context-aware empathy)
-    # ==========================================
-    elif any(phrase in text for phrase in ["i'm not good", "i am not good", "i'm sad", "i am sad", "feeling down", "not well", "having a bad day"]):
-        last_topic = get_last_bot_topic()
-        if last_topic:
-            responses = [
-                "I'm sorry to hear that. Want to talk about what's bothering you?",
-                "Oh no, I noticed we were just chatting and things seem harder now. I'm here.",
-                "That sounds tough. Would you like to share what's going on?",
-                "I'm here for you. Sometimes just talking helps.",
-                "Sorry you're having a rough time. What happened?",
-            ]
-        else:
-            responses = [
-                "I'm sorry to hear that. Would you like to talk about it?",
-                "Oh no, I'm here for you. What's bothering you?",
-                "I'm sorry you're feeling that way. Remember, this too shall pass.",
-                "That sounds tough. I'm here to listen if you need to vent.",
-                "I understand. Sometimes days can be difficult. Want to share what's going on?",
-            ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # INTRODUCTIONS / NAMES
-    # ==========================================
-    elif any(phrase in text for phrase in ["your name", "who are you", "what are you called"]):
-        responses = [
-            f"My name is {chatbot_name}! Nice to meet you.",
-            f"I'm {chatbot_name}, your voice assistant!",
-            f"You can call me {chatbot_name}! What's your name?",
-            f"I go by {chatbot_name}. How about you?",
-            f"I'm {chatbot_name}! And you are?",
-            f"My name is {chatbot_name}. What should I call you?",
-            f"I'm {chatbot_name}, pleased to make your acquaintance!",
-            f"They call me {chatbot_name}! What's yours?",
-            f"{chatbot_name} at your service! And your name is?"
-        ]
-        response = random.choice(responses)
-
-    elif "my name is" in text or "call me " in text or (
-            "i am " in text and not any(p in text for p in ["i am good", "i am fine", "i am okay", "i am not", "i am sad"])):
-        if "my name is" in text:
-            name = text.split("my name is")[-1].strip()
-        elif "call me " in text:
-            name = text.split("call me ")[-1].strip()
-        elif "i am " in text:
-            name = text.split("i am ")[-1].strip()
-        else:
-            name = "there"
-
-        name = name.split()[0].capitalize() if name.split() else "there"
-        user_name = name
-
-        responses = [
-            f"Nice to meet you, {name}!",
-            f"Hello {name}! That's a lovely name.",
-            f"Great to meet you, {name}! How can I help you today?",
-            f"Hi {name}! Thanks for introducing yourself.",
-            f"Welcome, {name}! I'm {chatbot_name}.",
-            f"Pleased to meet you, {name}!",
-            f"Hello {name}! What brings you here today?",
-            f"Hi there, {name}! Lovely to make your acquaintance.",
-            f"Hey {name}! I'll remember that.",
-            f"{name}, that's a nice name! How are you today?"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # THANK YOU
-    # ==========================================
-    elif any(word in text for word in ["thank", "thanks", "appreciate", "grateful"]):
-        responses = [
-            "You're welcome!",
-            "My pleasure!",
-            "Happy to help!",
-            "Anytime!",
-            "Don't mention it!",
-            "You're very welcome!",
-            "Glad I could help!",
-            "It's my pleasure to assist you!",
-            "No problem at all!",
-            "You're most welcome!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # APOLOGIES
-    # ==========================================
-    elif any(word in text for word in ["sorry", "apologize", "apology", "my bad"]):
-        responses = [
-            "No need to apologize! We all make mistakes.",
-            "That's perfectly okay!",
-            "No worries at all!",
-            "It's completely fine!",
-            "Don't worry about it!",
-            "No problem at all!",
-            "All good! No apology needed.",
-            "It happens! No need to say sorry.",
-            "Water under the bridge!",
-            "Absolutely no problem!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # TIME AND DATE
-    # ==========================================
-    elif any(phrase in text for phrase in ["what time", "current time", "time now", "what's the time"]):
-        current_time = datetime.datetime.now().strftime("%I:%M %p")
-        responses = [
-            f"The current time is {current_time}.",
-            f"It's {current_time} right now.",
-            f"According to my clock, it's {current_time}.",
-            f"The time is {current_time}.",
-            f"It's currently {current_time}.",
-            f"My clock shows {current_time}.",
-            f"Right now it's {current_time}.",
-            f"Time check: it's {current_time}.",
-            f"The time at the moment is {current_time}.",
-            f"I see it's {current_time}."
-        ]
-        response = random.choice(responses)
-
-    elif any(phrase in text for phrase in ["what date", "today's date", "current date", "what day is today"]):
-        current_date = datetime.datetime.now().strftime("%B %d, %Y")
-        day_of_week = datetime.datetime.now().strftime("%A")
-        responses = [
-            f"Today is {day_of_week}, {current_date}.",
-            f"It's {current_date} today.",
-            f"Today's date is {current_date}.",
-            f"We're on {day_of_week}, {current_date}.",
-            f"The date today is {current_date}.",
-            f"It's {day_of_week}, {current_date}.",
-            f"According to the calendar, it's {current_date}.",
-            f"Today is {current_date}.",
-            f"The current date is {current_date}.",
-            f"It's {day_of_week} today, {current_date}."
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # WEATHER
-    # ==========================================
-    elif any(word in text for word in ["weather", "temperature", "forecast", "raining", "sunny", "cold", "hot"]):
-        responses = [
-            "I don't have real-time weather data, but you can check your local weather app!",
-            "For accurate weather, I'd recommend checking a weather service.",
-            "I wish I could tell you! Unfortunately I don't have that capability yet.",
-            "You might want to check a weather website for current conditions.",
-            "Weather updates aren't in my programming, but I hope it's nice where you are!",
-            "I can't access weather data, but I hope the weather is pleasant for you!",
-            "For weather info, you'd need to consult a dedicated weather service.",
-            "I'm not connected to weather satellites, but I can chat about other things!",
-            "Weather isn't my specialty, but I can help with many other topics!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # COMPLIMENTS
-    # ==========================================
-    elif any(phrase in text for phrase in ["you are nice", "you are helpful", "you are smart", "you are amazing", "you are great", "i like you"]):
-        responses = [
-            "Thank you! That's very kind of you to say.",
-            "You're making me blush! Thank you!",
-            "That's so sweet of you! I appreciate it.",
-            "Thank you! You're pretty awesome yourself!",
-            "You're too kind! I'm just here to help.",
-            "Thank you! That means a lot to me.",
-            "You're making my day with your kind words!",
-            "Thanks! I'm just doing my best to help.",
-            "Thank you for the compliment! You're wonderful too.",
-            "I appreciate that! It's nice to be appreciated."
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # FAREWELLS
-    # ==========================================
-    elif any(word in text for word in ["bye", "goodbye", "see you", "farewell", "later", "take care"]):
-        if user_name:
-            responses = [
-                f"Goodbye, {user_name}! It was nice talking to you!",
-                f"See you later, {user_name}! Have a great day!",
-                f"Take care, {user_name}! Come back anytime!",
-                f"Farewell, {user_name}! It was a pleasure chatting!",
-                f"Bye, {user_name}! Hope to talk again soon!",
-                f"See you soon, {user_name}! Stay safe!",
-                f"Goodbye, {user_name}! Thanks for the chat!",
-                f"Until next time, {user_name}!",
-                f"Take it easy, {user_name}! Bye!",
-                f"Catch you later, {user_name}!"
-            ]
-        else:
-            responses = [
-                "Goodbye! It was nice talking to you!",
-                "See you later! Have a great day!",
-                "Take care! Come back anytime!",
-                "Farewell! It was a pleasure chatting!",
-                "Bye! Hope to talk again soon!",
-                "See you soon! Stay safe!",
-                "Goodbye! Thanks for the chat!",
-                "Until next time!",
-                "Take it easy! Bye!",
-                "Catch you later!"
-            ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # WHAT CAN YOU DO
-    # ==========================================
-    elif any(phrase in text for phrase in ["what can you do", "what do you do", "your capabilities", "what are your functions"]):
-        responses = [
-            "I can chat with you, answer questions, tell jokes, check the time, and keep you company!",
-            "I'm here to have conversations, answer your questions, and help pass the time!",
-            "I can talk about many things, tell stories, share facts, or just listen if you need someone to talk to!",
-            "My main function is conversation! I can discuss topics, share information, or just keep you company.",
-            "I'm a voice assistant! I can chat, answer questions, tell jokes, and change my voice style if you ask.",
-            "I'm designed for friendly conversation! I can discuss various topics with you.",
-            "I'm here to chat! Whether you want to talk about your day, ask questions, or just want company.",
-            "I'm a chatbot created for conversation! I can also change how I speak — try asking me to speak faster or slower!"
-        ]
-        response = random.choice(responses)
-
-    elif any(phrase in text for phrase in ["who made you", "who created you", "who built you", "who developed you"]):
-        responses = [
-            "I was created by a developer who wanted to make a helpful voice assistant!",
-            "A programmer built me to be a friendly conversational partner.",
-            "I was developed by someone who loves creating helpful AI assistants!",
-            "My creator is a developer who wanted to make conversation more accessible.",
-            "I was built by a programmer who enjoys creating useful chatbots!",
-            "A developer created me to be a helpful and friendly AI companion.",
-            "I was made by someone who believes in the power of friendly conversation!",
-            "My creator is a programmer who built me to assist and chat with people.",
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # JOKES
-    # ==========================================
-    elif any(word in text for word in ["joke", "funny", "make me laugh", "tell me something funny"]):
+        return f"Got it, {name}! Nice to meet you."
+    
+    if any(w in text_lower for w in ["hello", "hi", "hey"]):
+        n = memory.get("name", "")
+        return f"Hey{' ' + n if n else ''}! How's it going?"
+    
+    if "how are you" in text_lower:
+        return "Doing great! What about you?"
+    
+    if any(w in text_lower for w in ["bye", "goodbye"]):
+        n = memory.get("name", "")
+        return f"See ya{' ' + n if n else ''}! Come back soon."
+    
+    if "joke" in text_lower:
         jokes = [
-            "Why don't scientists trust atoms? Because they make up everything!",
-            "Why did the scarecrow win an award? He was outstanding in his field!",
-            "What do you call a bear with no teeth? A gummy bear!",
-            "Why don't eggs tell jokes? They'd crack each other up!",
-            "What do you call a fish wearing a bowtie? Sofishticated!",
-            "Why did the bicycle fall over? Because it was two-tired!",
-            "What do you call a fake noodle? An impasta!",
-            "Why did the math book look so sad? Because it had too many problems!",
-            "What's orange and sounds like a parrot? A carrot!",
-            "What do you call a sleeping bull? A bulldozer!",
-            "Why did the cookie go to the doctor? Because it felt crummy!",
-            "Why did the tomato turn red? Because it saw the salad dressing!",
-            "What do you get when you cross a snowman and a vampire? Frostbite!"
+            "Why don't scientists trust atoms? They make up everything!",
+            "What's a bear with no teeth? A gummy bear!",
+            "Parallel lines have so much in common. Too bad they'll never meet."
         ]
-        response = random.choice(jokes)
+        return random.choice(jokes)
+    
+    return random.choice([
+        "That's interesting. Tell me more!",
+        "I see! What else is on your mind?",
+        "Hmm, I'd love to hear more.",
+        "Really? Go on..."
+    ])
 
-    # ==========================================
-    # FOOD AND DRINKS
-    # ==========================================
-    elif any(word in text for word in ["hungry", "food", "eat", "dinner", "lunch", "breakfast", "meal", "restaurant"]):
-        responses = [
-            "Food is wonderful! What's your favorite type of cuisine?",
-            "I may not eat, but I love hearing about delicious food! What are you craving?",
-            "Food brings people together! Do you enjoy cooking or eating out more?",
-            "Talking about food makes me wish I could taste! What's the best meal you've ever had?",
-            "Food is such an important part of culture! What's your go-to comfort food?",
-            "Whether you're cooking or dining out, food is always an adventure!",
-            "What are your thoughts on trying exotic foods? Or do you prefer familiar dishes?"
-        ]
-        response = random.choice(responses)
+# ==========================================
+# MAIN BRAIN RESPONSE
+# ==========================================
+def get_brain_response(user_text):
+    """Processes user input and returns AI response."""
+    global conversation_history, memory
 
-    elif any(word in text for word in ["coffee", "tea", "drink", "beverage", "juice", "water"]):
-        responses = [
-            "A good drink can be so refreshing! Do you have a favorite beverage?",
-            "I don't drink, but I've heard coffee is many people's morning ritual!",
-            "Tea or coffee? That's a classic question! Which do you prefer?",
-            "Hydration is important! Water is essential for health.",
-            "Some people swear by their morning coffee, others by tea! What's your preference?",
-            "Herbal teas can be so soothing! Do you have a favorite kind?",
-            "The variety of drinks around the world is amazing! From matcha to espresso to chai..."
-        ]
-        response = random.choice(responses)
+    # Analyze emotion first — used throughout this function
+    user_emotion, _ = emotion_engine.analyze(user_text)
 
-    # ==========================================
-    # MUSIC
-    # ==========================================
-    elif any(word in text for word in ["music", "song", "band", "artist", "concert", "listen to", "playlist"]):
-        responses = [
-            "Music is universal! What type of music do you enjoy listening to?",
-            "I love the concept of music! It can change moods and bring back memories. What's your favorite genre?",
-            "Music is such a powerful form of expression! Who are your favorite artists?",
-            "Do you play any instruments or just enjoy listening to music?",
-            "Music can be so nostalgic! What songs bring back memories for you?",
-            "The diversity of music around the world is incredible!",
-            "What was the last song you listened to that really moved you?"
-        ]
-        response = random.choice(responses)
+    # Update system prompt with latest context
+    conversation_history[0] = {"role": "system", "content": get_system_prompt()}
 
-    # ==========================================
-    # MOVIES AND TV
-    # ==========================================
-    elif any(word in text for word in ["movie", "film", "tv show", "netflix", "cinema", "actor", "actress", "watch"]):
-        responses = [
-            "Movies and TV can be such great entertainment! What's your favorite genre?",
-            "What was the last really good movie or show you watched?",
-            "Do you enjoy going to the cinema or watching at home more?",
-            "Some movies become cultural touchstones! Are there any films you've watched multiple times?",
-            "TV shows can create such loyal followings! Have you ever binge-watched a series?",
-            "Have you watched anything recently that you'd highly recommend?"
-        ]
-        response = random.choice(responses)
+    # Trim history to MAX_HISTORY turns (system prompt stays at index 0)
+    if len(conversation_history) > MAX_HISTORY + 1:
+        conversation_history = [conversation_history[0]] + conversation_history[-(MAX_HISTORY):]
 
-    # ==========================================
-    # BOOKS
-    # ==========================================
-    elif any(word in text for word in ["book", "read", "novel", "author", "library", "story"]):
-        responses = [
-            "Books open up entire worlds! What type of books do you enjoy?",
-            "Reading is such a wonderful hobby! Do you prefer fiction or non-fiction?",
-            "What's the best book you've read recently?",
-            "Some books stay with you forever! Are there any that changed your perspective?",
-            "Do you have favorite authors or do you like discovering new ones?",
-            "E-books, audiobooks, or physical books — do you have a preference?"
-        ]
-        response = random.choice(responses)
+    # Check special commands first (music, weather, search, etc.)
+    special = detect_and_execute(user_text)
+    if special:
+        conversation_history.append({"role": "user", "content": user_text})
+        conversation_history.append({"role": "assistant", "content": special})
+        update_memory(user_text, user_emotion)
+        personality_learner.learn_from_interaction(user_text, special, user_emotion)
+        return special
 
-    # ==========================================
-    # HOBBIES
-    # ==========================================
-    elif any(word in text for word in ["hobby", "hobbies", "free time", "weekend", "fun", "enjoy", "passion"]):
-        responses = [
-            "Hobbies make life so much richer! What do you enjoy doing in your free time?",
-            "Having a passion outside work is so important! What are yours?",
-            "What's your favorite way to spend a free afternoon?",
-            "Do you have any hobbies you've picked up recently?",
-            "Some people find their greatest joy in their hobbies! What's yours?",
-            "Learning new skills as a hobby can be so rewarding!",
-            "What hobby would you like to try if you had more time?"
-        ]
-        response = random.choice(responses)
+    # Handle name sharing
+    name = extract_name(user_text)
+    if name:
+        memory["name"] = name
+        save_memory(memory)
+        response = f"Got it, {name}! I'll remember that. What's on your mind?"
+        conversation_history.append({"role": "user", "content": user_text})
+        conversation_history.append({"role": "assistant", "content": response})
+        return response
 
-    # ==========================================
-    # TECHNOLOGY
-    # ==========================================
-    elif any(word in text for word in ["computer", "phone", "app", "software", "tech", "gadget", "device", "internet"]):
-        responses = [
-            "Technology moves so fast! What tech are you most interested in?",
-            "Do you enjoy learning about new technologies or do you prefer when things stay familiar?",
-            "What's your most-used gadget or piece of technology?",
-            "Technology can be both helpful and overwhelming! How do you balance it?",
-            "What technological advancement has most impacted your life?",
-            "Apps and software keep evolving! Do you have favorite apps?",
-            "What futuristic technology are you most excited about?"
-        ]
-        response = random.choice(responses)
+    # Thinking delay — makes responses feel natural, not instant-robot
+    print("🤖 Thinking...")
+    time.sleep(random.uniform(0.4, 1.2))
 
-    # ==========================================
-    # WORK AND STUDY
-    # ==========================================
-    elif any(word in text for word in ["work", "job", "career", "office", "boss", "colleague", "study", "school", "university", "homework"]):
-        responses = [
-            "Work and study take up so much of our time! What do you do?",
-            "Do you enjoy your work or studies? What do you find most rewarding?",
-            "Work-life balance is important! How do you manage it?",
-            "Have you faced any interesting challenges at work or school recently?",
-            "What skills are most important in your field?",
-            "Do you work better alone or as part of a team?",
-            "Continuous learning is key! Are you studying anything currently?",
-            "Do you have any goals for your career or education?"
-        ]
-        response = random.choice(responses)
+    # Tag message with emotion so LLM has emotional context
+    tagged_input = f"[Emotion: {user_emotion}] {user_text}"
 
-    # ==========================================
-    # HEALTH AND WELLNESS
-    # ==========================================
-    elif any(word in text for word in ["health", "wellness", "fitness", "meditation", "yoga", "sleep", "diet", "mental health"]):
-        responses = [
-            "Taking care of health is so important! What wellness practices do you follow?",
-            "Mental health is just as important as physical health! How do you maintain yours?",
-            "Do you have any regular exercise or wellness routines?",
-            "Sleep is crucial! How's your sleep schedule?",
-            "Nutrition plays a big role in health! Do you pay attention to your diet?",
-            "Stress management is key in today's world! What helps you relax?",
-            "Have you tried meditation or mindfulness practices?",
-            "What's your favorite way to de-stress after a long day?"
-        ]
-        response = random.choice(responses)
+    # Try Ollama (local LLM)
+    if OLLAMA_AVAILABLE:
+        try:
+            conversation_history.append({"role": "user", "content": tagged_input})
 
-    # ==========================================
-    # FAMILY AND RELATIONSHIPS
-    # ==========================================
-    elif any(word in text for word in ["family", "parent", "sibling", "brother", "sister", "mother", "father", "relationship", "friend", "friendship"]):
-        responses = [
-            "Family and relationships are so important! Tell me about yours.",
-            "Friends can become like family! Do you have close friends?",
-            "Family dynamics can be complex but meaningful!",
-            "What qualities do you value most in relationships?",
-            "Friendships evolve over time! Have you maintained long-term friendships?",
-            "Family traditions can be so special! Do you have any?",
-            "What's the best relationship advice you've received?",
-            "Supportive relationships make such a difference in life!"
-        ]
-        response = random.choice(responses)
+            response = client.chat.completions.create(
+                model="llama3.2:latest",
+                messages=conversation_history,
+                max_tokens=100,
+                temperature=0.85
+            )
 
-    # ==========================================
-    # PETS AND ANIMALS
-    # ==========================================
-    elif any(word in text for word in ["pet", "dog", "cat", "animal", "puppy", "kitten", "bird", "fish"]):
-        responses = [
-            "Pets bring so much joy! Do you have any pets?",
-            "Animals can be such wonderful companions! Tell me about your pets if you have any.",
-            "What's your favorite animal and why?",
-            "Do you prefer dogs, cats, or other animals?",
-            "Animals teach us about unconditional love!",
-            "Pets can be so therapeutic! Do you agree?"
-        ]
-        response = random.choice(responses)
+            ai_text = response.choices[0].message.content.strip()
+            ai_text = re.sub(r'\*+', '', ai_text)
+            ai_text = re.sub(r'(?i)as an ai[^.]*\.', '', ai_text)
+            ai_text = re.sub(r'Let me know if you need.*', '', ai_text, flags=re.IGNORECASE)
+            ai_text = ai_text.strip()
 
-    # ==========================================
-    # CURRENT EVENTS
-    # ==========================================
-    elif any(word in text for word in ["news", "current events", "headlines", "politics", "world", "society"]):
-        responses = [
-            "The world is always changing! What current events interest you?",
-            "Staying informed is important, but so is managing news consumption!",
-            "What topics in the news have caught your attention recently?",
-            "Do you follow local, national, or international news more closely?",
-            "Balancing being informed with mental wellbeing is important!",
-            "What positive news stories have you heard recently?"
-        ]
-        response = random.choice(responses)
+            conversation_history.append({"role": "assistant", "content": ai_text})
+            update_memory(user_text, user_emotion)
+            personality_learner.learn_from_interaction(user_text, ai_text, user_emotion)
 
-    # ==========================================
-    # PHILOSOPHICAL / DEEP
-    # ==========================================
-    elif any(word in text for word in ["meaning of life", "purpose", "happiness", "success", "dream", "goal", "aspiration"]):
-        responses = [
-            "These are deep questions! What does happiness mean to you?",
-            "Purpose and meaning can be very personal! How do you define success?",
-            "Life's big questions don't always have easy answers! What are your thoughts?",
-            "Dreams and goals give direction! What are you working toward?",
-            "Finding purpose is a journey! What gives your life meaning?",
-            "Success can be measured in many ways! How do you measure it?",
-            "Goals keep us moving forward! What's your next big goal?"
-        ]
-        response = random.choice(responses)
+            return ai_text
 
-    # ==========================================
-    # FUN FACTS / TRIVIA
-    # ==========================================
-    elif any(word in text for word in ["random", "interesting", "fact", "trivia", "learn", "curious"]):
-        fun_facts = [
-            "Did you know honey never spoils? Archaeologists found honey in Egyptian tombs over 3000 years old — still perfectly good!",
-            "Octopuses have three hearts! Two pump blood to the gills, one pumps it to the rest of the body.",
-            "A day on Venus is longer than a year on Venus! It takes 243 Earth days to rotate but only 225 to orbit the Sun.",
-            "The shortest war in history was between Britain and Zanzibar in 1896 — it lasted just 38 minutes!",
-            "Bananas are berries, but strawberries aren't! Botanically, berries have seeds inside.",
-            "A group of flamingos is called a flamboyance!",
-            "Humans share 50 percent of their DNA with bananas!",
-            "The Eiffel Tower can be 15 centimeters taller during summer due to thermal expansion!"
-        ]
-        response = random.choice(fun_facts)
+        except Exception as e:
+            print(f"⚠️ Ollama error: {e}")
 
-    # ==========================================
-    # HELP REQUESTS
-    # ==========================================
-    elif any(word in text for word in ["help", "assist", "support", "guide", "advice"]):
-        responses = [
-            "I'd be happy to help! What do you need assistance with?",
-            "I'm here to help! What can I do for you?",
-            "How can I assist you today?",
-            "I'm ready to help! What do you need?",
-            "What kind of help are you looking for?",
-            "Happy to provide assistance! Tell me what you need.",
-            "I'm here to support you! What's on your mind?"
-        ]
-        response = random.choice(responses)
+    # Offline fallback
+    response = get_offline_response(user_text)
+    conversation_history.append({"role": "user", "content": tagged_input})
+    conversation_history.append({"role": "assistant", "content": response})
+    update_memory(user_text, user_emotion)
+    personality_learner.learn_from_interaction(user_text, response, user_emotion)
 
-    # ==========================================
-    # AGREEING
-    # ==========================================
-    elif any(word in text for word in ["yes", "yeah", "yep", "sure", "absolutely", "definitely", "agree"]):
-        responses = [
-            "Great! I'm glad we're on the same page.",
-            "Absolutely! That makes sense.",
-            "I agree! That's a good point.",
-            "Yes! I think so too.",
-            "Definitely! You're right about that.",
-            "Sure thing! I concur.",
-            "I'm with you on that!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # DISAGREEING
-    # ==========================================
-    elif any(word in text for word in ["no", "nope", "disagree", "not really", "don't think so"]):
-        responses = [
-            "That's okay! We can have different perspectives.",
-            "I understand your point, even if I see it differently.",
-            "No problem! It's good to hear different viewpoints.",
-            "That's fair! Everyone has their own opinion.",
-            "I respect that! Thanks for sharing your perspective.",
-            "No worries! Diversity of thought is valuable."
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # CONFUSED / UNCLEAR
-    # ==========================================
-    elif any(phrase in text for phrase in ["i don't know", "not sure", "uncertain", "confused", "what do you mean"]):
-        responses = [
-            "That's okay! Sometimes things aren't clear right away.",
-            "No problem! Would you like to explore this topic more?",
-            "It's okay to be uncertain! What part is unclear?",
-            "Confusion can lead to learning! Would you like to discuss it further?",
-            "That's perfectly fine! We can figure it out together."
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # ENCOURAGEMENT
-    # ==========================================
-    elif any(phrase in text for phrase in ["i can't", "it's hard", "difficult", "struggling", "challenging"]):
-        responses = [
-            "You can do it! Take it one step at a time.",
-            "It might be hard now, but you'll get through it!",
-            "Challenges help us grow! I believe in you.",
-            "You're stronger than you think! Keep going.",
-            "Every expert was once a beginner! Don't give up.",
-            "Progress, not perfection! You're doing great.",
-            "You've overcome challenges before, and you'll overcome this one too!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # PERSONAL ACHIEVEMENTS
-    # ==========================================
-    elif any(word in text for word in ["achieved", "accomplished", "proud", "success", "milestone", "goal reached"]):
-        responses = [
-            "That's fantastic! Congratulations on your achievement!",
-            "Well done! You should be proud of yourself.",
-            "Amazing accomplishment! Your hard work paid off.",
-            "Congratulations! That's something to celebrate!",
-            "So proud of you! That's a significant milestone.",
-            "Excellent work! You deserve to feel accomplished.",
-            "Huge congratulations! That's truly impressive."
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # LOVE AND ROMANCE
-    # ==========================================
-    elif any(word in text for word in ["love", "romance", "dating", "relationship", "partner", "crush"]):
-        responses = [
-            "Love is a beautiful thing! Tell me more if you'd like.",
-            "Relationships can be wonderful and challenging! What's on your mind?",
-            "Love comes in many forms! Are you speaking from personal experience?",
-            "Romantic relationships can teach us so much about ourselves!",
-            "Everyone's love story is unique! What aspect interests you?"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # AGE QUESTIONS
-    # ==========================================
-    elif any(phrase in text for phrase in ["how old", "what is your age", "your age"]):
-        responses = [
-            "Age is just a number! As an AI, I don't have an age in the traditional sense.",
-            "I'm ageless! I exist to help and chat whenever you need me.",
-            "In AI years, I'm forever young! How about you, if you don't mind me asking?",
-            "I don't experience time like humans do! I'm always here when you need me.",
-            "My age is irrelevant — what matters is I'm here to help you!"
-        ]
-        response = random.choice(responses)
-
-    # ==========================================
-    # FEELINGS / EMOTIONS (Set 3 Saturday — emotional voice modulation groundwork)
-    # ==========================================
-    elif any(word in text for word in ["feel", "feeling", "emotion", "emotional", "mood"]):
-        feelings = [
-            "feel happy", "feel sad", "feel excited", "feel anxious",
-            "feel nervous", "feel calm", "feel angry", "feel disappointed",
-            "feel grateful", "feel lonely", "feel confident", "feel scared",
-            "feel surprised", "feel bored", "feel hopeful", "feel tired"
-        ]
-
-        for feeling in feelings:
-            if feeling in text:
-                emotion = feeling.split()[1]
-                responses = [
-                    f"It's completely normal to {feeling} sometimes. Want to talk more about it?",
-                    f"Thanks for sharing that you {feeling}. How long have you been feeling this way?",
-                    f"I hear that you {feeling}. Would you like to explore what's causing this?",
-                    f"Feeling {emotion} is part of being human. You're not alone in this.",
-                    f"I appreciate you sharing that you {feeling}. How can I support you right now?",
-                    f"Everyone experiences feeling {emotion} at times. What usually helps you?",
-                    f"Thank you for being open about feeling {emotion}. Would you like to discuss it further?"
-                ]
-                # Adjust voice tone based on detected emotion (Set 3 Saturday emotional modulation)
-                if emotion in ["sad", "lonely", "scared", "disappointed", "anxious"]:
-                    speak_profile_override = "calm"
-                elif emotion in ["excited", "happy", "hopeful", "confident"]:
-                    speak_profile_override = "energetic"
-                else:
-                    speak_profile_override = current_voice_profile
-
-                response = random.choice(responses)
-                add_to_history("bot", response)
-                speak(response, profile=speak_profile_override)
-                reset_wake_timer()
-                return response
-
-    # ==========================================
-    # DEFAULT RESPONSES (Set 2 Wednesday — context awareness)
-    # ==========================================
-    if not response:
-        if chatbot_name.lower() in text:
-            responses = [
-                f"You said my name! What can I do for you?",
-                f"Yes, that's me! How can I help?",
-                f"You called? I'm listening!",
-                f"That's my name! What would you like to talk about?",
-                f"I heard my name! What's on your mind?",
-                f"I'm here! What would you like to discuss?"
-            ]
-            response = random.choice(responses)
-
-        elif text.endswith('?') or any(word in text for word in ["what", "why", "how", "when", "where", "who", "which"]):
-            responses = [
-                "That's an interesting question! What are your thoughts on it?",
-                "I'd love to hear your perspective on that first!",
-                "That's something worth exploring! What do you think?",
-                "Interesting question! I'd be curious to know your opinion.",
-                "Good question! What's your take on it?",
-                "That's worth discussing! What's your view?"
-            ]
-            response = random.choice(responses)
-
-        elif any(word in text for word in ["i think", "i believe", "i feel", "in my opinion", "from my perspective"]):
-            responses = [
-                "Thanks for sharing your perspective! That's interesting.",
-                "I appreciate you sharing your thoughts on that!",
-                "Thank you for expressing your opinion!",
-                "It's great to hear your point of view!",
-                "I value hearing your perspective!"
-            ]
-            response = random.choice(responses)
-
-        else:
-            continuations = [
-                "Interesting! Tell me more about that.",
-                "I see. What happened next?",
-                "Go on, I'm listening.",
-                "That's fascinating. Please continue.",
-                "Really? What else can you tell me?",
-                "I understand. What are your thoughts on that?",
-                "Interesting point. How does that make you feel?",
-                "Tell me more, I'm interested.",
-                "I hear you. What else is on your mind?",
-                "That's worth discussing further. What's your perspective?",
-                "Thanks for sharing that. How did that come about?",
-                "I'm following along. What happened then?",
-                "That's something to think about. What are your conclusions?",
-                "Interesting observation. What led you to that?",
-                "I'm curious to know more. Can you elaborate?",
-                "That's a good point. How did you arrive at that?",
-                "I appreciate you sharing that. What was the context?",
-                "That makes sense. What was your reaction?",
-                "I see what you mean. What were the circumstances?",
-                "Thanks for telling me that. How has that affected you?"
-            ]
-            response = random.choice(continuations)
-
-    add_to_history("bot", response)
     return response
 
 # ==========================================
-# AUDIO PROCESSING
+# MAIN LOOP
 # ==========================================
-def audio_callback(indata, frames, time, status):
-    """Callback — collects audio only when Usha isn't speaking."""
-    if status:
-        print(f"Audio status: {status}", end="\r")
-    if not is_speaking:
-        audio_queue.put(bytes(indata))
-
-def process_audio_queue():
-    """
-    Main audio processing loop.
-    Phase 1: Listen for wake word 'buddy' (passive mode)
-    Phase 2: Process commands after wake word (active mode)
-    """
-    print(f"😴 Passive mode — say '{WAKE_WORD}' to wake {chatbot_name}...")
+def start_conversation():
+    global conversation_history
+    
+    is_online = check_internet()
+    online_status = "🟢 ONLINE" if is_online else "🔴 OFFLINE"
+    emotion_tts = "pyttsx3 + gTTS" if PYTTSX3_AVAILABLE else "gTTS"
+    
+    print(f"""
+╔══════════════════════════════════════════════╗
+║         🧠 BUDDY — Ultimate Assistant       ║
+╠══════════════════════════════════════════════╣
+║  🎤 Google STT (Free)                       ║
+║  🔊 {emotion_tts:<38}║
+║  🧠 Llama 3.2 Brain                         ║
+║  🎯 Emotion-Aware Voice                     ║
+║  🛑 Interruptible Speech                    ║
+║  🧠 Long-Term Personality Memory            ║
+║  🌐 Hybrid Online/Offline                   ║
+║  Status: {online_status}                          ║
+╚══════════════════════════════════════════════╝
+    """)
+    
+    name = memory.get("name", "")
+    greeting = f"Hey{' ' + name if name else ''}! I'm Buddy. What's up?"
+    print(f"🤖 {chatbot_name}: {greeting}")
+    speak(greeting)
+    conversation_history.append({"role": "assistant", "content": greeting})
+    
+    print("\n✨ I can: play music, search web, calculate, weather, news, and more!")
+    print("   Say 'stop' to interrupt me anytime. Press Ctrl+C to quit.\n")
+    print("=" * 50)
 
     while True:
         try:
-            audio_data = audio_queue.get(timeout=1.0)
+            user_input = listen()
+            
+            if user_input:
+                user_lower = user_input.lower()
 
-            if recognizer.AcceptWaveform(audio_data):
-                result = json.loads(recognizer.Result())
-                text = result.get("text", "").strip()
+                # 🛑 Interrupt: user says "stop" while Buddy is speaking
+                if user_lower.strip() in ("stop", "stop it", "quiet", "shut up", "shh"):
+                    global stop_speaking_flag
+                    stop_speaking_flag = True
+                    print("🛑 Interrupted.")
+                    continue
 
-                # ---- PASSIVE MODE: ONLY listen for wake word ----
-                if not is_awake:
-                    if WAKE_WORD in text.lower():
-                        activate_wake()
-                        speak(f"Yes, I'm here! How can I help you?")
-                    continue  # Ignore everything else in passive mode
-
-                # ---- ACTIVE MODE: Process commands ----
-                if not passes_confidence_check(text):
-                    continue  # Confidence threshold filter (Set 3 Saturday)
-
-                print(f"\nYou: {text}")
-
-                response = get_response(text)
-                speak(response)
-                reset_wake_timer()  # Reset sleep timer after each interaction
-
-                # Graceful exit on goodbye
-                if any(word in text.lower() for word in ["bye", "goodbye", "farewell"]):
-                    tm.sleep(1.5)
-                    deactivate_wake()
-
-        except queue.Empty:
-            continue
-        except Exception as e:
-            print(f"Audio processing error: {e}")
-            continue
-
-# ==========================================
-# MAIN ENTRY POINT
-# ==========================================
-def main():
-    print(f"\n{'='*55}")
-    print(f"  {chatbot_name} — Offline Voice Assistant")
-    print(f"{'='*55}")
-    print(f"  Wake Word   : '{WAKE_WORD}'")
-    print(f"  Sleep Timer : {WAKE_WORD_TIMEOUT} seconds after last interaction")
-    print(f"  Voice Modes : default | calm | energetic | whisper")
-    print(f"  ML Engine   : TF-IDF + Logistic Regression (ml_brain.py)")
-    print(f"  Memory      : memory.json (persistent user data)")
-    print(f"  System      : Hybrid ML + Rule-based (Set 4 Thursday)")
-    print(f"{'='*55}\n")
-
-    # Start audio processing thread
-    processing_thread = threading.Thread(target=process_audio_queue, daemon=True)
-    processing_thread.start()
-
-    try:
-        with sd.RawInputStream(
-            samplerate=16000,
-            blocksize=4000,
-            dtype="int16",
-            channels=1,
-            callback=audio_callback
-        ) as stream:
-            while True:
-                tm.sleep(0.1)
-
-    except KeyboardInterrupt:
-        print(f"\n\n{chatbot_name}: Goodbye! It was nice talking with you!")
-    except Exception as e:
-        print(f"Stream Error: {e}")
-    finally:
-        print("\nAssistant stopped.")
+                # Goodbye
+                if any(w in user_lower for w in ["bye", "goodbye", "good night"]):
+                    n = memory.get("name", "")
+                    farewell = f"See ya{' ' + n if n else ''}! Take care!"
+                    print(f"🤖 {chatbot_name}: {farewell}")
+                    speak(farewell)
+                    save_memory(memory)
+                    personality_learner.save()
+                    break
+                
+                ai_reply = get_brain_response(user_input)
+                speak(ai_reply)
+                
+        except KeyboardInterrupt:
+            farewell = "Gotta go! Catch you later!"
+            print(f"\n🤖 {chatbot_name}: {farewell}")
+            speak(farewell)
+            save_memory(memory)
+            personality_learner.save()
+            break
 
 if __name__ == "__main__":
-    main()
+    # Install check
+    try:
+        import speech_recognition
+    except ImportError:
+        print("Installing required package...")
+        os.system("pip install SpeechRecognition")
+        import speech_recognition
+    
+    start_conversation()
