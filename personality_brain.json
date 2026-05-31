@@ -1,9 +1,7 @@
 {
   "preferences": {},
   "topics": {
-    "technology": 2,
-    "work": 1,
-    "music": 2
+    "technology": 1
   },
   "style": {
     "formality": 0.3,
@@ -13,178 +11,47 @@
   },
   "history": [
     {
-      "timestamp": "2026-05-30T12:20:54.296991",
-      "emotion": "neutral",
-      "topics": [
-        "technology"
-      ]
-    },
-    {
-      "timestamp": "2026-05-30T12:21:57.327782",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:22:15.684850",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:22:42.043365",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:23:00.562405",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:24:13.858769",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:24:27.733116",
-      "emotion": "energetic",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:24:50.070636",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:25:09.222047",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:25:28.903478",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:25:46.032133",
-      "emotion": "energetic",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:25:59.374727",
-      "emotion": "energetic",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:26:43.169317",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:27:06.025030",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:27:27.265244",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:27:54.109020",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:28:07.806230",
-      "emotion": "neutral",
-      "topics": [
-        "technology"
-      ]
-    },
-    {
-      "timestamp": "2026-05-30T12:28:25.451926",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:28:40.129060",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:28:51.996272",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:29:10.441841",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:29:24.498097",
-      "emotion": "energetic",
-      "topics": [
-        "work"
-      ]
-    },
-    {
-      "timestamp": "2026-05-30T12:33:30.164342",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:33:49.549291",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:34:08.162311",
-      "emotion": "neutral",
-      "topics": []
-    },
-    {
-      "timestamp": "2026-05-30T12:35:20.394304",
+      "timestamp": "2026-05-31T22:46:28.026383",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:35:37.718799",
+      "timestamp": "2026-05-31T22:48:13.652610",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:36:03.117592",
+      "timestamp": "2026-05-31T22:48:52.246784",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:36:25.013219",
+      "timestamp": "2026-05-31T22:49:26.870855",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:37:07.724035",
+      "timestamp": "2026-05-31T22:49:46.755941",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:37:44.129094",
+      "timestamp": "2026-05-31T22:50:32.399827",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:50:02.242985",
+      "timestamp": "2026-05-31T22:51:11.816015",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:50:50.145978",
+      "timestamp": "2026-05-31T22:51:33.112189",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:51:18.269108",
+      "timestamp": "2026-05-31T22:52:21.639410",
+      "emotion": "joy"
+    },
+    {
+      "timestamp": "2026-05-31T22:52:57.085352",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-05-30T12:51:50.509621",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-05-30T12:53:48.772732",
+      "timestamp": "2026-05-31T22:53:54.882199",
       "emotion": "neutral"
     }
   ]

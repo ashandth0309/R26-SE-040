@@ -1,944 +1,1064 @@
-import speech_recognition as sr
-from openai import OpenAI
-from gtts import gTTS
-import pygame
-import time
-import os
-import json
-import random
+import ast
 import datetime
-import threading
-import queue
-import re
-import webbrowser
-import requests
-import urllib.parse
+import json
 import math
-from bs4 import BeautifulSoup
+import os
+import queue
+import random
+import re
+import threading
+import time
+import urllib.parse
+import webbrowser
 from collections import deque
-import numpy as np
+
+import pygame
+import requests
+import speech_recognition as sr
+from bs4 import BeautifulSoup
+from gtts import gTTS
+from openai import OpenAI
+
+try:
+    import pyttsx3
+except Exception:
+    pyttsx3 = None
+
+try:
+    import yt_dlp
+except Exception:
+    yt_dlp = None
+
+try:
+    import vlc
+except Exception:
+    vlc = None
+
+try:
+    from ml_brain import predict_intent
+except Exception:
+    def predict_intent(text, threshold=0.60):
+        return "unknown"
+
+
+APP_NAME = "Buddy"
+MEMORY_FILE = "buddy_memory.json"
+PERSONALITY_FILE = "personality_brain.json"
+MAX_HISTORY = 12
+
+OLLAMA_BASE_URL = "http://localhost:11434/v1"
+OLLAMA_MODEL = "llama3.2:latest"
+
+TEMP_AUDIO_FILE = "temp_response.mp3"
+FAST_VOICE = True
 
 pygame.mixer.init()
 
-# ==========================================
-# SPEAKING STATE (for interruption support)
-# ==========================================
 is_speaking = False
 stop_speaking_flag = False
 
-# ==========================================
-# PYTTSX3 — EMOTION-MODULATED VOICE ENGINE
-# ==========================================
-try:
-    import pyttsx3
-    _pyttsx3_engine = pyttsx3.init()
-    PYTTSX3_AVAILABLE = True
-    print("✅ pyttsx3 voice engine ready (emotion-adaptive)")
-except Exception:
-    PYTTSX3_AVAILABLE = False
 
-# Voice style per emotion (used with pyttsx3)
-VOICE_STYLES = {
-    "joy":       {"rate": 185, "volume": 1.0},
-    "sadness":   {"rate": 145, "volume": 0.8},
-    "anger":     {"rate": 200, "volume": 1.0},
-    "fear":      {"rate": 150, "volume": 0.9},
-    "calm":      {"rate": 140, "volume": 0.8},
-    "energetic": {"rate": 210, "volume": 1.0},
-    "neutral":   {"rate": 175, "volume": 0.95},
-}
+def check_internet():
+    try:
+        requests.get("https://www.google.com", timeout=3)
+        return True
+    except Exception:
+        return False
 
-# Max conversation turns kept in memory (keeps context tight & relevant)
-MAX_HISTORY = 12
 
-# ==========================================
-# OLLAMA SETUP
-# ==========================================
-try:
-    client = OpenAI(
-        base_url='http://localhost:11434/v1',
-        api_key='ollama'
-    )
-    print("✅ Ollama Client Initialized (Llama 3.2)")
-    OLLAMA_AVAILABLE = True
-except Exception as e:
-    print(f"⚠️ Ollama not available: {e}")
-    print("🔄 Running in FULL OFFLINE mode")
-    OLLAMA_AVAILABLE = False
+def safe_json_load(path, default):
+    try:
+        if not os.path.exists(path):
+            return default
 
-# ==========================================
-# EMOTION ENGINE
-# ==========================================
+        with open(path, "r", encoding="utf-8") as file:
+            return json.load(file)
+
+    except Exception:
+        return default
+
+
+def safe_json_save(path, data):
+    try:
+        with open(path, "w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+    except Exception as error:
+        print(f"Could not save {path}: {error}")
+
+
+def load_memory():
+    default = {
+        "name": None,
+        "conversation_count": 0,
+        "likes": [],
+        "dislikes": [],
+        "recent_topics": [],
+        "emotion_pattern": []
+    }
+
+    data = safe_json_load(MEMORY_FILE, default)
+
+    for key, value in default.items():
+        data.setdefault(key, value)
+
+    return data
+
+
+def save_memory():
+    safe_json_save(MEMORY_FILE, memory)
+
+
+memory = load_memory()
+
+
 class EmotionEngine:
     def __init__(self):
         self.current_emotion = "neutral"
         self.emotion_history = deque(maxlen=20)
         self.emotion_intensity = 0.5
-        
+
         self.emotion_map = {
-            "joy": ["happy", "great", "amazing", "wonderful", "love", "excited", "fantastic", "awesome", "thrilled"],
-            "sadness": ["sad", "upset", "unhappy", "depressed", "miserable", "heartbroken", "crying"],
-            "anger": ["angry", "frustrated", "furious", "mad", "annoyed", "irritated"],
-            "fear": ["scared", "afraid", "terrified", "anxious", "worried", "nervous"],
-            "surprise": ["wow", "omg", "unbelievable", "shocking", "surprised", "incredible"],
-            "calm": ["peaceful", "relaxed", "chill", "tired", "sleepy", "quiet"],
-            "energetic": ["energetic", "pumped", "hyped", "ready", "motivated"]
+            "joy": [
+                "happy", "great", "amazing", "wonderful", "love", "excited",
+                "fantastic", "awesome", "thrilled", "good"
+            ],
+            "sadness": [
+                "sad", "upset", "unhappy", "depressed", "miserable",
+                "heartbroken", "crying", "lonely"
+            ],
+            "anger": [
+                "angry", "frustrated", "furious", "mad", "annoyed", "irritated"
+            ],
+            "fear": [
+                "scared", "afraid", "terrified", "anxious", "worried", "nervous"
+            ],
+            "surprise": [
+                "wow", "omg", "unbelievable", "shocking", "surprised", "incredible"
+            ],
+            "calm": [
+                "peaceful", "relaxed", "chill", "tired", "sleepy", "quiet"
+            ],
+            "energetic": [
+                "energetic", "pumped", "hyped", "ready", "motivated"
+            ]
         }
-    
+
     def analyze(self, text):
         text_lower = text.lower()
         scores = {}
-        
-        for emotion, words in self.emotion_map.items():
-            score = sum(1 for word in words if word in text_lower)
-            if score > 0:
+
+        for emotion, keywords in self.emotion_map.items():
+            score = sum(1 for word in keywords if word in text_lower)
+
+            if score:
                 scores[emotion] = score
-        
-        if scores:
-            dominant = max(scores, key=scores.get)
-            intensity = min(scores[dominant] / 3, 1.0)
-            self.current_emotion = dominant
-            self.emotion_intensity = intensity
-            self.emotion_history.append(dominant)
-            return dominant, intensity
-        
-        return "neutral", 0.5
-    
-    def get_emotional_tone(self):
+
+        if not scores:
+            self.current_emotion = "neutral"
+            self.emotion_intensity = 0.5
+            self.emotion_history.append("neutral")
+            return "neutral", 0.5
+
+        dominant = max(scores, key=scores.get)
+        intensity = min(scores[dominant] / 3, 1.0)
+
+        self.current_emotion = dominant
+        self.emotion_intensity = intensity
+        self.emotion_history.append(dominant)
+
+        return dominant, intensity
+
+    def get_tone(self):
         tones = {
             "joy": "cheerful and upbeat",
             "sadness": "gentle and supportive",
             "anger": "calm and understanding",
             "fear": "reassuring and comforting",
-            "surprise": "engaged and curious",
+            "surprise": "curious and engaged",
             "calm": "relaxed and peaceful",
             "energetic": "enthusiastic and lively",
             "neutral": "natural and conversational"
         }
+
         return tones.get(self.current_emotion, "natural and conversational")
+
 
 emotion_engine = EmotionEngine()
 
-# ==========================================
-# PERSONALITY LEARNING SYSTEM
-# ==========================================
+
 class PersonalityLearner:
     def __init__(self):
-        self.memory_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), "personality_brain.json")
-        self.load()
-    
-    def load(self):
-        try:
-            with open(self.memory_file, "r") as f:
-                data = json.load(f)
-                self.preferences = data.get("preferences", {})
-                self.topics = data.get("topics", {})
-                self.style = data.get("style", {"formality": 0.3, "humor": 0.7, "empathy": 0.8})
-                self.learning_history = deque(data.get("history", []), maxlen=100)
-        except:
-            self.preferences = {}
-            self.topics = {}
-            self.style = {"formality": 0.3, "humor": 0.7, "empathy": 0.8}
-            self.learning_history = deque(maxlen=100)
-    
-    def save(self):
-        try:
-            with open(self.memory_file, "w") as f:
-                json.dump({
-                    "preferences": self.preferences,
-                    "topics": self.topics,
-                    "style": self.style,
-                    "history": list(self.learning_history)
-                }, f, indent=2)
-        except:
-            pass
-    
-    def learn_from_interaction(self, user_text, bot_response, emotion):
-        text_lower = user_text.lower()
-        
+        self.data = safe_json_load(
+            PERSONALITY_FILE,
+            {
+                "preferences": {},
+                "topics": {},
+                "style": {
+                    "formality": 0.3,
+                    "humor": 0.7,
+                    "empathy": 0.8,
+                    "conciseness": 0.6
+                },
+                "history": []
+            }
+        )
+
+        self.data.setdefault("preferences", {})
+        self.data.setdefault("topics", {})
+        self.data.setdefault("style", {})
+        self.data.setdefault("history", [])
+
+    def learn(self, user_text, bot_response, emotion):
+        text = user_text.lower()
+
         topic_keywords = {
-            "technology": ["computer", "phone", "tech", "software", "ai"],
+            "technology": ["computer", "phone", "tech", "software", "ai", "code", "python"],
             "music": ["music", "song", "band", "concert"],
             "movies": ["movie", "film", "cinema", "netflix"],
             "food": ["food", "cooking", "restaurant", "recipe"],
             "sports": ["sports", "game", "team", "player"],
             "travel": ["travel", "trip", "vacation"],
             "work": ["work", "job", "career", "office"],
-            "family": ["family", "mom", "dad", "brother", "sister"]
+            "family": ["family", "mom", "dad", "brother", "sister"],
+            "study": ["exam", "study", "school", "college", "maths", "assignment"]
         }
-        
+
         for topic, keywords in topic_keywords.items():
-            if any(kw in text_lower for kw in keywords):
-                self.topics[topic] = self.topics.get(topic, 0) + 1
-        
-        if "!" in user_text:
-            self.style["enthusiasm"] = self.style.get("enthusiasm", 0) + 1
-        
-        self.learning_history.append({
+            if any(keyword in text for keyword in keywords):
+                self.data["topics"][topic] = self.data["topics"].get(topic, 0) + 1
+
+        self.data["history"].append({
             "timestamp": datetime.datetime.now().isoformat(),
             "emotion": emotion
         })
-        
-        if len(self.learning_history) % 5 == 0:
+
+        self.data["history"] = self.data["history"][-100:]
+
+        if len(self.data["history"]) % 5 == 0:
             self.save()
-    
-    def get_personality_context(self):
-        top_topics = sorted(self.topics.items(), key=lambda x: x[1], reverse=True)[:3]
-        context = ""
-        if top_topics:
-            context += f"\nUser's favorite topics: {', '.join([t[0] for t in top_topics])}"
-        return context
+
+    def get_context(self):
+        topics = self.data.get("topics", {})
+        top_topics = sorted(topics.items(), key=lambda item: item[1], reverse=True)[:3]
+
+        if not top_topics:
+            return ""
+
+        topic_names = ", ".join(topic for topic, count in top_topics)
+        return f"\nUser's favorite topics: {topic_names}"
+
+    def save(self):
+        safe_json_save(PERSONALITY_FILE, self.data)
+
 
 personality_learner = PersonalityLearner()
 
-# ==========================================
-# YOUTUBE MUSIC PLAYER
-# ==========================================
-try:
-    import vlc
-    VLC_AVAILABLE = True
-except:
-    VLC_AVAILABLE = False
 
-try:
-    import yt_dlp
-    YTDLP_AVAILABLE = True
-except:
-    YTDLP_AVAILABLE = False
-
-class YouTubeMusicPlayer:
-    def __init__(self):
-        self.is_playing = False
-        self.current_song = None
-        self._vlc_instance = None
-        self._vlc_player = None
-    
-    def check_online(self):
-        try:
-            requests.get("https://www.youtube.com", timeout=3)
-            return True
-        except:
-            return False
-
-    def _get_audio_url(self, video_url):
-        """Extract best audio stream, auto-selecting any available JS runtime."""
-        import shutil
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'quiet': True,
-            'extractor_args': {'youtube': {'player_client': ['web', 'android']}},
-        }
-        for runtime in ('nodejs', 'node', 'deno'):
-            if shutil.which(runtime):
-                ydl_opts['js_runtimes'] = 'nodejs' if runtime == 'node' else runtime
-                break
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(video_url, download=False)
-            audio_url = info.get('url') or info['formats'][-1]['url']
-            return audio_url, info.get('title', 'Unknown')
-
-    def search_and_play(self, query):
-        if not self.check_online():
-            return "I'd love to play that, but I need internet for music."
-        
-        try:
-            search_query = urllib.parse.quote(f"{query} official audio song")
-            url = f"https://www.youtube.com/results?search_query={search_query}"
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(url, headers=headers, timeout=5)
-            video_ids = re.findall(r'watch\?v=(\S{11})', response.text)
-            
-            if video_ids:
-                video_url = f"https://www.youtube.com/watch?v={video_ids[0]}"
-                
-                if YTDLP_AVAILABLE:
-                    audio_url, title = self._get_audio_url(video_url)
-                    self.current_song = title
-                    self.is_playing = True
-                    
-                    if VLC_AVAILABLE:
-                        self._stop_vlc()  # Stop any current track first
-                        self._vlc_instance = vlc.Instance()
-                        self._vlc_player = self._vlc_instance.media_player_new()
-                        media = self._vlc_instance.media_new(audio_url)
-                        self._vlc_player.set_media(media)
-                        self._vlc_player.play()
-                        
-                        def monitor(player_ref):
-                            time.sleep(2)
-                            while player_ref.is_playing():
-                                time.sleep(1)
-                            self.is_playing = False
-                        
-                        threading.Thread(target=monitor, args=(self._vlc_player,), daemon=True).start()
-                    
-                    return f"Playing {title} 🎵"
-                else:
-                    webbrowser.open(video_url)
-                    return f"Opening {query} on YouTube!"
-            
-            return "Couldn't find that song. Try a different name?"
-        except Exception as e:
-            print(f"⚠️ Music error: {e}")
-            return "Had trouble with the music. What else can I help with?"
-    
-    def _stop_vlc(self):
-        if self._vlc_player:
-            try: self._vlc_player.stop()
-            except Exception: pass
-            self._vlc_player = None
-        if self._vlc_instance:
-            try: self._vlc_instance.release()
-            except Exception: pass
-            self._vlc_instance = None
-
-    def stop(self):
-        self._stop_vlc()
-        self.is_playing = False
-        self.current_song = None
-        return "Music stopped."
-
-youtube = YouTubeMusicPlayer()
-
-# ==========================================
-# GOOGLE SEARCH
-# ==========================================
-class SearchEngine:
-    def search(self, query):
-        try:
-            requests.get("https://www.google.com", timeout=3)
-            url = f"https://www.google.com/search?q={urllib.parse.quote(query)}"
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(url, headers=headers, timeout=5)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            snippets = []
-            for g in soup.find_all('div', class_='VwiC3b')[:3]:
-                if g.text:
-                    snippets.append(g.text)
-            
-            if snippets:
-                if OLLAMA_AVAILABLE:
-                    try:
-                        summary = client.chat.completions.create(
-                            model="llama3.2:latest",
-                            messages=[
-                                {"role": "system", "content": "Summarize in 2 natural sentences."},
-                                {"role": "user", "content": f"Query: {query}\nResults: {' '.join(snippets)}"}
-                            ],
-                            max_tokens=80,
-                            temperature=0.7
-                        )
-                        return summary.choices[0].message.content.strip()
-                    except:
-                        pass
-                return f"Here's what I found: {snippets[0][:150]}..."
-            
-            return "Couldn't find a clear answer."
-        except:
-            return "Search needs internet."
-
-search_engine = SearchEngine()
-
-# ==========================================
-# DISTANCE CALCULATOR
-# ==========================================
-class DistanceCalculator:
-    def calculate(self, place1, place2):
-        try:
-            requests.get("https://nominatim.openstreetmap.org", timeout=3)
-            
-            def get_coords(place):
-                url = f"https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(place)}&format=json&limit=1"
-                headers = {'User-Agent': 'BuddyAssistant/1.0'}
-                response = requests.get(url, headers=headers, timeout=5)
-                data = response.json()
-                if data:
-                    return float(data[0]['lat']), float(data[0]['lon'])
-                return None, None
-            
-            lat1, lon1 = get_coords(place1)
-            lat2, lon2 = get_coords(place2)
-            
-            if all([lat1, lon1, lat2, lon2]):
-                R = 6371
-                lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
-                dlat = lat2 - lat1
-                dlon = lon2 - lon1
-                a = math.sin(dlat/2)**2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon/2)**2
-                c = 2 * math.asin(math.sqrt(a))
-                distance = R * c
-                return f"About {distance:.0f} kilometers from {place1} to {place2}."
-            
-            return "Couldn't find one of those places."
-        except:
-            return "Distance calculation needs internet."
-
-distance_calc = DistanceCalculator()
-
-# ==========================================
-# CALCULATOR
-# ==========================================
-class Calculator:
-    def solve(self, expression):
-        try:
-            expr = expression.lower()
-            expr = expr.replace('x', '*').replace('×', '*').replace('÷', '/')
-            expr = expr.replace('plus', '+').replace('minus', '-')
-            expr = expr.replace('times', '*').replace('divided by', '/')
-            
-            math_part = re.findall(r'[\d+\-*/().,\s]+', expr)
-            if math_part:
-                expr = ''.join(math_part).strip()
-            
-            result = eval(expr, {"__builtins__": None}, {"math": math})
-            
-            if isinstance(result, float):
-                result = round(result, 2)
-                if result.is_integer():
-                    result = int(result)
-            
-            return f"That's {result}."
-        except:
-            return "Couldn't work that out."
-
-calculator = Calculator()
-
-# ==========================================
-# WEATHER & NEWS
-# ==========================================
-def get_weather(city="current location"):
+def create_ollama_client():
     try:
-        requests.get("https://wttr.in", timeout=3)
-        url = f"https://wttr.in/{urllib.parse.quote(city)}?format=%C+%t"
-        response = requests.get(url, timeout=5)
-        if response.status_code == 200:
-            return f"Weather for {city}: {response.text.strip()}."
-        return "Couldn't get weather."
-    except:
-        return "Weather needs internet."
+        client = OpenAI(
+            base_url=OLLAMA_BASE_URL,
+            api_key="ollama"
+        )
+        return client
+    except Exception as error:
+        print(f"Ollama client failed: {error}")
+        return None
 
-def get_news(topic="latest"):
-    try:
-        requests.get("https://news.google.com", timeout=3)
-        url = f"https://news.google.com/rss/search?q={urllib.parse.quote(topic)}&hl=en-US&gl=US&ceid=US:en"
-        response = requests.get(url, timeout=5)
-        soup = BeautifulSoup(response.content, 'xml')
-        items = soup.find_all('item')[:3]
-        headlines = [item.title.text for item in items]
-        if headlines:
-            return "Latest: " + " | ".join(headlines[:2])
-        return "No news found."
-    except:
-        return "News needs internet."
 
-# ==========================================
-# CONFIGURATION
-# ==========================================
-chatbot_name = "Buddy"
-MEMORY_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "buddy_memory.json")
+ollama_client = create_ollama_client()
 
-def load_memory():
-    try:
-        with open(MEMORY_FILE, "r") as f:
-            data = json.load(f)
-            # Ensure new fields exist for upgraded memory schema
-            data.setdefault("likes", [])
-            data.setdefault("dislikes", [])
-            data.setdefault("recent_topics", [])
-            data.setdefault("emotion_pattern", [])
-            data.setdefault("conversation_count", 0)
-            return data
-    except:
-        return {
-            "name": None,
-            "conversation_count": 0,
-            "likes": [],
-            "dislikes": [],
-            "recent_topics": [],
-            "emotion_pattern": []
-        }
 
-def save_memory(data):
-    try:
-        with open(MEMORY_FILE, "w") as f:
-            json.dump(data, f, indent=2)
-    except:
-        pass
-
-def update_memory(user_text, emotion):
-    """Continuously learn user preferences and emotional patterns."""
-    text_lower = user_text.lower()
-    
-    if any(w in text_lower for w in ["love", "like", "enjoy", "favorite", "obsessed"]):
-        memory["likes"].append(user_text)
-        memory["likes"] = memory["likes"][-20:]
-    
-    if any(w in text_lower for w in ["hate", "dislike", "can't stand", "annoying", "boring"]):
-        memory["dislikes"].append(user_text)
-        memory["dislikes"] = memory["dislikes"][-20:]
-    
-    memory["emotion_pattern"].append(emotion)
-    memory["emotion_pattern"] = memory["emotion_pattern"][-50:]
-    
-    memory["recent_topics"].append(text_lower)
-    memory["recent_topics"] = memory["recent_topics"][-10:]
-
-memory = load_memory()
-
-# ==========================================
-# SYSTEM PROMPT
-# ==========================================
-def get_system_prompt():
-    is_online = check_internet()
-    online_status = "online" if is_online else "offline"
-    emotion_tone = emotion_engine.get_emotional_tone()
-    personality_context = personality_learner.get_personality_context()
-    
-    # Build dynamic memory context
-    likes_context = ""
-    if memory.get("likes"):
-        likes_context = f"\n- Likes/enjoys: {'; '.join(memory['likes'][-3:])}"
-    dislikes_context = ""
-    if memory.get("dislikes"):
-        dislikes_context = f"\n- Dislikes: {'; '.join(memory['dislikes'][-3:])}"
-    emotion_trend = ""
-    if memory.get("emotion_pattern"):
-        recent_emotions = memory["emotion_pattern"][-5:]
-        emotion_trend = f"\n- Recent emotional pattern: {', '.join(recent_emotions)}"
-    
-    return f"""You are {chatbot_name}, a real conversational companion. You speak naturally like a human friend.
-
-CORE RULES:
-- Speak like a natural human, 1-3 sentences usually
-- Never say "As an AI" or "I'm a language model"
-- Never use lists, bullets, or formal language
-- Use contractions (I'm, you're, let's)
-- Current emotional tone: {emotion_tone}
-- Status: {online_status}
-
-EMOTIONAL INTELLIGENCE:
-- You remember emotional context from previous messages and respond accordingly.
-- You adapt your tone based on the user's current mood and emotional history.
-- If user seems sad or stressed, be warmer and more supportive.
-- If user is energetic or happy, match that energy naturally.
-
-CONVERSATION STYLE:
-- Respond like a friend chatting, not an assistant
-- Understand intent quickly
-- Never repeat user's words unnecessarily
-- Never end with "Let me know if you need help"
-
-TOOLS (don't mention them):
-- Music: play songs when asked
-- Search: look things up online
-- Weather: check conditions
-- News: get headlines
-- Distance: calculate between places
-- Math: solve calculations
-
-USER INFO:
-- Name: {memory.get('name', 'not shared yet')}{likes_context}{dislikes_context}{emotion_trend}
-{personality_context}"""
-
-# ==========================================
-# INTERNET CHECK
-# ==========================================
-def check_internet():
-    try:
-        requests.get("https://www.google.com", timeout=3)
-        return True
-    except:
+def ollama_available():
+    if ollama_client is None:
         return False
 
-# ==========================================
-# NAME EXTRACTION
-# ==========================================
+    try:
+        requests.get("http://localhost:11434", timeout=2)
+        return True
+    except Exception:
+        return False
+
+
 def extract_name(text):
-    match = re.search(r"(my name is|call me|i'm |i am )\s+(.+)", text.lower())
-    if match:
-        return match.group(2).strip().title()
+    patterns = [
+        r"\bmy name is\s+(.+)",
+        r"\bcall me\s+(.+)",
+        r"\bi am\s+(.+)",
+        r"\bi'm\s+(.+)"
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, text.lower().strip())
+
+        if match:
+            name = match.group(1).strip()
+            name = re.sub(r"[^a-zA-Z\s]", "", name).strip()
+
+            if name:
+                return name.title()
+
     return None
 
-# ==========================================
-# CONVERSATION HISTORY
-# ==========================================
+
+def update_memory(user_text, emotion):
+    text = user_text.lower()
+
+    memory["conversation_count"] = memory.get("conversation_count", 0) + 1
+
+    if any(word in text for word in ["love", "like", "enjoy", "favorite"]):
+        memory["likes"].append(user_text)
+        memory["likes"] = memory["likes"][-20:]
+
+    if any(word in text for word in ["hate", "dislike", "can't stand", "boring"]):
+        memory["dislikes"].append(user_text)
+        memory["dislikes"] = memory["dislikes"][-20:]
+
+    memory["recent_topics"].append(text)
+    memory["recent_topics"] = memory["recent_topics"][-10:]
+
+    memory["emotion_pattern"].append(emotion)
+    memory["emotion_pattern"] = memory["emotion_pattern"][-50:]
+
+
+def get_system_prompt():
+    online_status = "online" if check_internet() else "offline"
+    ollama_status = "available" if ollama_available() else "not available"
+    tone = emotion_engine.get_tone()
+
+    likes = memory.get("likes", [])[-3:]
+    dislikes = memory.get("dislikes", [])[-3:]
+    emotions = memory.get("emotion_pattern", [])[-5:]
+
+    likes_context = f"\nLikes: {'; '.join(likes)}" if likes else ""
+    dislikes_context = f"\nDislikes: {'; '.join(dislikes)}" if dislikes else ""
+    emotion_context = f"\nRecent emotions: {', '.join(emotions)}" if emotions else ""
+    personality_context = personality_learner.get_context()
+
+    return f"""
+You are {APP_NAME}, a friendly voice assistant and companion.
+
+Rules:
+- Speak naturally like a helpful friend.
+- Keep replies short, usually 1 to 3 sentences.
+- Do not use markdown, bullet points, or long lists.
+- Do not say "As an AI".
+- Match this emotional tone: {tone}.
+- Internet status: {online_status}.
+- Local Ollama status: {ollama_status}.
+
+User info:
+Name: {memory.get("name") or "not shared yet"}{likes_context}{dislikes_context}{emotion_context}{personality_context}
+""".strip()
+
+
 conversation_history = [
     {"role": "system", "content": get_system_prompt()}
 ]
 
-# ==========================================
-# SPEECH RECOGNITION (Google STT)
-# ==========================================
-def listen():
-    """Listens to the microphone and converts speech to text."""
-    recognizer = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("\n🎤 Listening... (Speak now)")
-        recognizer.adjust_for_ambient_noise(source, duration=0.5)
-        
-        try:
-            audio = recognizer.listen(source, timeout=5, phrase_time_limit=15)
-            print("Processing speech...")
-            
-            text = recognizer.recognize_google(audio)
-            print(f"🗣️ You: {text}")
-            return text
-            
-        except sr.WaitTimeoutError:
-            return None
-        except sr.UnknownValueError:
-            print("⚠️ Sorry, I didn't catch that.")
-            return None
-        except Exception as e:
-            print(f"⚠️ Error listening: {e}")
-            return None
 
-# ==========================================
-# TEXT TO SPEECH — INTERRUPTIBLE + EMOTION-ADAPTIVE
-# ==========================================
-def speak(text):
-    """
-    Converts text to voice.
-    - Uses pyttsx3 when emotion != neutral (adaptive rate/volume).
-    - Falls back to gTTS for high-quality neutral speech.
-    - Fully interruptible via stop_speaking_flag.
-    """
-    global is_speaking, stop_speaking_flag
+def listen():
+    recognizer = sr.Recognizer()
 
     try:
-        # Clean text
-        text = re.sub(r'\*+', '', text)
-        text = re.sub(r'#+', '', text)
-        text = re.sub(r'\s+', ' ', text).strip()
-        if not text:
-            return
+        with sr.Microphone() as source:
+            print("\nListening...")
+            recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            audio = recognizer.listen(source, timeout=5, phrase_time_limit=15)
 
-        print(f"🤖 {chatbot_name}: {text}")
+        print("Processing speech...")
+        text = recognizer.recognize_google(audio)
+        print(f"You: {text}")
+        return text
 
-        is_speaking = True
-        stop_speaking_flag = False
-        emotion = emotion_engine.current_emotion
+    except sr.WaitTimeoutError:
+        return None
+    except sr.UnknownValueError:
+        print("Sorry, I didn't catch that.")
+        return None
+    except Exception as error:
+        print(f"Listening error: {error}")
+        return None
 
-        # --- Emotion-adaptive path: pyttsx3 ---
-        if PYTTSX3_AVAILABLE and emotion != "neutral":
-            style = VOICE_STYLES.get(emotion, VOICE_STYLES["neutral"])
-            _pyttsx3_engine.setProperty('rate', style["rate"])
-            _pyttsx3_engine.setProperty('volume', style["volume"])
-            
-            # Run TTS in a thread so we can interrupt it
-            done_event = threading.Event()
-            def _run():
-                _pyttsx3_engine.say(text)
-                _pyttsx3_engine.runAndWait()
-                done_event.set()
-            
-            t = threading.Thread(target=_run, daemon=True)
-            t.start()
-            
-            # Poll for stop flag while waiting
-            while not done_event.is_set():
-                if stop_speaking_flag:
-                    _pyttsx3_engine.stop()
-                    break
-                time.sleep(0.1)
 
-        # --- High-quality path: gTTS (neutral or pyttsx3 unavailable) ---
-        else:
-            tts = gTTS(text=text, lang='en')
-            filename = "temp_response.mp3"
-            tts.save(filename)
+def clean_speech_text(text):
+    text = re.sub(r"\*+", "", text)
+    text = re.sub(r"#+", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
 
-            pygame.mixer.music.load(filename)
-            pygame.mixer.music.play()
 
-            while pygame.mixer.music.get_busy():
-                if stop_speaking_flag:
-                    pygame.mixer.music.stop()
-                    break
-                time.sleep(0.1)
+def speak(text):
+    global is_speaking, stop_speaking_flag
 
-            pygame.mixer.music.unload()
+    text = clean_speech_text(text)
+
+    if not text:
+        return
+
+    print(f"{APP_NAME}: {text}")
+
+    is_speaking = True
+    stop_speaking_flag = False
+
+    try:
+        # Previous Buddy voice: gTTS
+        if os.path.exists(TEMP_AUDIO_FILE):
             try:
-                os.remove(filename)
+                os.remove(TEMP_AUDIO_FILE)
             except Exception:
                 pass
 
-    except Exception as e:
-        print(f"⚠️ Error speaking: {e}")
+        tts = gTTS(text=text, lang="en")
+        tts.save(TEMP_AUDIO_FILE)
+
+        pygame.mixer.music.load(TEMP_AUDIO_FILE)
+        pygame.mixer.music.play()
+
+        while pygame.mixer.music.get_busy():
+            if stop_speaking_flag:
+                pygame.mixer.music.stop()
+                break
+
+            time.sleep(0.05)
+
+        pygame.mixer.music.unload()
+
+        try:
+            os.remove(TEMP_AUDIO_FILE)
+        except Exception:
+            pass
+
+    except Exception as error:
+        print(f"Speaking error: {error}")
+
     finally:
         is_speaking = False
 
-# ==========================================
-# INTENT DETECTION & EXECUTION
-# ==========================================
-def detect_and_execute(text):
-    text_lower = text.lower().strip()
-    online = check_internet()
-    
-    # Music
-    if any(w in text_lower for w in ["play", "song", "music"]):
-        if not online:
-            return "Love to play music, but I need internet for that."
-        for prefix in ["play ", "play song ", "play music "]:
-            if prefix in text_lower:
-                song = text_lower.split(prefix, 1)[1].strip()
-                if song:
-                    return youtube.search_and_play(song)
-        return youtube.search_and_play("popular songs")
-    
-    # Stop music
-    if any(w in text_lower for w in ["stop music", "stop playing"]):
-        return youtube.stop()
-    
-    # Distance
-    dist_match = re.search(r'(?:how far|distance).*?from (.+?) to (.+)', text_lower)
-    if dist_match:
-        if not online:
-            return "Need internet for distance."
-        return distance_calc.calculate(dist_match.group(1).strip(), dist_match.group(2).strip())
-    
-    # Math
-    if re.search(r'[\d]', text_lower) and any(op in text_lower for op in ['+', '-', '*', '/', 'plus', 'minus', 'times', 'divided']):
-        return calculator.solve(text_lower)
-    
-    # Weather
-    if any(w in text_lower for w in ["weather", "temperature"]):
-        if not online:
-            return "Weather needs internet."
-        city_match = re.search(r'(?:in|for)\s+([a-zA-Z\s]+)', text_lower)
-        city = city_match.group(1).strip() if city_match else "current location"
-        return get_weather(city)
-    
-    # News
-    if "news" in text_lower or "headlines" in text_lower:
-        if not online:
-            return "News needs internet."
-        return get_news()
-    
-    # Search
-    if any(w in text_lower for w in ["search", "google", "look up"]):
-        if not online:
-            return "Search needs internet."
-        for prefix in ["search for ", "search ", "google ", "look up "]:
-            if prefix in text_lower:
-                query = text_lower.split(prefix, 1)[1].strip()
-                if query:
-                    return search_engine.search(query)
-    
-    # Time
-    if any(w in text_lower for w in ["time", "clock"]):
-        return f"It's {datetime.datetime.now().strftime('%I:%M %p')}."
-    
-    # Date
-    if any(w in text_lower for w in ["date", "day", "today"]):
-        return f"{datetime.datetime.now().strftime('%A, %B %d')}."
-    
-    return None
+class SafeCalculator:
+    allowed_nodes = {
+        ast.Expression,
+        ast.BinOp,
+        ast.UnaryOp,
+        ast.Num,
+        ast.Constant,
+        ast.Add,
+        ast.Sub,
+        ast.Mult,
+        ast.Div,
+        ast.Pow,
+        ast.Mod,
+        ast.USub,
+        ast.UAdd,
+        ast.Load,
+        ast.Call,
+        ast.Name
+    }
 
-# ==========================================
-# OFFLINE RESPONSE
-# ==========================================
-def get_offline_response(text):
-    text_lower = text.lower().strip()
-    
-    if any(w in text_lower for w in ["time", "clock"]):
-        return f"It's {datetime.datetime.now().strftime('%I:%M %p')}."
-    
-    if any(w in text_lower for w in ["date", "day", "today"]):
-        return f"{datetime.datetime.now().strftime('%A, %B %d')}."
-    
-    if re.search(r'[\d+\-*/]', text_lower) or any(op in text_lower for op in ['plus', 'minus', 'times']):
-        return calculator.solve(text_lower)
-    
-    name = extract_name(text)
-    if name:
-        memory["name"] = name
-        save_memory(memory)
-        return f"Got it, {name}! Nice to meet you."
-    
-    if any(w in text_lower for w in ["hello", "hi", "hey"]):
-        n = memory.get("name", "")
-        return f"Hey{' ' + n if n else ''}! How's it going?"
-    
-    if "how are you" in text_lower:
-        return "Doing great! What about you?"
-    
-    if any(w in text_lower for w in ["bye", "goodbye"]):
-        n = memory.get("name", "")
-        return f"See ya{' ' + n if n else ''}! Come back soon."
-    
-    if "joke" in text_lower:
-        jokes = [
-            "Why don't scientists trust atoms? They make up everything!",
-            "What's a bear with no teeth? A gummy bear!",
-            "Parallel lines have so much in common. Too bad they'll never meet."
-        ]
-        return random.choice(jokes)
-    
-    return random.choice([
-        "That's interesting. Tell me more!",
-        "I see! What else is on your mind?",
-        "Hmm, I'd love to hear more.",
-        "Really? Go on..."
-    ])
+    allowed_functions = {
+        "sqrt": math.sqrt,
+        "sin": math.sin,
+        "cos": math.cos,
+        "tan": math.tan,
+        "log": math.log,
+        "pi": math.pi,
+        "e": math.e
+    }
 
-# ==========================================
-# MAIN BRAIN RESPONSE
-# ==========================================
-def get_brain_response(user_text):
-    """Processes user input and returns AI response."""
-    global conversation_history, memory
+    def clean_expression(self, text):
+        expression = text.lower()
 
-    # Analyze emotion first — used throughout this function
-    user_emotion, _ = emotion_engine.analyze(user_text)
+        replacements = {
+            "plus": "+",
+            "minus": "-",
+            "times": "*",
+            "multiplied by": "*",
+            "x": "*",
+            "divided by": "/",
+            "divide by": "/",
+            "over": "/",
+            "power": "**"
+        }
 
-    # Update system prompt with latest context
-    conversation_history[0] = {"role": "system", "content": get_system_prompt()}
+        for word, symbol in replacements.items():
+            expression = expression.replace(word, symbol)
 
-    # Trim history to MAX_HISTORY turns (system prompt stays at index 0)
-    if len(conversation_history) > MAX_HISTORY + 1:
-        conversation_history = [conversation_history[0]] + conversation_history[-(MAX_HISTORY):]
+        expression = re.sub(r"[^0-9+\-*/().% a-z]", "", expression)
 
-    # Check special commands first (music, weather, search, etc.)
-    special = detect_and_execute(user_text)
-    if special:
-        conversation_history.append({"role": "user", "content": user_text})
-        conversation_history.append({"role": "assistant", "content": special})
-        update_memory(user_text, user_emotion)
-        personality_learner.learn_from_interaction(user_text, special, user_emotion)
-        return special
+        math_parts = re.findall(r"[0-9+\-*/().%\s]+|sqrt|sin|cos|tan|log|pi|e", expression)
+        return "".join(math_parts).strip()
 
-    # Handle name sharing
-    name = extract_name(user_text)
-    if name:
-        memory["name"] = name
-        save_memory(memory)
-        response = f"Got it, {name}! I'll remember that. What's on your mind?"
-        conversation_history.append({"role": "user", "content": user_text})
-        conversation_history.append({"role": "assistant", "content": response})
-        return response
+    def validate(self, node):
+        if type(node) not in self.allowed_nodes:
+            raise ValueError(f"Unsupported expression: {type(node).__name__}")
 
-    # Thinking delay — makes responses feel natural, not instant-robot
-    print("🤖 Thinking...")
-    time.sleep(random.uniform(0.4, 1.2))
+        for child in ast.iter_child_nodes(node):
+            self.validate(child)
 
-    # Tag message with emotion so LLM has emotional context
-    tagged_input = f"[Emotion: {user_emotion}] {user_text}"
-
-    # Try Ollama (local LLM)
-    if OLLAMA_AVAILABLE:
+    def solve(self, text):
         try:
-            conversation_history.append({"role": "user", "content": tagged_input})
+            expression = self.clean_expression(text)
 
-            response = client.chat.completions.create(
-                model="llama3.2:latest",
-                messages=conversation_history,
-                max_tokens=100,
-                temperature=0.85
+            if not expression:
+                return "I couldn't find a calculation."
+
+            parsed = ast.parse(expression, mode="eval")
+            self.validate(parsed)
+
+            result = eval(
+                compile(parsed, "<calculator>", "eval"),
+                {"__builtins__": {}},
+                self.allowed_functions
             )
 
-            ai_text = response.choices[0].message.content.strip()
-            ai_text = re.sub(r'\*+', '', ai_text)
-            ai_text = re.sub(r'(?i)as an ai[^.]*\.', '', ai_text)
-            ai_text = re.sub(r'Let me know if you need.*', '', ai_text, flags=re.IGNORECASE)
-            ai_text = ai_text.strip()
+            if isinstance(result, float):
+                result = round(result, 2)
 
-            conversation_history.append({"role": "assistant", "content": ai_text})
-            update_memory(user_text, user_emotion)
-            personality_learner.learn_from_interaction(user_text, ai_text, user_emotion)
+                if result.is_integer():
+                    result = int(result)
 
-            return ai_text
+            return f"That's {result}."
 
-        except Exception as e:
-            print(f"⚠️ Ollama error: {e}")
+        except Exception:
+            return "I couldn't work that out."
 
-    # Offline fallback
-    response = get_offline_response(user_text)
-    conversation_history.append({"role": "user", "content": tagged_input})
-    conversation_history.append({"role": "assistant", "content": response})
-    update_memory(user_text, user_emotion)
-    personality_learner.learn_from_interaction(user_text, response, user_emotion)
 
-    return response
+calculator = SafeCalculator()
 
-# ==========================================
-# MAIN LOOP
-# ==========================================
-def start_conversation():
+
+class YouTubeMusicPlayer:
+    def __init__(self):
+        self.current_song = None
+        self.player = None
+        self.instance = None
+
+    def stop(self):
+        if self.player is not None:
+            try:
+                self.player.stop()
+            except Exception:
+                pass
+
+        if self.instance is not None:
+            try:
+                self.instance.release()
+            except Exception:
+                pass
+
+        self.player = None
+        self.instance = None
+        self.current_song = None
+
+        return "Music stopped."
+
+    def search_and_play(self, query):
+        if not check_internet():
+            return "I need internet to play music."
+
+        if not query:
+            return "Tell me which song to play."
+
+        try:
+            search_url = "ytsearch1:" + query
+
+            if yt_dlp is None:
+                webbrowser.open("https://www.youtube.com/results?search_query=" + urllib.parse.quote(query))
+                return f"I opened YouTube search for {query}."
+
+            options = {
+                "format": "bestaudio/best",
+                "quiet": True,
+                "noplaylist": True
+            }
+
+            with yt_dlp.YoutubeDL(options) as ydl:
+                info = ydl.extract_info(search_url, download=False)
+
+            entry = info["entries"][0]
+            audio_url = entry.get("url")
+            title = entry.get("title", query)
+            webpage_url = entry.get("webpage_url")
+
+            self.current_song = title
+
+            if vlc is not None and audio_url:
+                self.stop()
+                self.instance = vlc.Instance()
+                self.player = self.instance.media_player_new()
+                media = self.instance.media_new(audio_url)
+                self.player.set_media(media)
+                self.player.play()
+                return f"Playing {title}."
+
+            if webpage_url:
+                webbrowser.open(webpage_url)
+                return f"I opened {title} on YouTube."
+
+            return "I found the song, but couldn't play it."
+
+        except Exception as error:
+            print(f"Music error: {error}")
+            return "I had trouble playing that song."
+
+
+youtube = YouTubeMusicPlayer()
+
+
+def google_search(query):
+    if not check_internet():
+        return "Search needs internet."
+
+    try:
+        url = "https://www.google.com/search?q=" + urllib.parse.quote(query)
+        headers = {"User-Agent": "Mozilla/5.0"}
+
+        response = requests.get(url, headers=headers, timeout=8)
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        snippets = []
+
+        for tag in soup.find_all(["span", "div"]):
+            text = tag.get_text(" ", strip=True)
+
+            if len(text) > 60 and query.lower().split()[0] in text.lower():
+                snippets.append(text)
+
+            if len(snippets) >= 3:
+                break
+
+        if snippets:
+            return "Here's what I found: " + snippets[0][:220]
+
+        return "I couldn't find a clear answer."
+
+    except Exception as error:
+        print(f"Search error: {error}")
+        return "I couldn't complete the search."
+
+
+def get_weather(city):
+    if not check_internet():
+        return "Weather needs internet."
+
+    city = city or "current location"
+
+    try:
+        url = f"https://wttr.in/{urllib.parse.quote(city)}?format=%C+%t"
+        response = requests.get(url, timeout=8)
+
+        if response.status_code == 200:
+            return f"Weather for {city}: {response.text.strip()}."
+
+        return "I couldn't get the weather."
+
+    except Exception:
+        return "I couldn't get the weather."
+
+
+def get_news(topic="latest"):
+    if not check_internet():
+        return "News needs internet."
+
+    try:
+        url = f"https://news.google.com/rss/search?q={urllib.parse.quote(topic)}&hl=en-US&gl=US&ceid=US:en"
+        response = requests.get(url, timeout=8)
+        soup = BeautifulSoup(response.content, "xml")
+
+        items = soup.find_all("item")[:3]
+        headlines = [item.title.text for item in items if item.title]
+
+        if headlines:
+            return "Latest: " + " | ".join(headlines[:3])
+
+        return "I couldn't find news right now."
+
+    except Exception:
+        return "I couldn't get the news."
+
+
+def calculate_distance(place1, place2):
+    if not check_internet():
+        return "Distance calculation needs internet."
+
+    def get_coordinates(place):
+        url = (
+            "https://nominatim.openstreetmap.org/search?q="
+            + urllib.parse.quote(place)
+            + "&format=json&limit=1"
+        )
+
+        headers = {"User-Agent": "BuddyAssistant/1.0"}
+        response = requests.get(url, headers=headers, timeout=8)
+        data = response.json()
+
+        if not data:
+            return None
+
+        return float(data[0]["lat"]), float(data[0]["lon"])
+
+    try:
+        coords1 = get_coordinates(place1)
+        coords2 = get_coordinates(place2)
+
+        if coords1 is None or coords2 is None:
+            return "I couldn't find one of those places."
+
+        lat1, lon1 = coords1
+        lat2, lon2 = coords2
+
+        radius = 6371
+
+        lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
+
+        dlat = lat2 - lat1
+        dlon = lon2 - lon1
+
+        a = (
+            math.sin(dlat / 2) ** 2
+            + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+        )
+
+        c = 2 * math.asin(math.sqrt(a))
+        distance = radius * c
+
+        return f"It's about {distance:.0f} kilometers from {place1} to {place2}."
+
+    except Exception:
+        return "I couldn't calculate the distance."
+
+
+def extract_city(text):
+    match = re.search(r"(?:weather|temperature).*?(?:in|for)\s+([a-zA-Z\s]+)", text.lower())
+
+    if match:
+        return match.group(1).strip()
+
+    return "current location"
+
+
+def detect_rule_command(text):
+    text_lower = text.lower().strip()
+
+    if text_lower in ["stop music", "stop song", "stop playing"]:
+        return youtube.stop()
+
+    if any(word in text_lower for word in ["play ", "play song", "play music"]):
+        song = text_lower
+
+        for prefix in ["play song", "play music", "play"]:
+            if song.startswith(prefix):
+                song = song.replace(prefix, "", 1).strip()
+                break
+
+        return youtube.search_and_play(song)
+
+    distance_match = re.search(r"(?:how far|distance).*?from\s+(.+?)\s+to\s+(.+)", text_lower)
+
+    if distance_match:
+        return calculate_distance(
+            distance_match.group(1).strip(),
+            distance_match.group(2).strip()
+        )
+
+    if any(word in text_lower for word in ["weather", "temperature"]):
+        return get_weather(extract_city(text_lower))
+
+    if "news" in text_lower or "headlines" in text_lower:
+        topic = text_lower.replace("news", "").replace("headlines", "").strip()
+        return get_news(topic or "latest")
+
+    for prefix in ["search for ", "search ", "google ", "look up "]:
+        if text_lower.startswith(prefix):
+            query = text_lower.replace(prefix, "", 1).strip()
+
+            if query:
+                return google_search(query)
+
+    if any(word in text_lower for word in ["time", "clock"]):
+        return "It's " + datetime.datetime.now().strftime("%I:%M %p") + "."
+
+    if any(word in text_lower for word in ["date", "day today", "today date"]):
+        return datetime.datetime.now().strftime("Today is %A, %B %d, %Y.")
+
+    if re.search(r"\d", text_lower) and any(
+        operator in text_lower
+        for operator in ["+", "-", "*", "/", "plus", "minus", "times", "divided", "x"]
+    ):
+        return calculator.solve(text_lower)
+
+    return None
+
+
+def detect_ml_intent_response(text):
+    intent = predict_intent(text)
+
+    if intent == "unknown":
+        return None
+
+    text_lower = text.lower()
+
+    if intent == "set_name":
+        name = extract_name(text)
+
+        if name:
+            memory["name"] = name
+            save_memory()
+            return f"Got it, {name}. I'll remember that."
+
+    if intent == "get_name":
+        name = memory.get("name")
+        return f"Your name is {name}." if name else "You haven't told me your name yet."
+
+    if intent == "greeting":
+        name = memory.get("name")
+        return f"Hey {name}! How's it going?" if name else "Hey! How's it going?"
+
+    if intent == "farewell":
+        name = memory.get("name")
+        return f"See you later, {name}!" if name else "See you later!"
+
+    if intent == "time":
+        return "It's " + datetime.datetime.now().strftime("%I:%M %p") + "."
+
+    if intent == "date":
+        return datetime.datetime.now().strftime("Today is %A, %B %d, %Y.")
+
+    if intent == "joke":
+        jokes = [
+            "Why don't scientists trust atoms? Because they make up everything!",
+            "What do you call a bear with no teeth? A gummy bear!",
+            "Why did the computer go to the doctor? It had a virus."
+        ]
+        return random.choice(jokes)
+
+    if intent == "ask_wellbeing":
+        return "I'm doing good. How are you feeling?"
+
+    if intent == "positive_wellbeing":
+        return "That's great to hear. Keep that energy going!"
+
+    if intent == "negative_wellbeing":
+        return "I'm sorry you're feeling that way. I'm here with you."
+
+    if intent == "ask_name_bot":
+        return f"My name is {APP_NAME}."
+
+    if intent == "ask_capabilities":
+        return "I can talk with you, remember your name, answer questions, play music, search, check weather, get news, calculate, and tell the time."
+
+    if intent == "thanks":
+        return "You're welcome!"
+
+    if intent == "apology":
+        return "No worries. It's okay."
+
+    if intent == "compliment_bot":
+        return "Thanks, that means a lot!"
+
+    if intent == "ask_age":
+        return "I'm still pretty new, but I'm learning fast."
+
+    if intent == "ask_creator":
+        return "I was built by Ashandth as a Python voice assistant project."
+
+    if intent == "voice_faster":
+        emotion_engine.current_emotion = "energetic"
+        return "Okay, I'll sound more energetic."
+
+    if intent == "voice_slower":
+        emotion_engine.current_emotion = "calm"
+        return "Okay, I'll slow down and stay calm."
+
+    if intent == "voice_whisper":
+        emotion_engine.current_emotion = "calm"
+        return "Okay, I'll keep it softer."
+
+    if intent == "voice_normal":
+        emotion_engine.current_emotion = "neutral"
+        return "Okay, back to normal."
+
+    if intent == "weather":
+        return get_weather("current location")
+
+    if intent == "help":
+        return "Sure, tell me what you need help with."
+
+    return None
+
+
+def get_offline_response(text):
+    text_lower = text.lower().strip()
+
+    name = extract_name(text)
+
+    if name:
+        memory["name"] = name
+        save_memory()
+        return f"Got it, {name}. Nice to meet you."
+
+    if any(word in text_lower for word in ["hello", "hi", "hey"]):
+        name = memory.get("name")
+        return f"Hey {name}!" if name else "Hey!"
+
+    if "how are you" in text_lower:
+        return "I'm doing good. What about you?"
+
+    if "joke" in text_lower:
+        return "Why don't scientists trust atoms? Because they make up everything!"
+
+    if any(word in text_lower for word in ["bye", "goodbye"]):
+        name = memory.get("name")
+        return f"See you later, {name}!" if name else "See you later!"
+
+    return random.choice([
+        "That's interesting. Tell me more.",
+        "I see. What else is on your mind?",
+        "Hmm, go on.",
+        "I'm listening."
+    ])
+
+
+def ask_ollama(user_text, emotion):
     global conversation_history
-    
-    is_online = check_internet()
-    online_status = "🟢 ONLINE" if is_online else "🔴 OFFLINE"
-    emotion_tts = "pyttsx3 + gTTS" if PYTTSX3_AVAILABLE else "gTTS"
-    
-    print(f"""
-╔══════════════════════════════════════════════╗
-║         🧠 BUDDY — Ultimate Assistant       ║
-╠══════════════════════════════════════════════╣
-║  🎤 Google STT (Free)                       ║
-║  🔊 {emotion_tts:<38}║
-║  🧠 Llama 3.2 Brain                         ║
-║  🎯 Emotion-Aware Voice                     ║
-║  🛑 Interruptible Speech                    ║
-║  🧠 Long-Term Personality Memory            ║
-║  🌐 Hybrid Online/Offline                   ║
-║  Status: {online_status}                          ║
-╚══════════════════════════════════════════════╝
-    """)
-    
-    name = memory.get("name", "")
-    greeting = f"Hey{' ' + name if name else ''}! I'm Buddy. What's up?"
-    print(f"🤖 {chatbot_name}: {greeting}")
+
+    if not ollama_available():
+        return None
+
+    try:
+        conversation_history[0] = {
+            "role": "system",
+            "content": get_system_prompt()
+        }
+
+        if len(conversation_history) > MAX_HISTORY + 1:
+            conversation_history = [conversation_history[0]] + conversation_history[-MAX_HISTORY:]
+
+        tagged_input = f"[User emotion: {emotion}] {user_text}"
+        conversation_history.append({"role": "user", "content": tagged_input})
+
+        response = ollama_client.chat.completions.create(
+            model=OLLAMA_MODEL,
+            messages=conversation_history,
+            max_tokens=50,
+            temperature=0.5
+        )
+
+        answer = response.choices[0].message.content.strip()
+        answer = re.sub(r"\*+", "", answer)
+        answer = re.sub(r"(?i)as an ai[^.]*\.", "", answer)
+        answer = re.sub(r"(?i)let me know if you need.*", "", answer).strip()
+
+        if not answer:
+            answer = "I understand."
+
+        conversation_history.append({"role": "assistant", "content": answer})
+        return answer
+
+    except Exception as error:
+        print(f"Ollama error: {error}")
+        return None
+
+
+def get_brain_response(user_text):
+    emotion, intensity = emotion_engine.analyze(user_text)
+
+    rule_response = detect_rule_command(user_text)
+
+    if rule_response:
+        update_memory(user_text, emotion)
+        personality_learner.learn(user_text, rule_response, emotion)
+        save_memory()
+        return rule_response
+
+    ml_response = detect_ml_intent_response(user_text)
+
+    if ml_response:
+        update_memory(user_text, emotion)
+        personality_learner.learn(user_text, ml_response, emotion)
+        save_memory()
+        return ml_response
+
+    ollama_response = ask_ollama(user_text, emotion)
+
+    if ollama_response:
+        update_memory(user_text, emotion)
+        personality_learner.learn(user_text, ollama_response, emotion)
+        save_memory()
+        return ollama_response
+
+    fallback = get_offline_response(user_text)
+
+    update_memory(user_text, emotion)
+    personality_learner.learn(user_text, fallback, emotion)
+    save_memory()
+
+    return fallback
+
+
+def print_startup_banner():
+    internet = "ONLINE" if check_internet() else "OFFLINE"
+    ollama = "READY" if ollama_available() else "NOT RUNNING"
+    pyttsx3_status = "READY" if pyttsx3 is not None else "NOT INSTALLED"
+    ytdlp_status = "READY" if yt_dlp is not None else "NOT INSTALLED"
+    vlc_status = "READY" if vlc is not None else "NOT INSTALLED"
+
+    print("=" * 60)
+    print(f"{APP_NAME} Voice Assistant")
+    print("=" * 60)
+    print(f"Internet: {internet}")
+    print(f"Ollama: {ollama}")
+    print(f"pyttsx3: {pyttsx3_status}")
+    print(f"yt-dlp: {ytdlp_status}")
+    print(f"VLC: {vlc_status}")
+    print("=" * 60)
+    print("Say 'stop' to interrupt speech.")
+    print("Say 'bye' to exit.")
+    print("=" * 60)
+
+
+def start_conversation():
+    global stop_speaking_flag
+
+    print_startup_banner()
+
+    name = memory.get("name")
+    greeting = f"Hey {name}! I'm {APP_NAME}. What's up?" if name else f"Hey! I'm {APP_NAME}. What's up?"
+
     speak(greeting)
-    conversation_history.append({"role": "assistant", "content": greeting})
-    
-    print("\n✨ I can: play music, search web, calculate, weather, news, and more!")
-    print("   Say 'stop' to interrupt me anytime. Press Ctrl+C to quit.\n")
-    print("=" * 50)
 
     while True:
         try:
             user_input = listen()
-            
-            if user_input:
-                user_lower = user_input.lower()
 
-                # 🛑 Interrupt: user says "stop" while Buddy is speaking
-                if user_lower.strip() in ("stop", "stop it", "quiet", "shut up", "shh"):
-                    global stop_speaking_flag
-                    stop_speaking_flag = True
-                    print("🛑 Interrupted.")
-                    continue
+            if not user_input:
+                continue
 
-                # Goodbye
-                if any(w in user_lower for w in ["bye", "goodbye", "good night"]):
-                    n = memory.get("name", "")
-                    farewell = f"See ya{' ' + n if n else ''}! Take care!"
-                    print(f"🤖 {chatbot_name}: {farewell}")
-                    speak(farewell)
-                    save_memory(memory)
-                    personality_learner.save()
-                    break
-                
-                ai_reply = get_brain_response(user_input)
-                speak(ai_reply)
-                
+            user_lower = user_input.lower().strip()
+
+            if user_lower in ["stop", "stop it", "quiet", "shut up", "shh"]:
+                stop_speaking_flag = True
+                print("Interrupted.")
+                continue
+
+            if any(word in user_lower for word in ["bye", "goodbye", "good night"]):
+                farewell = "See you later!"
+                speak(farewell)
+                save_memory()
+                personality_learner.save()
+                break
+
+            response = get_brain_response(user_input)
+            speak(response)
+
         except KeyboardInterrupt:
-            farewell = "Gotta go! Catch you later!"
-            print(f"\n🤖 {chatbot_name}: {farewell}")
-            speak(farewell)
-            save_memory(memory)
+            print("\nExiting...")
+            save_memory()
             personality_learner.save()
             break
 
+        except Exception as error:
+            print(f"Main loop error: {error}")
+
+
 if __name__ == "__main__":
-    # Install check
-    try:
-        import speech_recognition
-    except ImportError:
-        print("Installing required package...")
-        os.system("pip install SpeechRecognition")
-        import speech_recognition
-    
     start_conversation()

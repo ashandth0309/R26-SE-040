@@ -1,19 +1,30 @@
 {
   "name": "Ashandth",
-  "conversation_count": 0,
+  "conversation_count": 11,
   "likes": [],
   "dislikes": [],
   "recent_topics": [
-    "speak you can speed",
-    "so buddy",
-    "soviet union mein life advises to me",
-    "i have a maths exam tomorrow will you help me",
-    "what is your name"
+    "can you hear me",
+    "do you understand tamil",
+    "speak anything in tamil",
+    "i couldn't able to hear tamil",
+    "can you hear me",
+    "can you hear me",
+    "can you explain me quantum physics what does it mean",
+    "actually yesterday i just write a good i just faced an accident yesterday",
+    "languages you can speak",
+    "can you speak tamil"
   ],
   "emotion_pattern": [
     "neutral",
     "neutral",
     "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "joy",
     "neutral",
     "neutral"
   ]

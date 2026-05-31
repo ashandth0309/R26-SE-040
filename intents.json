@@ -9,9 +9,6 @@
         "call me ashan",
         "call me boss",
         "call me genius",
-        "call me you are perfect",
-        "call me mr perfect",
-        "call me mr ashan",
         "you can call me john",
         "i am ashan",
         "i am called sarah",
@@ -25,15 +22,7 @@
         "everyone calls me sam",
         "my name is priya",
         "you can refer to me as kevin",
-        "i want you to call me jessica",
-        "my full name is ashan uthayashankar",
-        "hi my name is daniel",
-        "the name is bond",
-        "name is chris",
-        "i am known as leo",
-        "they call me max",
-        "just call me dave",
-        "my name is nina"
+        "i want you to call me jessica"
       ]
     },
     {
@@ -53,15 +42,7 @@
         "what name do you have for me",
         "did you save my name",
         "can you recall my name",
-        "what is the name i gave you",
-        "do you remember me",
-        "tell me what my name is",
-        "have you stored my name",
-        "what am i called",
-        "do you have my name saved",
-        "say my name",
-        "what name did i give you",
-        "repeat my name back to me"
+        "what is the name i gave you"
       ]
     },
     {
@@ -79,25 +60,14 @@
         "what is up",
         "greetings",
         "hello buddy",
-        "hi usha",
-        "hey usha",
+        "hey buddy",
         "morning",
         "evening",
         "yo",
         "sup",
         "hello there",
         "hi how are you",
-        "hey good morning",
-        "good day",
-        "hello again",
-        "hi i am back",
-        "hey wake up",
-        "hello usha",
-        "good morning usha",
-        "hi buddy wake up",
-        "hey buddy",
-        "good evening usha",
-        "hello is anyone there"
+        "hey good morning"
       ]
     },
     {
@@ -117,20 +87,10 @@
         "talk to you later",
         "until next time",
         "peace out",
-        "i will talk to you later",
         "bye bye",
         "see ya",
         "i am done for now",
         "i am going now",
-        "that is all for now",
-        "i have to go",
-        "good night usha",
-        "bye for now",
-        "i am signing off",
-        "i am heading out",
-        "talk later",
-        "goodbye for now",
-        "i must go",
         "ok bye",
         "night night"
       ]
@@ -153,15 +113,7 @@
         "give me the time",
         "i need to know the time",
         "what hour is it",
-        "check the time for me",
-        "what does your clock say",
-        "tell me what time it is right now",
-        "what is the time at the moment",
-        "time please",
-        "usha what time is it",
-        "do you know what time it is",
-        "what is the current hour",
-        "could you give me the time"
+        "check the time for me"
       ]
     },
     {
@@ -181,16 +133,7 @@
         "give me today date",
         "what is today",
         "can you tell me what day it is",
-        "what day of the week is it",
-        "tell me what day it is",
-        "which month are we in",
-        "do you know the date",
-        "date please",
-        "usha what is the date",
-        "what is the day today",
-        "tell me today date",
-        "what is the current day",
-        "what month and year is it"
+        "what day of the week is it"
       ]
     },
     {
@@ -207,20 +150,10 @@
         "funny joke please",
         "can you joke",
         "make me smile",
-        "do you have a funny joke",
         "i need a laugh",
         "cheer me up with a joke",
         "hit me with a joke",
-        "got any jokes",
-        "share a joke",
-        "usha tell me a joke",
-        "what is a good joke",
-        "crack a joke",
-        "any funny jokes",
-        "joke please",
-        "i want something funny",
-        "tell me something that will make me laugh",
-        "entertain me with a joke"
+        "got any jokes"
       ]
     },
     {
@@ -240,16 +173,7 @@
         "how is your day",
         "how is your day going",
         "everything good with you",
-        "are you well",
-        "you good",
-        "how is life treating you",
-        "how are things going",
-        "is everything okay with you",
-        "you feeling okay",
-        "how is your mood",
-        "are you functioning well",
-        "how are you today",
-        "hope you are doing well"
+        "are you well"
       ]
     },
     {
@@ -269,18 +193,7 @@
         "i am happy",
         "all good",
         "i feel great",
-        "never been better",
-        "i am fantastic",
-        "feeling amazing",
-        "i am excellent",
-        "life is good",
-        "i am very well",
-        "doing fantastic",
-        "i feel wonderful",
-        "things are going great",
-        "i am feeling positive",
-        "really good thank you",
-        "i am doing brilliant"
+        "never been better"
       ]
     },
     {
@@ -301,18 +214,7 @@
         "i am depressed",
         "i feel lonely",
         "i am upset",
-        "i feel horrible",
-        "not feeling well",
-        "i am exhausted",
-        "things are tough",
-        "i am struggling",
-        "feeling miserable",
-        "i am overwhelmed",
-        "not in a good place",
-        "i am anxious",
-        "feeling really bad",
-        "i am not okay",
-        "going through a hard time"
+        "i am anxious"
       ]
     },
     {
@@ -326,21 +228,13 @@
         "do you have a name",
         "introduce yourself",
         "what do people call you",
-        "are you usha",
         "who am i talking to",
         "what is the name of this assistant",
         "can you introduce yourself",
         "tell me who you are",
         "give me your name",
         "what are you known as",
-        "do you go by a name",
-        "say your name",
-        "what is your name again",
-        "remind me of your name",
-        "what name were you given",
-        "usha is that your name",
-        "tell me what your name is",
-        "what do i call you"
+        "say your name"
       ]
     },
     {
@@ -360,15 +254,7 @@
         "what tasks can you perform",
         "what are you good at",
         "what is your purpose",
-        "show me what you can do",
-        "what kind of assistant are you",
-        "what services do you offer",
-        "list your capabilities",
-        "how can you assist me",
-        "what topics can you talk about",
-        "what do you know how to do",
-        "tell me your abilities",
-        "what is your functionality"
+        "show me what you can do"
       ]
     },
     {
@@ -388,17 +274,7 @@
         "appreciate your help",
         "thank you very much",
         "thanks a million",
-        "i am grateful",
-        "much appreciated",
-        "thanks for helping me",
-        "that helped a lot",
-        "you have been very helpful",
-        "i really appreciate that",
-        "thank you for your help",
-        "thanks for everything",
-        "brilliant thank you",
-        "great thanks",
-        "thank you usha"
+        "i am grateful"
       ]
     },
     {
@@ -414,20 +290,11 @@
         "i did not mean that",
         "i am so sorry",
         "oops sorry",
-        "i apologise",
-        "i am truly sorry",
-        "please forgive me",
         "that was my fault",
         "i made a mistake",
-        "i am at fault",
         "sorry about that",
-        "i regret that",
-        "pardon",
         "my mistake",
-        "i should not have said that",
-        "please accept my apology",
-        "i owe you an apology",
-        "i am really sorry"
+        "please accept my apology"
       ]
     },
     {
@@ -447,17 +314,7 @@
         "you are awesome",
         "you are brilliant",
         "you are wonderful",
-        "you are very intelligent",
-        "i think you are great",
-        "you did a good job",
-        "you are so clever",
-        "you are impressive",
-        "i really like you",
-        "you are so helpful",
-        "what a great assistant you are",
-        "you are perfect",
-        "you are incredible",
-        "i am impressed by you"
+        "you are very intelligent"
       ]
     },
     {
@@ -473,19 +330,10 @@
         "when did you start",
         "how old is this assistant",
         "are you young or old",
-        "how many years have you been running",
         "when were you created",
-        "how old are you exactly",
         "what year were you made",
         "tell me your age",
-        "do you have an age",
-        "how long ago were you built",
-        "when did you come into existence",
-        "how long have you been working",
-        "what is your creation date",
-        "how long have you been alive",
-        "how new are you",
-        "are you a new assistant"
+        "do you have an age"
       ]
     },
     {
@@ -502,18 +350,9 @@
         "who designed you",
         "who is your developer",
         "who invented you",
-        "who is responsible for you",
-        "who put you together",
         "who coded you",
         "tell me who made you",
-        "who is your maker",
-        "which developer made you",
-        "who thought of you",
-        "who is your owner",
-        "who gave you life",
-        "who created this assistant",
-        "who is the brain behind you",
-        "who is your programmer"
+        "who is your maker"
       ]
     },
     {
@@ -530,18 +369,8 @@
         "increase your speed",
         "can you talk faster",
         "please speak faster",
-        "talk at a faster pace",
-        "increase talking speed",
-        "go faster",
-        "i want you to speak quicker",
         "talk with more energy",
-        "speak with more energy",
-        "be a bit more energetic",
-        "pick up the pace",
-        "switch to energetic mode",
-        "faster voice please",
-        "can you be more lively",
-        "increase voice speed"
+        "switch to energetic mode"
       ]
     },
     {
@@ -558,18 +387,8 @@
         "be more calm",
         "can you slow down",
         "please speak more slowly",
-        "talk at a slower pace",
-        "reduce your speaking speed",
-        "take it slow",
-        "i want you to speak slower",
         "talk with a calm voice",
-        "speak calmly",
-        "be a bit calmer",
-        "switch to calm mode",
-        "slower voice please",
-        "relax and speak slowly",
-        "can you be calmer",
-        "reduce voice speed"
+        "switch to calm mode"
       ]
     },
     {
@@ -586,18 +405,7 @@
         "can you whisper",
         "please lower your volume",
         "speak in a whisper",
-        "keep it quiet",
-        "talk in a soft voice",
-        "i need you to be quiet",
-        "please be more quiet",
-        "turn down your volume",
-        "not so loud please",
-        "speak at a lower volume",
-        "soft voice please",
-        "switch to whisper mode",
-        "can you be quieter",
-        "be gentle with your voice",
-        "reduce your volume"
+        "soft voice please"
       ]
     },
     {
@@ -611,49 +419,10 @@
         "use your normal voice",
         "reset your voice",
         "return to normal",
-        "speak in your normal way",
         "back to normal please",
         "restore default voice",
-        "use the default voice",
-        "speak as you normally do",
-        "i want your normal voice back",
         "switch back to normal",
-        "go back to default",
-        "i prefer your normal voice",
-        "can you speak normally again",
-        "return to your default speed",
-        "reset to normal voice",
-        "standard voice please",
-        "use your regular voice",
-        "normal speaking voice"
-      ]
-    },
-    {
-      "intent": "music",
-      "examples": [
-        "tell me about music",
-        "what music do you like",
-        "do you like songs",
-        "what is your favourite song",
-        "talk about music",
-        "recommend a song",
-        "do you know any bands",
-        "tell me about artists",
-        "what is your favourite band",
-        "do you enjoy music",
-        "what genre of music do you prefer",
-        "can you suggest a song",
-        "tell me about pop music",
-        "do you know any rock bands",
-        "what is good music to listen to",
-        "i like listening to music",
-        "music is my hobby",
-        "do you listen to music",
-        "what song would you recommend",
-        "tell me about classical music",
-        "i enjoy music very much",
-        "music makes me happy",
-        "what type of songs do you like"
+        "go back to default"
       ]
     },
     {
@@ -667,21 +436,11 @@
         "is it hot outside",
         "is it cold today",
         "what is the forecast",
-        "how sunny is it",
         "tell me the weather",
         "what is the weather like today",
         "should i bring an umbrella",
         "is it going to rain today",
-        "what is the weather outside",
-        "how hot is it today",
-        "is it cold outside",
-        "what is the temperature today",
-        "will there be rain",
-        "what is today weather",
-        "is it windy today",
-        "what is the weather forecast for today",
-        "will it be sunny today",
-        "how is the climate today"
+        "what is the weather outside"
       ]
     },
     {
@@ -701,16 +460,7 @@
         "can you assist me",
         "i could use some help",
         "help please",
-        "i am stuck can you help",
-        "i need some advice",
-        "can you give me guidance",
-        "i need a hand",
-        "please assist me",
-        "give me some help",
-        "i am confused help me",
-        "i need direction",
-        "can you support me",
-        "help me out please"
+        "i am stuck can you help"
       ]
     },
     {
@@ -730,16 +480,7 @@
         "whatever",
         "i have nothing to say",
         "just some random words",
-        "this is a test",
-        "abcdefg",
-        "zxcvbnm",
-        "some gibberish here",
-        "i am just talking",
-        "no specific topic",
-        "just checking",
-        "nothing important",
-        "just testing the system",
-        "random input here"
+        "this is a test"
       ]
     }
   ]
