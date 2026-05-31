@@ -1,0 +1,13 @@
+SpeechRecognition
+pyaudio
+openai
+gTTS
+pygame
+requests
+beautifulsoup4
+lxml
+numpy
+scikit-learn
+pyttsx3
+yt-dlp
+python-vlc
