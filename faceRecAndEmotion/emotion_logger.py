@@ -1,13 +1,12 @@
 """
-Emotion Logger with Telegram Alert System (Upgraded)
-- Added UNKNOWN alert support
-- Cleaner alert logic
+Emotion Logger + Telegram Command System + Graph Report
 """
 
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import datetime, timedelta
+from datetime import datetime
 import requests
+import time
 
 from database_manager import DatabaseManager
 from config import EMOTION_LOG_INTERVAL
@@ -19,12 +18,8 @@ class EmotionLogger:
         self.log_interval = EMOTION_LOG_INTERVAL
         self.last_log_time = {}
 
-        # =========================
         # TELEGRAM CONFIG
-
-        
-        # =========================
-        self.TELEGRAM_BOT_TOKEN = "8546984008:AAFzK-kgMe3feW7ob8okmr0Ck0EeZMzblJQ"
+        self.TELEGRAM_BOT_TOKEN = "8546984008:AAHpB13l0QOjBUGPImXiVgDJmUk9YS-dA30"
         self.TELEGRAM_CHAT_ID = "8706374419"
 
     # =========================
@@ -33,7 +28,6 @@ class EmotionLogger:
     def log_emotion(self, name, emotion, confidence):
         current_time = datetime.now()
 
-        # anti spam per user
         if name in self.last_log_time:
             diff = (current_time - self.last_log_time[name]).total_seconds()
             if diff < self.log_interval:
@@ -42,30 +36,33 @@ class EmotionLogger:
         self.db.log_emotion(name, emotion, confidence)
         self.last_log_time[name] = current_time
 
-        # check alerts
         self.check_alerts(name, emotion, confidence)
-
         return True
 
     # =========================
-    # TELEGRAM SENDER
+    # TELEGRAM TEXT
     # =========================
-    def send_telegram(self, message):
-        try:
-            url = f"https://api.telegram.org/bot{self.TELEGRAM_BOT_TOKEN}/sendMessage"
+    def send_text(self, chat_id, message):
+        url = f"https://api.telegram.org/bot{self.TELEGRAM_BOT_TOKEN}/sendMessage"
 
-            response = requests.post(url, data={
-                "chat_id": self.TELEGRAM_CHAT_ID,
-                "text": message
-            })
-
-            print("Telegram Response:", response.text)
-
-        except Exception as e:
-            print("Telegram error:", e)
+        requests.post(url, data={
+            "chat_id": chat_id,
+            "text": message
+        })
 
     # =========================
-    # ALERT SYSTEM (UPGRADED)
+    # TELEGRAM PHOTO
+    # =========================
+    def send_photo(self, chat_id, image_path):
+        url = f"https://api.telegram.org/bot{self.TELEGRAM_BOT_TOKEN}/sendPhoto"
+
+        with open(image_path, "rb") as photo:
+            requests.post(url, data={
+                "chat_id": chat_id
+            }, files={"photo": photo})
+
+    # =========================
+    # ALERT SYSTEM
     # =========================
     def check_alerts(self, name, emotion, confidence):
 
@@ -73,41 +70,118 @@ class EmotionLogger:
 
         if emotion in alert_emotions and confidence > 75:
 
-            # special unknown handling
-            if emotion == "unknown":
-                message = (
-                    f"⚠️ UNKNOWN EMOTION ALERT ⚠️\n\n"
-                    f"👤 Name: {name}\n"
-                    f"❓ Emotion: UNKNOWN (not clearly detected)\n"
-                    f"📊 Confidence: {confidence}%\n"
-                    f"🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                )
-            else:
-                message = (
-                    f"🚨 EMOTION ALERT 🚨\n\n"
-                    f"👤 Name: {name}\n"
-                    f"🙂 Emotion: {emotion}\n"
-                    f"📊 Confidence: {confidence}%\n"
-                    f"🕒 Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
-                )
+            message = f"""
+🚨 EMOTION ALERT 🚨
 
-            print(message)
-            self.send_telegram(message)
+👤 Name: {name}
+🙂 Emotion: {emotion}
+📊 Confidence: {confidence}%
+🕒 {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+
+            self.send_text(self.TELEGRAM_CHAT_ID, message)
 
     # =========================
-    # DAILY SUMMARY
+    # GRAPH GENERATOR + SEND
     # =========================
-    def get_daily_summary(self):
+    def generate_report(self, name):
+
         logs = self.db.emotion_logs.get("logs", [])
-
-        if not logs:
-            return None
-
         df = pd.DataFrame(logs)
 
-        return {
-            "total_detections": len(logs),
-            "emotion_counts": df["emotion"].value_counts().to_dict(),
-            "average_confidence": float(df["confidence"].mean()),
-            "most_common_emotion": df["emotion"].mode()[0]
-        }
+        if df.empty:
+            print("NO LOGS")
+            return None, None
+
+        # CLEAN FIX
+        df["name"] = df["name"].astype(str).str.strip().str.lower()
+        name = name.strip().lower()
+
+        person_df = df[df["name"] == name]
+
+        print("FOUND ROWS:", len(person_df))
+
+        if person_df.empty:
+            return None, None
+
+        emotions = ["happy", "sad", "angry", "fear", "surprise", "neutral", "unknown"]
+
+        counts = person_df["emotion"].value_counts().reindex(emotions, fill_value=0)
+
+        plt.figure(figsize=(8, 5))
+        counts.plot(kind="bar")
+
+        plt.title(f"Emotion Report - {name}")
+        plt.xlabel("Emotion")
+        plt.ylabel("Count")
+
+        file_path = f"{name}_report.png"
+        plt.savefig(file_path)
+        plt.close()
+
+        print("GRAPH SAVED:", file_path)
+
+        return file_path, counts
+
+    # =========================
+    # COMMAND LISTENER
+    # =========================
+    def listen_telegram(self):
+
+        offset = None
+
+        while True:
+            url = f"https://api.telegram.org/bot{self.TELEGRAM_BOT_TOKEN}/getUpdates?timeout=10"
+
+            if offset:
+                url += f"&offset={offset}"   # ✅ FIXED HERE
+
+            res = requests.get(url).json()
+
+            for update in res.get("result", []):
+
+                offset = update["update_id"] + 1
+
+                if "message" not in update:
+                    continue
+
+                chat_id = update["message"]["chat"]["id"]
+                text = update["message"].get("text", "")
+
+                # ======================
+                # /report Name
+                # ======================
+                if text.startswith("/report"):
+                    parts = text.split()
+
+                    if len(parts) < 2:
+                        self.send_text(chat_id, "Usage: /report Name")
+                        continue
+
+                    name = parts[1]
+
+                    file_path, counts = self.generate_report(name)
+
+                    if file_path is None:
+                        self.send_text(chat_id, f"No data found for {name}")
+                        continue
+
+                    # send image
+                    self.send_photo(chat_id, file_path)
+
+                    # send summary
+                    summary = f"""
+📊 Emotion Report - {name}
+
+🙂 Happy: {counts['happy']}
+😢 Sad: {counts['sad']}
+😡 Angry: {counts['angry']}
+😨 Fear: {counts['fear']}
+😮 Surprise: {counts['surprise']}
+😐 Neutral: {counts['neutral']}
+❓ Unknown: {counts['unknown']}
+"""
+
+                    self.send_text(chat_id, summary)
+
+            time.sleep(2)
