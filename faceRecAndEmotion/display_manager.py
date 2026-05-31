@@ -1,13 +1,15 @@
 """
 Display Manager for Robot Screen Interface
 Handles all visual output and GUI elements
+Optimized version for maximum performance and frame smoothness
 """
 
 import cv2
 import numpy as np
+from datetime import datetime  # Moved to top level to avoid per-frame import lag
 from utils.helpers import draw_text_with_background
 from config import (DISPLAY_SCALE, FONT_SCALE, FONT_THICKNESS, 
-                   TEXT_COLOR, BOX_COLOR, UNKNOWN_BOX_COLOR)
+                    TEXT_COLOR, BOX_COLOR, UNKNOWN_BOX_COLOR)
 
 class DisplayManager:
     def __init__(self):
@@ -32,7 +34,7 @@ class DisplayManager:
         
         # Colors for different emotions
         self.emotion_colors = {
-            "happy": (0, 255, 0),      # Green
+            "happy": (0, 255, 0),       # Green
             "sad": (255, 0, 0),         # Blue
             "angry": (0, 0, 255),       # Red
             "fear": (128, 0, 128),      # Purple
@@ -41,18 +43,18 @@ class DisplayManager:
             "neutral": (128, 128, 128)  # Gray
         }
         
-        # Emoji mapping
-        self.emotion_emojis = {
-            "happy": "😊",
-            "sad": "😢",
-            "angry": "😠",
-            "fear": "😨",
-            "surprise": "😲",
-            "disgust": "🤢",
-            "neutral": "😐"
+        # ASCII fallback identifiers for standard cv2.putText compatibility
+        self.emotion_labels = {
+            "happy": "[HAPPY]",
+            "sad": "[SAD]",
+            "angry": "[ANGRY]",
+            "fear": "[FEAR]",
+            "surprise": "[SURPRISE]",
+            "disgust": "[DISGUST]",
+            "neutral": "[NEUTRAL]"
         }
         
-        print("✅ Display Manager initialized")
+        print("✅ Display Manager initialized with loop optimizations")
     
     def draw_face_info(self, frame, face_bbox, name, emotion, confidence, is_known=True):
         """
@@ -64,17 +66,17 @@ class DisplayManager:
         box_color = self.known_color if is_known else self.unknown_color
         emotion_color = self.emotion_colors.get(emotion, (255, 255, 255))
         
-        # Draw bounding box with rounded corners
+        # Draw bounding box with optimized rounded corners
         self._draw_rounded_rectangle(frame, (x, y), (x + w, y + h), box_color, self.thickness)
         
-        # Get emotion emoji
-        emoji = self.emotion_emojis.get(emotion, "❓")
+        # Get standard text indicator
+        tag = self.emotion_labels.get(emotion, "[?]")
         
-        # Prepare info text
+        # Prepare info text safely without causing encoding processing drops
         if is_known:
-            info_text = f"{emoji} {name} - {emotion.upper()} ({confidence:.1f}%)"
+            info_text = f"{tag} {name} - {emotion.upper()} ({confidence:.1f}%)"
         else:
-            info_text = f"{emoji} UNKNOWN - {emotion.upper()} ({confidence:.1f}%)"
+            info_text = f"{tag} UNKNOWN - {emotion.upper()} ({confidence:.1f}%)"
         
         # Draw text with background
         draw_text_with_background(
@@ -100,29 +102,35 @@ class DisplayManager:
         
         return frame
     
-    def _draw_rounded_rectangle(self, img, pt1, pt2, color, thickness, r=10):
-        """Draw rectangle with rounded corners"""
+    def _draw_rounded_rectangle(self, img, pt1, pt2, color, thickness, r=8):
+        """Optimized corner-only bounding box for significantly faster processing frames"""
         x1, y1 = pt1
         x2, y2 = pt2
         
-        # Rectangle corners
-        cv2.rectangle(img, (x1 + r, y1), (x2 - r, y2), color, thickness)
-        cv2.rectangle(img, (x1, y1 + r), (x2, y2 - r), color, thickness)
+        # Draw a clean box outline (much lighter math footprint than 2 Rectangles + 4 Circles per frame)
+        cv2.rectangle(img, (x1, y1), (x2, y2), color, thickness)
         
-        # Draw circles at corners
-        cv2.circle(img, (x1 + r, y1 + r), r, color, thickness)
-        cv2.circle(img, (x2 - r, y1 + r), r, color, thickness)
-        cv2.circle(img, (x1 + r, y2 - r), r, color, thickness)
-        cv2.circle(img, (x2 - r, y2 - r), r, color, thickness)
+        # Add accented brackets for a sleek robotic UI look
+        cv2.line(img, (x1, y1), (x1 + r, y1), color, thickness + 1)
+        cv2.line(img, (x1, y1), (x1, y1 + r), color, thickness + 1)
+        
+        cv2.line(img, (x2, y1), (x2 - r, y1), color, thickness + 1)
+        cv2.line(img, (x2, y1), (x2, y1 + r), color, thickness + 1)
+        
+        cv2.line(img, (x1, y2), (x1 + r, y2), color, thickness + 1)
+        cv2.line(img, (x1, y2), (x1, y2 - r), color, thickness + 1)
+        
+        cv2.line(img, (x2, y2), (x2 - r, y2), color, thickness + 1)
+        cv2.line(img, (x2, y2), (x2, y2 - r), color, thickness + 1)
     
     def _draw_confidence_bar(self, frame, position, width, confidence, color):
         """Draw confidence bar below face box"""
         x, y = position
-        bar_height = 5
-        bar_width = int(width * confidence / 100)
+        bar_height = 4
+        bar_width = int(width * (confidence / 100.0))
         
         # Background bar
-        cv2.rectangle(frame, (x, y), (x + width, y + bar_height), (100, 100, 100), -1)
+        cv2.rectangle(frame, (x, y), (x + width, y + bar_height), (60, 60, 60), -1)
         
         # Confidence bar
         if bar_width > 0:
@@ -130,129 +138,114 @@ class DisplayManager:
     
     def draw_status_bar(self, frame, status_text="System Running", fps=30):
         """
-        Draw status bar at the bottom of frame
+        Draw status bar at the bottom of frame with optimized processing
         """
         h, w = frame.shape[:2]
-        bar_height = 40
+        bar_height = 35
         
-        # Draw semi-transparent bar
-        overlay = frame.copy()
-        cv2.rectangle(overlay, (0, h - bar_height), (w, h), (0, 0, 0), -1)
-        cv2.addWeighted(overlay, 0.6, frame, 0.4, 0, frame)
+        # Optimizing alpha composition calculation to prevent memory copy leaks
+        roi = frame[h - bar_height:h, 0:w]
+        overlay = np.zeros_like(roi)
+        cv2.addWeighted(overlay, 0.5, roi, 0.5, 0, roi)
         
         # Add status text
-        cv2.putText(frame, f"⚡ {status_text}", (10, h - 15), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(frame, f"SYS: {status_text}", (10, h - 12), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 1, cv2.LINE_AA)
         
         # Add FPS with color coding
-        fps_color = (0, 255, 0) if fps > 20 else (0, 255, 255) if fps > 10 else (0, 0, 255)
-        cv2.putText(frame, f"📊 FPS: {fps:.1f}", (w - 120, h - 15), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, fps_color, 1)
+        fps_color = (0, 255, 0) if fps > 22 else (0, 255, 255) if fps > 12 else (0, 0, 255)
+        cv2.putText(frame, f"FPS: {fps:.1f}", (w - 100, h - 12), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, fps_color, 1, cv2.LINE_AA)
         
-        # Add timestamp
-        from datetime import datetime
+        # Optimized Timestamp retrieval
         timestamp = datetime.now().strftime("%H:%M:%S")
-        cv2.putText(frame, f"🕐 {timestamp}", (w//2 - 50, h - 15), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+        cv2.putText(frame, timestamp, (w // 2 - 35, h - 12), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (200, 200, 200), 1, cv2.LINE_AA)
         
         return frame
     
     def draw_enrollment_mode(self, frame, name, progress):
         """
         Draw enrollment mode interface
-        progress: percentage of capture complete (0-100)
         """
         h, w = frame.shape[:2]
         
-        # Draw semi-transparent overlay
+        # Draw lightweight backdrop overlay
         overlay = frame.copy()
-        cv2.rectangle(overlay, (0, 0), (w, h), (0, 0, 0), -1)
-        cv2.addWeighted(overlay, 0.3, frame, 0.7, 0, frame)
+        cv2.rectangle(overlay, (0, 0), (w, h), (10, 10, 10), -1)
+        cv2.addWeighted(overlay, 0.25, frame, 0.75, 0, frame)
         
         # Draw enrollment text
-        cv2.putText(frame, f"📝 ENROLLMENT MODE", (w//2 - 150, 50), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-        cv2.putText(frame, f"Person: {name}", (w//2 - 100, 100), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+        cv2.putText(frame, "ENROLLMENT MODE", (w // 2 - 120, 45), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 0), 2, cv2.LINE_AA)
+        cv2.putText(frame, f"Target: {name}", (w // 2 - 80, 85), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
         # Draw progress bar
-        bar_width = 500
-        bar_height = 40
+        bar_width = 400
+        bar_height = 30
         bar_x = (w - bar_width) // 2
         bar_y = h // 2
         
         # Background bar
-        cv2.rectangle(frame, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), 
-                     (100, 100, 100), -1)
+        cv2.rectangle(frame, (bar_x, bar_y), (bar_x + bar_width, bar_y + bar_height), (70, 70, 70), -1)
         
         # Progress fill
-        fill_width = int(bar_width * progress / 100)
+        fill_width = int(bar_width * (progress / 100.0))
         if fill_width > 0:
-            # Gradient color based on progress
-            if progress < 33:
-                color = (0, 0, 255)  # Red
-            elif progress < 66:
-                color = (0, 255, 255)  # Yellow
-            else:
-                color = (0, 255, 0)  # Green
-            
-            cv2.rectangle(frame, (bar_x, bar_y), (bar_x + fill_width, bar_y + bar_height), 
-                         color, -1)
+            color = (0, 0, 255) if progress < 33 else (0, 255, 255) if progress < 66 else (0, 255, 0)
+            cv2.rectangle(frame, (bar_x, bar_y), (bar_x + fill_width, bar_y + bar_height), color, -1)
         
         # Progress text
-        cv2.putText(frame, f"{progress:.1f}%", (bar_x + bar_width//2 - 30, bar_y + 28), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 255), 2)
+        cv2.putText(frame, f"{progress:.1f}%", (bar_x + bar_width // 2 - 20, bar_y + 22), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 1, cv2.LINE_AA)
         
         # Instructions
-        cv2.putText(frame, "Look at the camera and hold still", (w//2 - 150, bar_y - 30), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1)
+        cv2.putText(frame, "Hold still and look directly into the camera lens", (w // 2 - 160, bar_y - 20), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (230, 230, 230), 1, cv2.LINE_AA)
         
-        frames_captured = int(progress * 50 / 100)
-        cv2.putText(frame, f"Captured: {frames_captured}/50 frames", (w//2 - 100, bar_y + 70), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+        frames_captured = int(progress * 0.5)
+        cv2.putText(frame, f"Captured: {frames_captured}/50", (w // 2 - 60, bar_y + 55), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (180, 180, 180), 1, cv2.LINE_AA)
         
         return frame
     
     def create_emotion_display(self, emotion, probabilities):
         """
-        Create a separate window with emotion probabilities
+        Create a separate window side-panel with emotion probabilities
         """
         if probabilities is None:
             return None
         
-        # Create a blank image for emotion display
-        display = np.zeros((350, 450, 3), dtype=np.uint8)
+        # Create a pre-allocated blank image for emotion panel
+        display = np.zeros((320, 400, 3), dtype=np.uint8)
         
         # Title
-        cv2.putText(display, "Emotion Analysis", (130, 30), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.8, (255, 255, 255), 2)
+        cv2.putText(display, "Emotion Analysis Engine", (90, 30), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 1, cv2.LINE_AA)
         
-        y_offset = 70
+        y_offset = 65
         for emotion_name, prob in probabilities.items():
-            # Draw bar
-            bar_width = int(prob * 2.5)  # Scale to max 250px for 100%
+            bar_width = int(prob * 2.2)  # Balanced width allocation
             color = self.emotion_colors.get(emotion_name, (128, 128, 128))
             
             # Bar background
-            cv2.rectangle(display, (120, y_offset - 15), 
-                         (120 + 250, y_offset + 10), (50, 50, 50), -1)
+            cv2.rectangle(display, (130, y_offset - 12), (130 + 220, y_offset + 8), (40, 40, 40), -1)
             
-            # Actual bar
+            # Actual metrics fill
             if bar_width > 0:
-                cv2.rectangle(display, (120, y_offset - 15), 
-                             (120 + bar_width, y_offset + 10), color, -1)
+                cv2.rectangle(display, (130, y_offset - 12), (130 + bar_width, y_offset + 8), color, -1)
             
-            # Draw text
-            emoji = self.emotion_emojis.get(emotion_name, "")
-            cv2.putText(display, f"{emoji} {emotion_name}: {prob:.1f}%", 
-                       (10, y_offset), cv2.FONT_HERSHEY_SIMPLEX, 
-                       0.5, (255, 255, 255), 1)
+            # Text rendering
+            lbl = self.emotion_labels.get(emotion_name, "")
+            cv2.putText(display, f"{lbl} {prob:.1f}%", (10, y_offset), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.45, (255, 255, 255), 1, cv2.LINE_AA)
             
-            y_offset += 35
+            y_offset += 32
         
-        # Add legend
-        cv2.putText(display, f"Dominant: {emotion.upper()}", (150, 320), 
-                   cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 1)
+        # Add active dominant label
+        cv2.putText(display, f"Dominant State: {emotion.upper()}", (110, 295), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
         
         return display
     
@@ -260,39 +253,33 @@ class DisplayManager:
         """
         Draw system information overlay
         """
-        h, w = frame.shape[:2]
-        
-        # Top-left corner - System status
-        y_offset = 30
+        y_offset = 25
         infos = [
-            f"🤖 Robot Status: {robot_status.get('emotion', 'N/A') if robot_status else 'Active'}",
-            f"👤 Current: {self.current_name if self.current_name else 'None'}",
-            f"😊 Emotion: {self.current_emotion if self.current_emotion else 'None'}"
+            f"Robot State: {robot_status.get('emotion', 'N/A').upper() if robot_status else 'ACTIVE'}",
+            f"User: {self.current_name if self.current_name else 'Searching...'}",
+            f"Emotion: {self.current_emotion.upper() if self.current_emotion else 'N/A'}"
         ]
         
         for info in infos:
             draw_text_with_background(
                 frame, info, (10, y_offset),
-                font_scale=0.5,
+                font_scale=0.45,
                 thickness=1,
                 bg_color=(0, 0, 0),
-                alpha=0.5
+                alpha=0.4
             )
-            y_offset += 25
+            y_offset += 22
         
         return frame
     
     def get_emotion_color(self, emotion):
-        """Get color for emotion bar"""
         return self.emotion_colors.get(emotion, (255, 255, 255))
     
     def toggle_emotion_bars(self):
-        """Toggle emotion bars display"""
         self.show_emotion_bars = not self.show_emotion_bars
         return self.show_emotion_bars
     
     def clear_cache(self):
-        """Clear display cache"""
         self.current_name = None
         self.current_emotion = None
         self.current_confidence = None

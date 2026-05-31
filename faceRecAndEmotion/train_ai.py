@@ -1,58 +1,118 @@
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Dropout, Flatten, BatchNormalization
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import os
 
-# 1. Define Dataset Paths
-train_dir = 'data/train' # Path to your training data folder
-test_dir = 'data/test'   # Path to your testing data folder
+# ==============================
+# 1. Dataset Paths
+# ==============================
+train_dir = 'data/train'
+test_dir = 'data/test'
 
-# 2. Data Preprocessing (Image Augmentation)
-# Rescale normalizes pixel values from [0-255] to [0-1]
-train_datagen = ImageDataGenerator(rescale=1./255, horizontal_flip=True)
+# ==============================
+# 2. Data Preprocessing
+# ==============================
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    horizontal_flip=True,
+    rotation_range=20,
+    zoom_range=0.2
+)
+
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-# Load images from directory and convert them to 48x48 grayscale
 train_generator = train_datagen.flow_from_directory(
-    train_dir, 
-    target_size=(48, 48), 
-    batch_size=64, 
-    color_mode='grayscale', 
+    train_dir,
+    target_size=(48, 48),
+    batch_size=64,
+    color_mode='grayscale',
     class_mode='categorical'
 )
 
-# 3. Build the AI Model (Convolutional Neural Network - CNN)
+test_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(48, 48),
+    batch_size=64,
+    color_mode='grayscale',
+    class_mode='categorical',
+    shuffle=False
+)
+
+# ==============================
+# 3. CNN Model (Improved)
+# ==============================
 model = Sequential([
-    # First Convolutional layer to detect features
-    Conv2D(32, (3, 3), activation='relu', input_shape=(48, 48, 1)),
-    MaxPooling2D(2, 2),
-    
-    # Second Convolutional layer
-    Conv2D(64, (3, 3), activation='relu'),
-    MaxPooling2D(2, 2),
-    
-    # Flattening the 2D images into a 1D vector
+
+    Conv2D(32, (3,3), activation='relu', input_shape=(48,48,1)),
+    BatchNormalization(),
+    MaxPooling2D(2,2),
+
+    Conv2D(64, (3,3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(2,2),
+
+    Conv2D(128, (3,3), activation='relu'),
+    BatchNormalization(),
+    MaxPooling2D(2,2),
+
     Flatten(),
-    
-    # Fully connected layers
+
     Dense(128, activation='relu'),
-    
-    # Output layer with 7 units (one for each emotion) using Softmax
+    Dropout(0.5),
+
+    Dense(64, activation='relu'),
+    Dropout(0.3),
+
     Dense(7, activation='softmax')
 ])
 
-# Compile the model with Adam optimizer and Categorical Crossentropy loss
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+# ==============================
+# 4. Compile Model
+# ==============================
+model.compile(
+    optimizer='adam',
+    loss='categorical_crossentropy',
+    metrics=['accuracy']
+)
 
-# 4. Start the Training Process
-print("🚀 Training started... This may take 10-20 minutes depending on your PC.")
-model.fit(train_generator, epochs=10)
+# ==============================
+# 5. Train Model
+# ==============================
+print("🚀 Training started...")
 
-# 5. Save the Trained Model
-if not os.path.exists('models'): 
+history = model.fit(
+    train_generator,
+    validation_data=test_generator,
+    epochs=25
+)
+
+# ==============================
+# 6. Evaluate Model
+# ==============================
+print("\n📊 Evaluating model on test data...")
+test_loss, test_acc = model.evaluate(test_generator)
+
+print("Test Accuracy:", test_acc)
+print("Test Loss:", test_loss)
+
+# ==============================
+# 7. Save Model
+# ==============================
+if not os.path.exists('models'):
     os.makedirs('models')
 
-# This saves the "brain" of your AI so you can use it in your robot
 model.save('models/emotion_model.h5')
-print("✅ Success! models/emotion_model.h5 has been created.")
+
+print("\n✅ Model saved successfully!")
+
+# ==============================
+# 8. Save Class Labels
+# ==============================
+class_labels = train_generator.class_indices
+print("\n📌 Class Mapping:", class_labels)
+
+with open("models/class_labels.txt", "w") as f:
+    f.write(str(class_labels))
+
+print("✅ Class labels saved!")
