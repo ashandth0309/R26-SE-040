@@ -1,0 +1,12 @@
+faceRecAndEmotion/models/
+faceRecAndEmotion/faces_dataset/
+faceRecAndEmotion/unknown/
+faceRecAndEmotion/database/
+
+*.h5
+*.keras
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.zip
