@@ -772,7 +772,14 @@ def speak(text):
     stop_speaking_flag = False
 
     try:
-        language = detect_language(text)
+        detected_language = detect_language(text)
+
+        # Keep old Buddy gTTS English voice for English replies.
+        # Use Tamil gTTS only when the reply is actually Tamil/Tanglish.
+        if detected_language == "ta":
+            language = "ta"
+        else:
+            language = "en"
 
         try:
             pygame.mixer.music.unload()
@@ -785,7 +792,7 @@ def speak(text):
             except Exception:
                 pass
 
-        # OLD BUDDY VOICE: gTTS
+        # OLD BUDDY VOICE: gTTS through pygame
         if check_internet():
             tts = gTTS(text=text, lang=language)
             tts.save(TEMP_AUDIO_FILE)
@@ -814,8 +821,14 @@ def speak(text):
         # OFFLINE BACKUP VOICE
         if pyttsx3 is not None:
             print(f"{APP_NAME}: {text}")
+
             engine = pyttsx3.init()
-            engine.setProperty("rate", 185)
+
+            if language == "en":
+                engine.setProperty("rate", 185)
+            else:
+                engine.setProperty("rate", 165)
+
             engine.setProperty("volume", 1.0)
             engine.say(text)
             engine.runAndWait()
@@ -830,7 +843,6 @@ def speak(text):
 
     finally:
         is_speaking = False
-
 
 # ============================================================
 # SAFE CALCULATOR

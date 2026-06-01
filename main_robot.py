@@ -14,13 +14,15 @@ import time
 from faceRecAndEmotion.shared_state import SharedRobotState
 from faceRecAndEmotion.robot_controller import RobotController
 from faceRecAndEmotion.robot_bridge import init_bridge, set_face_app
-from faceRecAndEmotion.main import SmartAIDogRobot
 
 import speech
 
 
 def run_face_system(face_app):
-    face_app.run()
+    try:
+        face_app.run()
+    except Exception as error:
+        print(f"❌ Face system crashed: {error}")
 
 
 def run_voice_system():
@@ -37,24 +39,31 @@ def main():
     shared_state = SharedRobotState()
     robot = RobotController(shared_state=shared_state)
 
-    face_app = SmartAIDogRobot(shared_state=shared_state, robot=robot)
+    face_app = None
 
-    init_bridge(shared_state, robot, face_app)
-    set_face_app(face_app)
+    try:
+        from faceRecAndEmotion.main import SmartAIDogRobot
+        face_app = SmartAIDogRobot(shared_state=shared_state, robot=robot)
+        init_bridge(shared_state, robot, face_app)
+        set_face_app(face_app)
+    except Exception as error:
+        print(f"❌ Could not start face app: {error}")
+        print("⚠️ Voice will still run, but camera/eye commands will not work.")
+        init_bridge(shared_state, robot, None)
 
-    face_thread = threading.Thread(
-        target=run_face_system,
-        args=(face_app,),
-        daemon=True
-    )
+    if face_app is not None:
+        face_thread = threading.Thread(
+            target=run_face_system,
+            args=(face_app,),
+            daemon=True
+        )
+        face_thread.start()
+        time.sleep(2)
 
     voice_thread = threading.Thread(
         target=run_voice_system,
         daemon=False
     )
-
-    face_thread.start()
-    time.sleep(2)
 
     voice_thread.start()
     voice_thread.join()

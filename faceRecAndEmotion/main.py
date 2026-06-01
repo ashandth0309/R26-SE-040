@@ -19,6 +19,11 @@ from faceRecAndEmotion.frame_manager import FrameManager
 from faceRecAndEmotion.robot_controller import RobotController
 from faceRecAndEmotion.emotion_logger import EmotionLogger
 
+try:
+    from faceRecAndEmotion.simple_face_memory import SimpleFaceMemory
+except Exception:
+    SimpleFaceMemory = None
+
 
 class SmartAIDogRobot:
     def __init__(self, shared_state=None, robot=None):
@@ -31,6 +36,16 @@ class SmartAIDogRobot:
         self.face_recognizer = FaceRecognition()
         self.emotion_detector = EmotionDetector()
         self.database = DatabaseManager()
+
+        if SimpleFaceMemory is not None:
+            try:
+                self.simple_face_memory = SimpleFaceMemory()
+            except Exception as error:
+                print(f"⚠️ Simple LBPH face memory unavailable: {error}")
+                self.simple_face_memory = None
+        else:
+            self.simple_face_memory = None
+
         self.frame_manager = FrameManager()
         self.robot = robot if robot is not None else RobotController(shared_state=shared_state)
         self.emotion_logger = EmotionLogger()
@@ -162,16 +177,48 @@ class SmartAIDogRobot:
         return frame
 
     def recognize_hybrid(self, face_img):
-        name, score, source = self.face_recognizer.predict_person(face_img)
+        """
+        Recognition order:
+        1. Trained TensorFlow model if face_model.keras exists
+        2. Old embedding database
+        3. Simple LBPH database fallback, no keras needed
+        4. Unknown
+        """
 
-        if name:
-            return name, score, source
+        score = 0
+        db_score = 0
 
-        embedding = self.face_recognizer.get_embedding(face_img)
-        db_name, db_score = self.database.find_person(embedding)
+        # Step 1: trained model recognition
+        try:
+            name, score, source = self.face_recognizer.predict_person(face_img)
 
-        if db_name:
-            return db_name, db_score * 100, "enrolled_database"
+            if name:
+                return name, score, source
+
+        except Exception as error:
+            print(f"⚠️ Trained model recognition skipped: {error}")
+
+        # Step 2: old embedding database fallback
+        try:
+            embedding = self.face_recognizer.get_embedding(face_img)
+            db_name, db_score = self.database.find_person(embedding)
+
+            if db_name:
+                return db_name, db_score * 100, "enrolled_database"
+
+        except Exception as error:
+            print(f"⚠️ Embedding database recognition skipped: {error}")
+
+        # Step 3: LBPH fallback
+        try:
+            if self.simple_face_memory is not None:
+                lbph_name, lbph_confidence = self.simple_face_memory.predict(face_img)
+
+                if lbph_name:
+                    return lbph_name, lbph_confidence, "lbph_voice_memory"
+
+        except Exception as error:
+            print(f"⚠️ LBPH recognition skipped: {error}")
 
         return None, max(score, db_score * 100), "unknown"
 
@@ -533,22 +580,49 @@ class SmartAIDogRobot:
     def complete_enrollment(self):
         print(f"\n📊 Processing {len(self.enrollment_frames)} face samples...")
 
-        embeddings = self.face_recognizer.get_embeddings_batch(
-            self.enrollment_frames
-        )
+        embeddings = []
+
+        try:
+            embeddings = self.face_recognizer.get_embeddings_batch(
+                self.enrollment_frames
+            )
+        except Exception as error:
+            print(f"⚠️ Embedding enrollment failed: {error}")
+
+        saved = False
 
         if len(embeddings) >= 10:
-            self.database.add_person(
-                self.enrollment_name,
-                embeddings
-            )
+            try:
+                self.database.add_person(
+                    self.enrollment_name,
+                    embeddings
+                )
 
-            print(f"✅ Successfully enrolled '{self.enrollment_name}'!")
-            print(f"   Total embeddings created: {len(embeddings)}")
-            print("   This person will be recognized through enrolled_database source.")
-        else:
+                print(f"✅ Successfully enrolled '{self.enrollment_name}' with embedding database!")
+                print(f"   Total embeddings created: {len(embeddings)}")
+                saved = True
+
+            except Exception as error:
+                print(f"⚠️ Embedding database save failed: {error}")
+
+        if not saved and self.simple_face_memory is not None:
+            try:
+                saved_count = self.simple_face_memory.add_person(
+                    self.enrollment_name,
+                    self.enrollment_frames
+                )
+
+                if saved_count > 0:
+                    print(f"✅ Successfully enrolled '{self.enrollment_name}' with LBPH fallback!")
+                    print(f"   Total face samples saved: {saved_count}")
+                    saved = True
+
+            except Exception as error:
+                print(f"⚠️ LBPH enrollment failed: {error}")
+
+        if not saved:
             print(
-                f"❌ Enrollment failed - only {len(embeddings)} valid faces detected"
+                f"❌ Enrollment failed - only {len(embeddings)} valid embeddings detected"
             )
             print("   Please try again with better lighting and face visibility")
 
