@@ -1,0 +1,16 @@
+opencv-python
+numpy
+tensorflow
+keras
+scikit-learn
+requests
+beautifulsoup4
+lxml
+pygame
+gTTS
+openai
+SpeechRecognition
+pyaudio
+pyttsx3
+yt-dlp
+python-vlc
