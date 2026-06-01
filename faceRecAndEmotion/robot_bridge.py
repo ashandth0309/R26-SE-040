@@ -9,16 +9,32 @@ This connects voice commands to:
 - eye/head/tail commands
 - face recognition status
 - emotion status
+- voice-based face enrollment:
+  "this is me my name is Ashandth"
 """
+
+import os
+import re
+from datetime import datetime
+
+import cv2
+
 
 _shared_state = None
 _robot = None
+_face_app = None
 
 
-def init_bridge(shared_state, robot):
-    global _shared_state, _robot
+def init_bridge(shared_state, robot, face_app=None):
+    global _shared_state, _robot, _face_app
     _shared_state = shared_state
     _robot = robot
+    _face_app = face_app
+
+
+def set_face_app(face_app):
+    global _face_app
+    _face_app = face_app
 
 
 def get_shared_state():
@@ -29,8 +45,140 @@ def get_robot():
     return _robot
 
 
+def get_face_app():
+    return _face_app
+
+
 def _contains_any(text, phrases):
     return any(phrase in text for phrase in phrases)
+
+
+def _extract_self_enrollment_name(text):
+    """
+    Extract name from:
+    - this is me my name is Ashandth
+    - this is me I am Ashandth
+    - buddy this is me call me Ashandth
+    - remember my face my name is Ashandth
+    """
+    text_lower = text.lower().strip()
+
+    enrollment_triggers = [
+        "this is me",
+        "remember my face",
+        "save my face",
+        "learn my face",
+        "register my face",
+        "enroll me",
+        "recognize me"
+    ]
+
+    if not any(trigger in text_lower for trigger in enrollment_triggers):
+        return None
+
+    patterns = [
+        r"my name is\s+(.+)",
+        r"call me\s+(.+)",
+        r"i am\s+(.+)",
+        r"i'm\s+(.+)"
+    ]
+
+    for pattern in patterns:
+        match = re.search(pattern, text_lower)
+        if match:
+            name = match.group(1).strip()
+
+            # Remove trailing filler words
+            name = re.sub(
+                r"\b(please|now|buddy|okay|ok|save it|remember it|this is me)\b",
+                "",
+                name
+            ).strip()
+
+            name = re.sub(r"[^a-zA-Z\s]", "", name).strip()
+
+            if name:
+                return name.title()
+
+    return None
+
+
+def enroll_current_face_from_voice(name):
+    """
+    Capture the current camera frame, detect face, save photos,
+    create embeddings, and add the person to the database.
+    """
+    if _shared_state is None:
+        return False, "My eye system is not connected yet."
+
+    if _face_app is None:
+        return False, "My face learning system is not ready yet."
+
+    frame = _shared_state.get_latest_frame(max_age_seconds=5)
+
+    if frame is None:
+        return False, "I cannot see a fresh camera image right now. Please look at the camera and try again."
+
+    faces = _face_app.face_recognizer.detect_faces(frame)
+
+    if not faces:
+        return False, "I cannot see your face clearly. Please look at the camera with better light."
+
+    # Pick the largest visible face
+    faces = sorted(faces, key=lambda box: box[2] * box[3], reverse=True)
+    bbox = faces[0]
+
+    face_img = _face_app.face_recognizer.extract_face(frame, bbox)
+
+    if face_img is None or not _face_app.face_recognizer.validate_face(face_img):
+        return False, "I found a face, but it is not clear enough. Please face the camera and try again."
+
+    # Capture multiple samples from the same latest frame with slight copies.
+    # If you want stronger accuracy, say the command several times from different angles.
+    face_samples = [face_img]
+
+    # Try to create extra samples from recent frame crop by slight image changes.
+    try:
+        for scale in [1.02, 0.98, 1.04, 0.96]:
+            resized = cv2.resize(face_img, None, fx=scale, fy=scale)
+            resized = cv2.resize(resized, (face_img.shape[1], face_img.shape[0]))
+            face_samples.append(resized)
+    except Exception:
+        pass
+
+    embeddings = _face_app.face_recognizer.get_embeddings_batch(face_samples)
+
+    if len(embeddings) < 1:
+        return False, "I saw you, but I could not create a face memory. Please try again with better lighting."
+
+    _face_app.database.add_person(name, embeddings)
+
+    # Save photo evidence
+    try:
+        base_dir = os.path.join("faceRecAndEmotion", "database", "voice_enrolled_faces", name.replace(" ", "_"))
+        os.makedirs(base_dir, exist_ok=True)
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        full_path = os.path.join(base_dir, f"{timestamp}_full.jpg")
+        face_path = os.path.join(base_dir, f"{timestamp}_face.jpg")
+
+        cv2.imwrite(full_path, frame)
+        cv2.imwrite(face_path, face_img)
+    except Exception as error:
+        print(f"Could not save enrolled face photo: {error}")
+
+    if _shared_state:
+        _shared_state.set_face_status(
+            person=name,
+            emotion="neutral",
+            confidence=100,
+            source="voice_enrollment"
+        )
+
+    if _robot:
+        _robot.react_to_emotion("happy", name)
+
+    return True, f"Nice to meet you {name}. I saved your name and face. Next time I see you, I will try to recognize you."
 
 
 def handle_robot_voice_command(text):
@@ -42,6 +190,16 @@ def handle_robot_voice_command(text):
         return None
 
     text_lower = text.lower().strip()
+
+    # ============================================================
+    # VOICE FACE ENROLLMENT
+    # ============================================================
+
+    enrollment_name = _extract_self_enrollment_name(text)
+
+    if enrollment_name:
+        success, response = enroll_current_face_from_voice(enrollment_name)
+        return response
 
     if _robot is None:
         return None

@@ -9,8 +9,8 @@ import os
 import shutil
 import threading  # Added to prevent synchronous disk I/O blocking our main camera loop
 from datetime import datetime
-from utils.helpers import ensure_dir, save_frame
-from config import MAX_UNKNOWN_FRAMES, UNKNOWN_FRAMES_DIR, CAPTURE_EVERY_N_FRAMES
+from faceRecAndEmotion.utils.helpers import ensure_dir, save_frame
+from faceRecAndEmotion.config import MAX_UNKNOWN_FRAMES, UNKNOWN_FRAMES_DIR, CAPTURE_EVERY_N_FRAMES
 
 class FrameManager:
     def __init__(self):

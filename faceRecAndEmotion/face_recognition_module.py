@@ -25,7 +25,7 @@ try:
 except Exception:
     tf = None
 
-from config import MODELS_DIR
+from faceRecAndEmotion.config import MODELS_DIR
 
 
 class FaceRecognition:

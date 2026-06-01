@@ -382,6 +382,9 @@ class SmartAIDogRobot:
             if not ret or frame is None:
                 continue
 
+            if self.shared_state:
+                self.shared_state.set_latest_frame(frame)
+
             self.frame_count += 1
             self.fps_counter += 1
 

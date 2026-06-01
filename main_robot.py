@@ -13,15 +13,14 @@ import time
 
 from faceRecAndEmotion.shared_state import SharedRobotState
 from faceRecAndEmotion.robot_controller import RobotController
-from faceRecAndEmotion.robot_bridge import init_bridge
+from faceRecAndEmotion.robot_bridge import init_bridge, set_face_app
 from faceRecAndEmotion.main import SmartAIDogRobot
 
 import speech
 
 
-def run_face_system(shared_state, robot):
-    app = SmartAIDogRobot(shared_state=shared_state, robot=robot)
-    app.run()
+def run_face_system(face_app):
+    face_app.run()
 
 
 def run_voice_system():
@@ -38,11 +37,14 @@ def main():
     shared_state = SharedRobotState()
     robot = RobotController(shared_state=shared_state)
 
-    init_bridge(shared_state, robot)
+    face_app = SmartAIDogRobot(shared_state=shared_state, robot=robot)
+
+    init_bridge(shared_state, robot, face_app)
+    set_face_app(face_app)
 
     face_thread = threading.Thread(
         target=run_face_system,
-        args=(shared_state, robot),
+        args=(face_app,),
         daemon=True
     )
 

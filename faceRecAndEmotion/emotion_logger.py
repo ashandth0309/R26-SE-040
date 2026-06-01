@@ -12,8 +12,9 @@ import requests
 import time
 import threading  # Added for asynchronous network updates
 
-from database_manager import DatabaseManager
-from config import EMOTION_LOG_INTERVAL
+from faceRecAndEmotion.database_manager import DatabaseManager
+from faceRecAndEmotion.config import EMOTION_LOG_INTERVAL
+
 
 
 class EmotionLogger:

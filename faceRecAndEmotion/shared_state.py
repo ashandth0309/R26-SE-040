@@ -23,6 +23,35 @@ class SharedRobotState:
         self.last_voice_response = None
         self.last_voice_time = None
 
+        # Latest camera frame support
+        self.latest_frame = None
+        self.latest_frame_time = None
+
+    def set_latest_frame(self, frame):
+        """
+        Store latest camera frame so speech.py can use the robot eyes.
+        """
+        with self.lock:
+            if frame is not None:
+                self.latest_frame = frame.copy()
+                self.latest_frame_time = time.time()
+
+    def get_latest_frame(self, max_age_seconds=5):
+        """
+        Return latest frame if it is recent enough.
+        """
+        with self.lock:
+            if self.latest_frame is None:
+                return None
+
+            if self.latest_frame_time is None:
+                return None
+
+            if time.time() - self.latest_frame_time > max_age_seconds:
+                return None
+
+            return self.latest_frame.copy()
+
     def set_face_status(self, person=None, emotion="neutral", confidence=0.0, source="unknown"):
         with self.lock:
             self.current_person = person
@@ -52,6 +81,7 @@ class SharedRobotState:
                 "last_voice_command": self.last_voice_command,
                 "last_voice_response": self.last_voice_response,
                 "last_voice_time": self.last_voice_time,
+                "latest_frame_time": self.latest_frame_time,
             }
 
     def stop(self):

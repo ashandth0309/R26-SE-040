@@ -3,8 +3,8 @@ Database Manager - Working version
 """
 
 import numpy as np
-from utils.helpers import load_json, save_json, get_timestamp
-from config import KNOWN_FACES_DB, EMOTION_LOGS_DB, SIMILARITY_THRESHOLD
+from faceRecAndEmotion.utils.helpers import load_json, save_json, get_timestamp
+from faceRecAndEmotion.config import KNOWN_FACES_DB, EMOTION_LOGS_DB, SIMILARITY_THRESHOLD
 import hashlib
 import os
 
