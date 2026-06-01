@@ -1,23 +1,40 @@
 {
   "name": "Ashandth",
-  "conversation_count": 4,
+  "conversation_count": 15,
   "likes": [],
   "dislikes": [],
   "recent_topics": [
-    "good so can you explain me about photosyn",
-    "explain that question little more",
-    "why you speaking to fast just stop that question and just tell me what's the date today",
-    "don't make me angry tell me the time now"
+    "don't make me angry",
+    "yesterday i got into an accident",
+    "நான் பேசுறது விளங்குதா",
+    "can you play me a music from youtube",
+    "play believer song believer song",
+    "ok stop the music",
+    "so can you are you a fixed model or i just getting train from",
+    "ok so my best friend's name is krishna",
+    "do you know who is krishna",
+    "கேக்குதா"
   ],
   "emotion_pattern": [
     "joy",
     "neutral",
     "neutral",
-    "anger"
+    "anger",
+    "neutral",
+    "anger",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral"
   ],
-  "last_user_question": "don't make me angry tell me the time now",
-  "last_bot_answer": "It's 08:53 PM.",
-  "last_topic": "dont make me angry tell me the time now",
+  "last_user_question": "கேக்குதா",
+  "last_bot_answer": "விடை: அனைத்தும் செய்தி பரிமாறலாம்.",
+  "last_topic": "கேக்குதா",
   "saved_questions": [
     {
       "time": "2026-06-01T20:51:38.835960",
@@ -36,6 +53,72 @@
       "question": "don't make me angry tell me the time now",
       "answer": "It's 08:53 PM.",
       "topic": "dont make me angry tell me the time now"
+    },
+    {
+      "time": "2026-06-01T21:03:39.176159",
+      "question": "can you explain me what does physics mean",
+      "answer": "Physics is the study of how the universe works at its most basic level, focusing on the interactions between matter and energy. It's a fundamental branch of science that helps us understand the natural world around us. Physics explores concepts like motion, forces, and energy, among others.",
+      "topic": "can you me what does physics mean"
+    },
+    {
+      "time": "2026-06-01T21:04:16.984002",
+      "question": "don't make me angry",
+      "answer": "I'm here to help you relax and calm down. If you're feeling frustrated or upset, it might be helpful to take some deep breaths and step away from the situation for a bit. I'm not trying to add to your stress - just offer a friendly reminder that everything will work out okay.",
+      "topic": "dont make me angry"
+    },
+    {
+      "time": "2026-06-01T21:04:50.686944",
+      "question": "yesterday I got into an accident",
+      "answer": "Sorry to hear that you were involved in an accident yesterday. Have you received any medical attention or are you okay? Are there any concerns about your safety or well-being right now?",
+      "topic": "yesterday i got into an accident"
+    },
+    {
+      "time": "2026-06-01T21:05:16.377189",
+      "question": "நான் பேசுறது விளங்குதா",
+      "answer": "அம்மா! என் உடல் ஏழை. நீ ஒரு பயிற்சி பெற்றவர்?",
+      "topic": "நான் பேசுறது விளங்குதா"
+    },
+    {
+      "time": "2026-06-01T21:05:43.170126",
+      "question": "can you play me a music from YouTube",
+      "answer": "You can search for a specific song on YouTube or browse through their recommended playlists to find something that interests you. They have an enormous library of songs, so you're sure to find something that suits your mood. You can also try searching for \"best songs on YouTube\" or \"popular music on YouTube\" if you need some inspiration.",
+      "topic": "can you play me a music from youtube"
+    },
+    {
+      "time": "2026-06-01T21:06:31.837896",
+      "question": "play believer song believer song",
+      "answer": "Playing Imagine Dragons - Believer.",
+      "topic": "play believer song believer song"
+    },
+    {
+      "time": "2026-06-01T21:06:48.609213",
+      "question": "ok stop the music",
+      "answer": "Music stopped.",
+      "topic": "ok stop the music"
+    },
+    {
+      "time": "2026-06-01T21:07:06.040193",
+      "question": "so can you are you a fixed model or I just getting train from",
+      "answer": "You're likely referring to the fact that your language model has been trained on a large dataset of text, which includes a wide range of topics and styles. This training allows me to generate responses based on patterns in the data, but it's not the same as having a fixed set of rules or parameters like a traditional AI model would have.",
+      "topic": "so can you are you a fixed model or i just getting train from"
+    },
+    {
+      "time": "2026-06-01T21:07:45.047955",
+      "question": "ok so my best friend's name is Krishna",
+      "answer": "Your best friend's name is indeed Krishna. You two seem to have a strong bond, which is great for your friendship. How has your relationship with Krishna been lately?",
+      "topic": "ok so my best friends name is krishna"
+    },
+    {
+      "time": "2026-06-01T21:08:12.935402",
+      "question": "do you know who is Krishna",
+      "answer": "Krishna was an ancient Indian spiritual leader and the central figure of Hinduism. He is often depicted as a human being with divine features, known for his teachings on non-violence, love, and self-realization. His life story has been extensively documented in the sacred texts of Hinduism, including the Bhagavad Gita and the Mahabharata.",
+      "topic": "do you know krishna"
+    },
+    {
+      "time": "2026-06-01T21:09:44.833491",
+      "question": "கேக்குதா",
+      "answer": "விடை: அனைத்தும் செய்தி பரிமாறலாம்.",
+      "topic": "கேக்குதா"
     }
   ]
 }

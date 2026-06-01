@@ -915,9 +915,12 @@ class YouTubeMusicPlayer:
         self.instance = None
 
     def stop(self):
+        stopped = False
+
         if self.player is not None:
             try:
                 self.player.stop()
+                stopped = True
             except Exception:
                 pass
 
@@ -931,7 +934,18 @@ class YouTubeMusicPlayer:
         self.instance = None
         self.current_song = None
 
-        return "Music stopped."
+        try:
+            pygame.mixer.music.stop()
+            stopped = True
+        except Exception:
+            pass
+
+        if stopped:
+            return "Music stopped."
+
+        return "No music is playing."
+
+
 
     def search_and_play(self, query):
         if not check_internet():
@@ -1141,13 +1155,42 @@ def detect_rule_command(text):
     text_lower = text.lower().strip()
     user_language = detect_language(text)
 
-    if text_lower in ["stop music", "stop song", "stop playing"]:
+    # STOP MUSIC FIRST
+    # This must be before play command, because "stop playing" contains "play".
+    stop_music_phrases = [
+        "stop",
+        "stop music",
+        "stop song",
+        "stop playing",
+        "stop the song",
+        "stop the music",
+        "pause music",
+        "pause song",
+        "pause the song",
+        "pause the music",
+        "music stop",
+        "song stop",
+        "enough music",
+        "turn off music",
+        "turn off the song"
+    ]
+
+    if text_lower in stop_music_phrases or any(phrase in text_lower for phrase in stop_music_phrases):
         return youtube.stop()
 
-    if any(word in text_lower for word in ["play ", "play song", "play music"]):
+    # PLAY MUSIC
+    play_phrases = [
+        "play ",
+        "play song",
+        "play music",
+        "put song",
+        "put music"
+    ]
+
+    if any(text_lower.startswith(phrase) for phrase in play_phrases):
         song = text_lower
 
-        for prefix in ["play song", "play music", "play"]:
+        for prefix in ["play song", "play music", "play", "put song", "put music"]:
             if song.startswith(prefix):
                 song = song.replace(prefix, "", 1).strip()
                 break
@@ -1196,6 +1239,7 @@ def detect_rule_command(text):
         return calculator.solve(text_lower)
 
     return None
+
 
 
 # ============================================================
