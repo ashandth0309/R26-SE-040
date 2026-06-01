@@ -1,31 +1,41 @@
 {
   "name": "Ashandth",
-  "conversation_count": 11,
+  "conversation_count": 4,
   "likes": [],
   "dislikes": [],
   "recent_topics": [
-    "can you hear me",
-    "do you understand tamil",
-    "speak anything in tamil",
-    "i couldn't able to hear tamil",
-    "can you hear me",
-    "can you hear me",
-    "can you explain me quantum physics what does it mean",
-    "actually yesterday i just write a good i just faced an accident yesterday",
-    "languages you can speak",
-    "can you speak tamil"
+    "good so can you explain me about photosyn",
+    "explain that question little more",
+    "why you speaking to fast just stop that question and just tell me what's the date today",
+    "don't make me angry tell me the time now"
   ],
   "emotion_pattern": [
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
     "joy",
     "neutral",
-    "neutral"
+    "neutral",
+    "anger"
+  ],
+  "last_user_question": "don't make me angry tell me the time now",
+  "last_bot_answer": "It's 08:53 PM.",
+  "last_topic": "dont make me angry tell me the time now",
+  "saved_questions": [
+    {
+      "time": "2026-06-01T20:51:38.835960",
+      "question": "good so can you explain me about photosyn",
+      "answer": "Photosynthesis is the process by which plants, algae, and some bacteria convert light energy from the sun into chemical energy in the form of glucose. This process also produces oxygen as a byproduct, which is released into the atmosphere. It's an essential part of the food chain, providing energy for many living organisms that consume it.",
+      "topic": "good so can you me about photosyn"
+    },
+    {
+      "time": "2026-06-01T20:53:49.886393",
+      "question": "why you speaking to fast just stop that question and just tell me what's the date today",
+      "answer": "Today is Monday, June 01, 2026.",
+      "topic": "why you speaking to fast just stop that question and just tell me whats the date today"
+    },
+    {
+      "time": "2026-06-01T20:53:59.760892",
+      "question": "don't make me angry tell me the time now",
+      "answer": "It's 08:53 PM.",
+      "topic": "dont make me angry tell me the time now"
+    }
   ]
 }

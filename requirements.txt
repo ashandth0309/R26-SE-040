@@ -11,3 +11,4 @@ scikit-learn
 pyttsx3
 yt-dlp
 python-vlc
+PyAudioWPatch

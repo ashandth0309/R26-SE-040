@@ -1,7 +1,9 @@
 {
   "preferences": {},
   "topics": {
-    "technology": 1
+    "technology": 6,
+    "work": 1,
+    "music": 1
   },
   "style": {
     "formality": 0.3,
@@ -53,6 +55,154 @@
     {
       "timestamp": "2026-05-31T22:53:54.882199",
       "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:00:44.279630",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:01:17.585135",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:01:55.198012",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:02:30.564294",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:02:56.761143",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:03:37.540437",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:04:07.962098",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:17:14.858242",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:17:33.304880",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:17:53.825789",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:18:12.967938",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:18:32.221140",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:18:53.896510",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:19:12.604210",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:24:25.930318",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:24:42.700727",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:25:01.099539",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:25:20.182368",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:25:38.901610",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:28:46.907961",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:29:02.268028",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:29:15.987676",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:29:37.945270",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:29:58.278469",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-05-31T23:30:19.216107",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:07:50.578289",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:08:12.842582",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:08:35.268048",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:08:49.020566",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:43:19.867713",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:43:35.944843",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:44:10.863125",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:44:44.296213",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:51:38.833972",
+      "emotion": "joy"
+    },
+    {
+      "timestamp": "2026-06-01T20:52:21.969614",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:53:49.886393",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-06-01T20:53:59.759895",
+      "emotion": "anger"
     }
   ]
 }
