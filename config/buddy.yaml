@@ -1,3 +1,12 @@
+logging:
+  enabled: true
+  console_enabled: true
+  file_enabled: true
+  file_name: "buddy.log"
+  max_bytes: 5242880
+  backup_count: 5
+  include_context: true
+
 robot:
   id: "buddy-001"
   name: "BUDDY"
@@ -45,6 +54,7 @@ storage:
   data_directory: "runtime_data"
   media_directory: "runtime_media"
   database_path: "runtime_data/buddy.db"
+  log_directory: "logs"
 
 features:
   voice: true

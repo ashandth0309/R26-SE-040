@@ -1,3 +1,7 @@
+logging:
+  console_enabled: true
+  file_enabled: true
+
 runtime:
   environment: "development"
   log_level: "DEBUG"

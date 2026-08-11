@@ -26,6 +26,7 @@ setup(
     'console_scripts': [
         'core_smoke_test = buddy_core.core_smoke_test:main',
         'config_smoke_test = buddy_core.config_smoke_test:main',
+        'logging_smoke_test = buddy_core.logging_smoke_test:main',
     ],
 },
 )

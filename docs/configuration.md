@@ -297,6 +297,22 @@ Task 06 includes focused tests for:
 11. Required missing secret handling
 12. Required present secret handling
 
+# Logging Configuration
+
+Task 07 extends the centralized configuration architecture with logging settings.
+
+The base configuration contains:
+
+```yaml
+logging:
+  enabled: true
+  console_enabled: true
+  file_enabled: true
+  file_name: "buddy.log"
+  max_bytes: 5242880
+  backup_count: 5
+  include_context: true
+
 ### Test Result
 
 ```text

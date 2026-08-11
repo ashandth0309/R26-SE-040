@@ -57,10 +57,19 @@ VALID_CONFIG = {
         "remote_access_enabled": False,
     },
     "storage": {
-        "data_directory": "runtime_data",
-        "media_directory": "runtime_media",
-        "database_path": "runtime_data/buddy.db",
-    },
+    "data_directory": "runtime_data",
+    "media_directory": "runtime_media",
+    "database_path": "runtime_data/buddy.db",
+    "log_directory": "logs",
+},"logging": {
+    "enabled": True,
+    "console_enabled": True,
+    "file_enabled": True,
+    "file_name": "buddy.log",
+    "max_bytes": 5242880,
+    "backup_count": 5,
+    "include_context": True,
+},
     "features": {
         "voice": False,
         "vision": False,
@@ -70,6 +79,7 @@ VALID_CONFIG = {
         "security": False,
         "mobile_control": False,
     },
+    
 }
 
 
@@ -205,3 +215,33 @@ def test_base_and_override_files(tmp_path):
     assert config["camera"]["enabled"] is False
     assert config["camera"]["width"] == 640
 
+def test_invalid_logging_enabled_type():
+    config = deepcopy(VALID_CONFIG)
+    config["logging"]["enabled"] = "yes"
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_invalid_logging_max_bytes():
+    config = deepcopy(VALID_CONFIG)
+    config["logging"]["max_bytes"] = 0
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_negative_logging_backup_count():
+    config = deepcopy(VALID_CONFIG)
+    config["logging"]["backup_count"] = -1
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_missing_log_directory():
+    config = deepcopy(VALID_CONFIG)
+    del config["storage"]["log_directory"]
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
