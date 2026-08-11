@@ -1,0 +1,21 @@
+runtime:
+  environment: "development"
+  log_level: "DEBUG"
+
+camera:
+  enabled: false
+
+audio:
+  enabled: false
+
+network:
+  remote_access_enabled: false
+
+features:
+  voice: false
+  vision: false
+  movement: false
+  navigation: false
+  patrol: false
+  security: false
+  mobile_control: false

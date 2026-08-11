@@ -1,0 +1,56 @@
+robot:
+  id: "buddy-001"
+  name: "BUDDY"
+
+runtime:
+  environment: "robot"
+  log_level: "INFO"
+  startup_mode: "IDLE"
+
+timing:
+  heartbeat_seconds: 2.0
+  command_default_timeout_seconds: 1.0
+
+movement:
+  max_linear_speed_mps: null
+  max_angular_speed_radps: null
+  acceleration_limit_mps2: null
+
+safety:
+  obstacle_stop_distance_m: null
+  obstacle_caution_distance_m: null
+  command_timeout_seconds: 1.0
+  connection_loss_stop_seconds: 1.0
+
+camera:
+  enabled: true
+  width: 640
+  height: 480
+  fps: 15
+
+audio:
+  enabled: true
+  wake_word: "Buddy"
+  sample_rate_hz: 16000
+
+vision:
+  face_recognition_enabled: true
+  emotion_recognition_enabled: true
+
+network:
+  local_api_enabled: true
+  remote_access_enabled: false
+
+storage:
+  data_directory: "runtime_data"
+  media_directory: "runtime_media"
+  database_path: "runtime_data/buddy.db"
+
+features:
+  voice: true
+  vision: true
+  movement: false
+  navigation: false
+  patrol: false
+  security: false
+  mobile_control: false
