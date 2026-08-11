@@ -1,0 +1,7 @@
+string source
+string reason
+string request_id
+---
+bool accepted
+bool emergency_stop_active
+string message

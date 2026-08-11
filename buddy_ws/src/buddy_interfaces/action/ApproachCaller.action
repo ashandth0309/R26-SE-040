@@ -1,0 +1,11 @@
+float32 estimated_direction_deg
+float32 direction_confidence
+string request_id
+---
+bool success
+string reason
+---
+string state
+bool person_visible
+float32 person_confidence
+float32 estimated_distance_m

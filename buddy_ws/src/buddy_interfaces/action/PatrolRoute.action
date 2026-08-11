@@ -1,0 +1,10 @@
+string route_id
+bool repeat
+---
+bool success
+string reason
+---
+string state
+uint32 current_waypoint
+uint32 total_waypoints
+float32 progress
