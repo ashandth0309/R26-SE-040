@@ -1,3 +1,5 @@
+"""Tests for the BUDDY centralized configuration architecture."""
+
 from copy import deepcopy
 
 import pytest
@@ -37,6 +39,13 @@ VALID_CONFIG = {
         "command_timeout_seconds": 1.0,
         "connection_loss_stop_seconds": 1.0,
     },
+    "hardware": {
+        "enabled": False,
+        "simulation": True,
+        "gpio": {
+            "numbering_mode": "BCM",
+        },
+    },
     "camera": {
         "enabled": False,
         "width": 640,
@@ -57,19 +66,20 @@ VALID_CONFIG = {
         "remote_access_enabled": False,
     },
     "storage": {
-    "data_directory": "runtime_data",
-    "media_directory": "runtime_media",
-    "database_path": "runtime_data/buddy.db",
-    "log_directory": "logs",
-},"logging": {
-    "enabled": True,
-    "console_enabled": True,
-    "file_enabled": True,
-    "file_name": "buddy.log",
-    "max_bytes": 5242880,
-    "backup_count": 5,
-    "include_context": True,
-},
+        "data_directory": "runtime_data",
+        "media_directory": "runtime_media",
+        "database_path": "runtime_data/buddy.db",
+        "log_directory": "logs",
+    },
+    "logging": {
+        "enabled": True,
+        "console_enabled": True,
+        "file_enabled": True,
+        "file_name": "buddy.log",
+        "max_bytes": 5242880,
+        "backup_count": 5,
+        "include_context": True,
+    },
     "features": {
         "voice": False,
         "vision": False,
@@ -79,12 +89,12 @@ VALID_CONFIG = {
         "security": False,
         "mobile_control": False,
     },
-    
 }
 
 
 def test_load_valid_yaml(tmp_path):
     path = tmp_path / "config.yaml"
+
     path.write_text(
         yaml.safe_dump(VALID_CONFIG),
         encoding="utf-8",
@@ -110,7 +120,10 @@ def test_recursive_override_merge():
         }
     }
 
-    merged = deep_merge(base, override)
+    merged = deep_merge(
+        base,
+        override,
+    )
 
     assert merged["camera"]["enabled"] is False
     assert merged["camera"]["width"] == 640
@@ -141,6 +154,7 @@ def test_deep_merge_does_not_mutate_base():
 
 def test_invalid_yaml(tmp_path):
     path = tmp_path / "invalid.yaml"
+
     path.write_text(
         "robot: [invalid",
         encoding="utf-8",
@@ -152,6 +166,7 @@ def test_invalid_yaml(tmp_path):
 
 def test_missing_required_section():
     config = deepcopy(VALID_CONFIG)
+
     del config["robot"]
 
     with pytest.raises(BuddyConfigError):
@@ -160,6 +175,7 @@ def test_missing_required_section():
 
 def test_invalid_log_level():
     config = deepcopy(VALID_CONFIG)
+
     config["runtime"]["log_level"] = "BANANA"
 
     with pytest.raises(BuddyConfigError):
@@ -168,6 +184,7 @@ def test_invalid_log_level():
 
 def test_negative_timing_value():
     config = deepcopy(VALID_CONFIG)
+
     config["timing"]["heartbeat_seconds"] = -1.0
 
     with pytest.raises(BuddyConfigError):
@@ -176,6 +193,7 @@ def test_negative_timing_value():
 
 def test_camera_enabled_invalid_resolution():
     config = deepcopy(VALID_CONFIG)
+
     config["camera"]["enabled"] = True
     config["camera"]["width"] = 0
 
@@ -201,6 +219,10 @@ def test_base_and_override_files(tmp_path):
                 "camera": {
                     "enabled": False,
                 },
+                "hardware": {
+                    "enabled": False,
+                    "simulation": True,
+                },
             }
         ),
         encoding="utf-8",
@@ -211,12 +233,34 @@ def test_base_and_override_files(tmp_path):
         override_path=override_path,
     )
 
-    assert config["runtime"]["environment"] == "development"
-    assert config["camera"]["enabled"] is False
-    assert config["camera"]["width"] == 640
+    assert (
+        config["runtime"]["environment"]
+        == "development"
+    )
+
+    assert (
+        config["camera"]["enabled"]
+        is False
+    )
+
+    assert (
+        config["camera"]["width"]
+        == 640
+    )
+
+    assert (
+        config["hardware"]["enabled"]
+        is False
+    )
+
+    assert (
+        config["hardware"]["simulation"]
+        is True
+    )
 
 def test_invalid_logging_enabled_type():
     config = deepcopy(VALID_CONFIG)
+
     config["logging"]["enabled"] = "yes"
 
     with pytest.raises(BuddyConfigError):
@@ -225,6 +269,7 @@ def test_invalid_logging_enabled_type():
 
 def test_invalid_logging_max_bytes():
     config = deepcopy(VALID_CONFIG)
+
     config["logging"]["max_bytes"] = 0
 
     with pytest.raises(BuddyConfigError):
@@ -233,6 +278,7 @@ def test_invalid_logging_max_bytes():
 
 def test_negative_logging_backup_count():
     config = deepcopy(VALID_CONFIG)
+
     config["logging"]["backup_count"] = -1
 
     with pytest.raises(BuddyConfigError):
@@ -241,7 +287,46 @@ def test_negative_logging_backup_count():
 
 def test_missing_log_directory():
     config = deepcopy(VALID_CONFIG)
+
     del config["storage"]["log_directory"]
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_invalid_hardware_enabled_type():
+    config = deepcopy(VALID_CONFIG)
+
+    config["hardware"]["enabled"] = "false"
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_invalid_hardware_simulation_type():
+    config = deepcopy(VALID_CONFIG)
+
+    config["hardware"]["simulation"] = "true"
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_missing_hardware_gpio_mapping():
+    config = deepcopy(VALID_CONFIG)
+
+    del config["hardware"]["gpio"]
+
+    with pytest.raises(BuddyConfigError):
+        validate_config(config)
+
+
+def test_invalid_gpio_numbering_mode():
+    config = deepcopy(VALID_CONFIG)
+
+    config["hardware"]["gpio"][
+        "numbering_mode"
+    ] = "INVALID"
 
     with pytest.raises(BuddyConfigError):
         validate_config(config)

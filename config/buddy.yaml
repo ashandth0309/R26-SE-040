@@ -31,6 +31,13 @@ safety:
   command_timeout_seconds: 1.0
   connection_loss_stop_seconds: 1.0
 
+hardware:
+  enabled: false
+  simulation: true
+
+  gpio:
+    numbering_mode: "BCM"
+
 camera:
   enabled: true
   width: 640

@@ -18,6 +18,7 @@ REQUIRED_SECTIONS = {
     "timing",
     "movement",
     "safety",
+    "hardware",
     "camera",
     "audio",
     "vision",
@@ -221,6 +222,7 @@ def validate_config(config: dict[str, Any]) -> None:
     timing = _require_mapping(config, "timing")
     movement = _require_mapping(config, "movement")
     safety = _require_mapping(config, "safety")
+    hardware = _require_mapping(config, "hardware")
     camera = _require_mapping(config, "camera")
     audio = _require_mapping(config, "audio")
     _require_mapping(config, "vision")
@@ -309,6 +311,39 @@ def validate_config(config: dict[str, Any]) -> None:
         safety.get("connection_loss_stop_seconds"),
         "safety.connection_loss_stop_seconds",
     )
+
+        # Hardware
+    _require_boolean(
+        hardware,
+        "enabled",
+        "hardware.enabled",
+    )
+
+    _require_boolean(
+        hardware,
+        "simulation",
+        "hardware.simulation",
+    )
+
+    gpio_config = hardware.get("gpio")
+
+    if not isinstance(gpio_config, dict):
+        raise BuddyConfigError(
+            "hardware.gpio must be a mapping."
+        )
+
+    numbering_mode = gpio_config.get(
+        "numbering_mode"
+    )
+
+    if numbering_mode not in {
+        "BCM",
+        "BOARD",
+    }:
+        raise BuddyConfigError(
+            "hardware.gpio.numbering_mode must "
+            "be 'BCM' or 'BOARD'."
+        )
 
     # Camera
     _require_boolean(

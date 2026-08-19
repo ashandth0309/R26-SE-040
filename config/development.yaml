@@ -6,6 +6,10 @@ runtime:
   environment: "development"
   log_level: "DEBUG"
 
+hardware:
+  enabled: false
+  simulation: true
+
 camera:
   enabled: false
 
