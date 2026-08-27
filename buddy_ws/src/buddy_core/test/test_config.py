@@ -40,12 +40,43 @@ VALID_CONFIG = {
         "connection_loss_stop_seconds": 1.0,
     },
     "hardware": {
+    "enabled": False,
+    "simulation": True,
+    "gpio": {
+        "numbering_mode": "BCM",
+    },
+    "motors": {
         "enabled": False,
-        "simulation": True,
-        "gpio": {
-            "numbering_mode": "BCM",
+        "pwm_frequency_hz": 1000,
+        "driver_1": {
+            "standby": None,
+            "front_left": {
+                "in1": None,
+                "in2": None,
+                "pwm": None,
+            },
+            "front_right": {
+                "in1": None,
+                "in2": None,
+                "pwm": None,
+            },
+        },
+        "driver_2": {
+            "standby": None,
+            "rear_left": {
+                "in1": None,
+                "in2": None,
+                "pwm": None,
+            },
+            "rear_right": {
+                "in1": None,
+                "in2": None,
+                "pwm": None,
+            },
         },
     },
+},
+
     "camera": {
         "enabled": False,
         "width": 640,

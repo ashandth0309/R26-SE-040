@@ -345,6 +345,78 @@ def validate_config(config: dict[str, Any]) -> None:
             "be 'BCM' or 'BOARD'."
         )
 
+    motors = hardware.get("motors")
+
+    if not isinstance(motors, dict):
+        raise BuddyConfigError(
+            "hardware.motors must be a mapping."
+        )
+
+    _require_boolean(
+        motors,
+        "enabled",
+        "hardware.motors.enabled",
+    )
+
+    _require_positive_number(
+        motors.get("pwm_frequency_hz"),
+        "hardware.motors.pwm_frequency_hz",
+    )
+
+    for driver_name, motor_names in (
+        (
+            "driver_1",
+            ("front_left", "front_right"),
+        ),
+        (
+            "driver_2",
+            ("rear_left", "rear_right"),
+        ),
+    ):
+        driver = motors.get(driver_name)
+
+        if not isinstance(driver, dict):
+            raise BuddyConfigError(
+                f"hardware.motors.{driver_name} "
+                "must be a mapping."
+            )
+
+        standby = driver.get("standby")
+
+        if standby is not None and (
+            isinstance(standby, bool)
+            or not isinstance(standby, int)
+            or standby < 0
+        ):
+            raise BuddyConfigError(
+                f"hardware.motors.{driver_name}."
+                "standby must be null or a "
+                "non-negative integer."
+            )
+
+        for motor_name in motor_names:
+            motor_config = driver.get(motor_name)
+
+            if not isinstance(motor_config, dict):
+                raise BuddyConfigError(
+                    f"hardware.motors.{driver_name}."
+                    f"{motor_name} must be a mapping."
+                )
+
+            for pin_name in ("in1", "in2", "pwm"):
+                pin_value = motor_config.get(pin_name)
+
+                if pin_value is not None and (
+                    isinstance(pin_value, bool)
+                    or not isinstance(pin_value, int)
+                    or pin_value < 0
+                ):
+                    raise BuddyConfigError(
+                        f"hardware.motors.{driver_name}."
+                        f"{motor_name}.{pin_name} must "
+                        "be null or a non-negative integer."
+                    )
+
     # Camera
     _require_boolean(
         camera,

@@ -38,6 +38,36 @@ hardware:
   gpio:
     numbering_mode: "BCM"
 
+  motors:
+    enabled: false
+    pwm_frequency_hz: 1000
+
+    driver_1:
+      standby: 20
+
+      front_left:
+        in1: 5
+        in2: 6
+        pwm: 7
+
+      front_right:
+        in1: 8
+        in2: 9
+        pwm: 10
+
+    driver_2:
+      standby: 11
+
+      rear_left:
+        in1: 12
+        in2: 13
+        pwm: 16
+
+      rear_right:
+        in1: 17
+        in2: 18
+        pwm: 19
+
 camera:
   enabled: true
   width: 640
