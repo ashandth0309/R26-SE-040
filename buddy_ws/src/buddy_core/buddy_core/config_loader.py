@@ -417,6 +417,141 @@ def validate_config(config: dict[str, Any]) -> None:
                         "be null or a non-negative integer."
                     )
 
+    # Ultrasonic obstacle sensors
+    ultrasonic = hardware.get("ultrasonic")
+
+    # Backward compatibility: ultrasonic configuration was introduced
+    # after the original centralized configuration contract.
+    if ultrasonic is None:
+        ultrasonic = {
+            "enabled": False,
+            "timeout_seconds": 0.03,
+            "inter_sensor_delay_seconds": 0.06,
+            "minimum_distance_m": 0.02,
+            "maximum_distance_m": 4.0,
+            "filter_window": 3,
+            "front_left": {"trigger": 21, "echo": 22},
+            "front_right": {"trigger": 23, "echo": 24},
+            "rear_left": {"trigger": 25, "echo": 26},
+            "rear_right": {"trigger": 27, "echo": 14},
+        }
+
+    elif not isinstance(ultrasonic, dict):
+        raise BuddyConfigError(
+            "hardware.ultrasonic must be a mapping."
+        )
+
+    _require_boolean(
+        ultrasonic,
+        "enabled",
+        "hardware.ultrasonic.enabled",
+    )
+
+    _require_positive_number(
+        ultrasonic.get("timeout_seconds"),
+        "hardware.ultrasonic.timeout_seconds",
+    )
+
+    _require_positive_number(
+        ultrasonic.get("inter_sensor_delay_seconds"),
+        "hardware.ultrasonic.inter_sensor_delay_seconds",
+    )
+
+    _require_positive_number(
+        ultrasonic.get("minimum_distance_m"),
+        "hardware.ultrasonic.minimum_distance_m",
+    )
+
+    _require_positive_number(
+        ultrasonic.get("maximum_distance_m"),
+        "hardware.ultrasonic.maximum_distance_m",
+    )
+
+    if (
+        ultrasonic["minimum_distance_m"]
+        >= ultrasonic["maximum_distance_m"]
+    ):
+        raise BuddyConfigError(
+            "hardware.ultrasonic.minimum_distance_m must "
+            "be smaller than maximum_distance_m."
+        )
+
+    _require_positive_integer(
+        ultrasonic.get("filter_window"),
+        "hardware.ultrasonic.filter_window",
+    )
+
+    ultrasonic_pins = set()
+
+    for sensor_name in (
+        "front_left",
+        "front_right",
+        "rear_left",
+        "rear_right",
+    ):
+        sensor = ultrasonic.get(sensor_name)
+
+        if not isinstance(sensor, dict):
+            raise BuddyConfigError(
+                f"hardware.ultrasonic.{sensor_name} "
+                "must be a mapping."
+            )
+
+        for pin_name in ("trigger", "echo"):
+            pin_value = sensor.get(pin_name)
+
+            if (
+                isinstance(pin_value, bool)
+                or not isinstance(pin_value, int)
+                or pin_value < 0
+            ):
+                raise BuddyConfigError(
+                    f"hardware.ultrasonic.{sensor_name}."
+                    f"{pin_name} must be a non-negative integer."
+                )
+
+            if pin_value in ultrasonic_pins:
+                raise BuddyConfigError(
+                    f"GPIO {pin_value} is used more than once "
+                    "by the ultrasonic sensors."
+                )
+
+            ultrasonic_pins.add(pin_value)
+
+        if sensor["trigger"] == sensor["echo"]:
+            raise BuddyConfigError(
+                f"hardware.ultrasonic.{sensor_name} trigger "
+                "and echo GPIOs must be different."
+            )
+
+    motor_pins = set()
+
+    for driver_name, motor_names in (
+        ("driver_1", ("front_left", "front_right")),
+        ("driver_2", ("rear_left", "rear_right")),
+    ):
+        driver = motors[driver_name]
+
+        if driver.get("standby") is not None:
+            motor_pins.add(driver["standby"])
+
+        for motor_name in motor_names:
+            motor = driver[motor_name]
+
+            for pin_name in ("in1", "in2", "pwm"):
+                pin_value = motor.get(pin_name)
+
+                if pin_value is not None:
+                    motor_pins.add(pin_value)
+
+    conflicts = ultrasonic_pins & motor_pins
+
+    if conflicts:
+        raise BuddyConfigError(
+            "Ultrasonic GPIO conflict with motor GPIO(s): "
+            + ", ".join(str(pin) for pin in sorted(conflicts))
+        )
+
     # Camera
     _require_boolean(
         camera,
