@@ -1,0 +1,9 @@
+hardware:
+  enabled: true
+  simulation: false
+  motors:
+    enabled: true
+  ultrasonic:
+    enabled: true
+  neck:
+    enabled: false
