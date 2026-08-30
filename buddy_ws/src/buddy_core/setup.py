@@ -28,6 +28,8 @@ setup(
         'config_smoke_test = buddy_core.config_smoke_test:main',
         'logging_smoke_test = buddy_core.logging_smoke_test:main',
         'obstacle_sensor = buddy_core.sensors.obstacle_node:main',
+        'safety_supervisor = buddy_core.safety.safety_node:main',
+        'motor_executor = buddy_core.motors.motor_node:main',
     ],
 },
 )

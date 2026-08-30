@@ -1,0 +1,18 @@
+runtime:
+  environment: "motor_mock_test"
+  log_level: "INFO"
+
+hardware:
+  enabled: false
+  simulation: true
+
+  motors:
+    enabled: true
+
+  ultrasonic:
+    enabled: false
+
+features:
+  movement: true
+  navigation: false
+  patrol: false

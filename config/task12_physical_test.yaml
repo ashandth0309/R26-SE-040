@@ -1,0 +1,18 @@
+runtime:
+  environment: "task12_physical_test"
+  log_level: "INFO"
+
+hardware:
+  enabled: true
+  simulation: false
+
+  motors:
+    enabled: true
+
+  ultrasonic:
+    enabled: true
+
+features:
+  movement: true
+  navigation: false
+  patrol: false
