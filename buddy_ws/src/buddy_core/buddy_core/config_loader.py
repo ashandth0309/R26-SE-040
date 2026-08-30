@@ -552,6 +552,130 @@ def validate_config(config: dict[str, Any]) -> None:
             + ", ".join(str(pin) for pin in sorted(conflicts))
         )
 
+    # Neck / PCA9685
+    neck = hardware.get("neck")
+
+    # Backward compatibility: neck configuration was introduced
+    # after the original centralized configuration contract.
+    if neck is None:
+        neck = {
+            "enabled": False,
+            "i2c_address": 0x40,
+            "frequency_hz": 50,
+            "pan": {
+                "channel": 0,
+                "min_angle_deg": 50,
+                "center_angle_deg": 135,
+                "max_angle_deg": 180,
+            },
+            "tilt": {
+                "channel": 1,
+                "min_angle_deg": 110,
+                "center_angle_deg": 180,
+                "max_angle_deg": 180,
+            },
+        }
+
+    elif not isinstance(neck, dict):
+        raise BuddyConfigError(
+            "hardware.neck must be a mapping."
+        )
+
+    _require_boolean(
+        neck,
+        "enabled",
+        "hardware.neck.enabled",
+    )
+
+    i2c_address = neck.get("i2c_address")
+
+    if (
+        isinstance(i2c_address, bool)
+        or not isinstance(i2c_address, int)
+        or not 0 <= i2c_address <= 0x7F
+    ):
+        raise BuddyConfigError(
+            "hardware.neck.i2c_address must be an integer "
+            "between 0x00 and 0x7F."
+        )
+
+    _require_positive_number(
+        neck.get("frequency_hz"),
+        "hardware.neck.frequency_hz",
+    )
+
+    channels = set()
+
+    for axis_name in ("pan", "tilt"):
+        axis = neck.get(axis_name)
+
+        if not isinstance(axis, dict):
+            raise BuddyConfigError(
+                f"hardware.neck.{axis_name} must be a mapping."
+            )
+
+        channel = axis.get("channel")
+
+        if (
+            isinstance(channel, bool)
+            or not isinstance(channel, int)
+            or not 0 <= channel <= 15
+        ):
+            raise BuddyConfigError(
+                f"hardware.neck.{axis_name}.channel must "
+                "be an integer between 0 and 15."
+            )
+
+        if channel in channels:
+            raise BuddyConfigError(
+                "PAN and TILT must use different PCA9685 channels."
+            )
+
+        channels.add(channel)
+
+        for angle_name in (
+            "min_angle_deg",
+            "center_angle_deg",
+            "max_angle_deg",
+        ):
+            angle = axis.get(angle_name)
+
+            if (
+                isinstance(angle, bool)
+                or not isinstance(angle, (int, float))
+                or not 0 <= angle <= 180
+            ):
+                raise BuddyConfigError(
+                    f"hardware.neck.{axis_name}.{angle_name} "
+                    "must be between 0 and 180 degrees."
+                )
+
+        if not (
+            axis["min_angle_deg"]
+            <= axis["center_angle_deg"]
+            <= axis["max_angle_deg"]
+        ):
+            raise BuddyConfigError(
+                f"hardware.neck.{axis_name} angles must satisfy "
+                "min <= center <= max."
+            )
+
+        calibrated_limits = {
+            "pan": (50, 180),
+            "tilt": (110, 180),
+        }
+
+        calibrated_min, calibrated_max = calibrated_limits[axis_name]
+
+        if (
+            axis["min_angle_deg"] < calibrated_min
+            or axis["max_angle_deg"] > calibrated_max
+        ):
+            raise BuddyConfigError(
+                f"hardware.neck.{axis_name} calibrated range must stay "
+                f"within {calibrated_min} to {calibrated_max} degrees."
+            )
+
     # Camera
     _require_boolean(
         camera,

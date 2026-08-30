@@ -72,6 +72,20 @@ hardware:
     rear_right:
       trigger: 27
       echo: 14
+  neck:
+    enabled: false
+    i2c_address: 0x40
+    frequency_hz: 50
+    pan:
+      channel: 0
+      min_angle_deg: 50
+      center_angle_deg: 135
+      max_angle_deg: 180
+    tilt:
+      channel: 1
+      min_angle_deg: 110
+      center_angle_deg: 180
+      max_angle_deg: 180
 camera:
   enabled: true
   width: 640
