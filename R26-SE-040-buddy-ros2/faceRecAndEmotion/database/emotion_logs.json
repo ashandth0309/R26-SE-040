@@ -1,0 +1,7150 @@
+{
+  "logs": [
+    {
+      "timestamp": "2026-09-24 15:59:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 15:59:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9821784485684901
+    },
+    {
+      "timestamp": "2026-09-24 16:00:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.982958972454071
+    },
+    {
+      "timestamp": "2026-09-24 16:00:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9906361097476548
+    },
+    {
+      "timestamp": "2026-09-24 16:00:08",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.48256105184555054
+    },
+    {
+      "timestamp": "2026-09-24 16:00:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9936392903327942
+    },
+    {
+      "timestamp": "2026-09-24 16:00:44",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8410222123834834
+    },
+    {
+      "timestamp": "2026-09-24 16:00:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:00:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:01:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:01:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9972853663819592
+    },
+    {
+      "timestamp": "2026-09-24 16:01:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.735876739025116
+    },
+    {
+      "timestamp": "2026-09-24 16:01:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:01:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9918748746067435
+    },
+    {
+      "timestamp": "2026-09-24 16:01:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:01:25",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8595750331878662
+    },
+    {
+      "timestamp": "2026-09-24 16:01:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9907597303390503
+    },
+    {
+      "timestamp": "2026-09-24 16:01:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9076934456825256
+    },
+    {
+      "timestamp": "2026-09-24 16:02:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.965853750705719
+    },
+    {
+      "timestamp": "2026-09-24 16:03:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5308557748794556
+    },
+    {
+      "timestamp": "2026-09-24 16:04:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:04:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:04:26",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8439304828643799
+    },
+    {
+      "timestamp": "2026-09-24 16:04:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:04:54",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8482183398940158
+    },
+    {
+      "timestamp": "2026-09-24 16:04:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:05:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:05:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:05:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:05:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5055652856826782
+    },
+    {
+      "timestamp": "2026-09-24 16:05:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9797520637512207
+    },
+    {
+      "timestamp": "2026-09-24 16:05:43",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7669198831224303
+    },
+    {
+      "timestamp": "2026-09-24 16:05:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5412179231643677
+    },
+    {
+      "timestamp": "2026-09-24 16:05:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7643352150917053
+    },
+    {
+      "timestamp": "2026-09-24 16:05:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:06:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:06:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:06:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.668870747089386
+    },
+    {
+      "timestamp": "2026-09-24 16:06:31",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9011981965539689
+    },
+    {
+      "timestamp": "2026-09-24 16:06:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:06:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:06:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8114259243011475
+    },
+    {
+      "timestamp": "2026-09-24 16:07:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7974647879600525
+    },
+    {
+      "timestamp": "2026-09-24 16:07:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:13",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8218179834972611
+    },
+    {
+      "timestamp": "2026-09-24 16:07:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9737772345542908
+    },
+    {
+      "timestamp": "2026-09-24 16:07:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9816522002220154
+    },
+    {
+      "timestamp": "2026-09-24 16:07:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8092975616455078
+    },
+    {
+      "timestamp": "2026-09-24 16:07:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9765703082084656
+    },
+    {
+      "timestamp": "2026-09-24 16:07:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7274685502052307
+    },
+    {
+      "timestamp": "2026-09-24 16:07:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:07:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9262540936470032
+    },
+    {
+      "timestamp": "2026-09-24 16:08:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9821525801511157
+    },
+    {
+      "timestamp": "2026-09-24 16:08:12",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9765042662620544
+    },
+    {
+      "timestamp": "2026-09-24 16:08:31",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.895049863758675
+    },
+    {
+      "timestamp": "2026-09-24 16:09:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9274079203605652
+    },
+    {
+      "timestamp": "2026-09-24 16:09:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9935985803604126
+    },
+    {
+      "timestamp": "2026-09-24 16:09:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9588842391967773
+    },
+    {
+      "timestamp": "2026-09-24 16:09:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:09:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:09:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:10:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9453980922698975
+    },
+    {
+      "timestamp": "2026-09-24 16:11:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:11:13",
+      "name": "sobiya",
+      "emotion": "surprise",
+      "confidence": 0.7064715973768715
+    },
+    {
+      "timestamp": "2026-09-24 16:11:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5156463384628296
+    },
+    {
+      "timestamp": "2026-09-24 16:11:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:11:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:11:30",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9984432457949666
+    },
+    {
+      "timestamp": "2026-09-24 16:11:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9995272159576416
+    },
+    {
+      "timestamp": "2026-09-24 16:11:38",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.999836504449636
+    },
+    {
+      "timestamp": "2026-09-24 16:11:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:11:51",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6260680556297302
+    },
+    {
+      "timestamp": "2026-09-24 16:11:55",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9809166181633842
+    },
+    {
+      "timestamp": "2026-09-24 16:12:02",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5760722756385803
+    },
+    {
+      "timestamp": "2026-09-24 16:12:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:12:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9681372046470642
+    },
+    {
+      "timestamp": "2026-09-24 16:12:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7879979610443115
+    },
+    {
+      "timestamp": "2026-09-24 16:12:20",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7181312777839568
+    },
+    {
+      "timestamp": "2026-09-24 16:12:24",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9635311365127563
+    },
+    {
+      "timestamp": "2026-09-24 16:12:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:12:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:12:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6572563648223877
+    },
+    {
+      "timestamp": "2026-09-24 16:12:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.928757186457943
+    },
+    {
+      "timestamp": "2026-09-24 16:12:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9939462542533875
+    },
+    {
+      "timestamp": "2026-09-24 16:12:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9983639716126902
+    },
+    {
+      "timestamp": "2026-09-24 16:12:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9968991279602051
+    },
+    {
+      "timestamp": "2026-09-24 16:13:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9938356872699075
+    },
+    {
+      "timestamp": "2026-09-24 16:13:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9699026328267236
+    },
+    {
+      "timestamp": "2026-09-24 16:13:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:13:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:13:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:13:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8885684609413147
+    },
+    {
+      "timestamp": "2026-09-24 16:13:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:13:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8675068537894997
+    },
+    {
+      "timestamp": "2026-09-24 16:13:53",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5519900321960449
+    },
+    {
+      "timestamp": "2026-09-24 16:13:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9419290984826744
+    },
+    {
+      "timestamp": "2026-09-24 16:14:02",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8799716830253601
+    },
+    {
+      "timestamp": "2026-09-24 16:14:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:14:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:14:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9905428880776697
+    },
+    {
+      "timestamp": "2026-09-24 16:14:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:14:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.674468994140625
+    },
+    {
+      "timestamp": "2026-09-24 16:14:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5927110667652528
+    },
+    {
+      "timestamp": "2026-09-24 16:14:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5535569254823834
+    },
+    {
+      "timestamp": "2026-09-24 16:14:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:14:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.993354320526123
+    },
+    {
+      "timestamp": "2026-09-24 16:14:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9927241206169128
+    },
+    {
+      "timestamp": "2026-09-24 16:14:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9934510000406503
+    },
+    {
+      "timestamp": "2026-09-24 16:14:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:15:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:15:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9481824636459351
+    },
+    {
+      "timestamp": "2026-09-24 16:15:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9839280247688293
+    },
+    {
+      "timestamp": "2026-09-24 16:15:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9828043569805835
+    },
+    {
+      "timestamp": "2026-09-24 16:15:28",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8615640566868714
+    },
+    {
+      "timestamp": "2026-09-24 16:15:32",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8288357461886708
+    },
+    {
+      "timestamp": "2026-09-24 16:15:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9558765292167664
+    },
+    {
+      "timestamp": "2026-09-24 16:15:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9806972742080688
+    },
+    {
+      "timestamp": "2026-09-24 16:15:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8459250330924988
+    },
+    {
+      "timestamp": "2026-09-24 16:15:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:15:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8284072875976562
+    },
+    {
+      "timestamp": "2026-09-24 16:16:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:16:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:16:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:16:25",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7318287215437028
+    },
+    {
+      "timestamp": "2026-09-24 16:16:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:16:34",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.923448920249939
+    },
+    {
+      "timestamp": "2026-09-24 16:16:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9457224011421204
+    },
+    {
+      "timestamp": "2026-09-24 16:16:44",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9555655717849731
+    },
+    {
+      "timestamp": "2026-09-24 16:16:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.980645178594898
+    },
+    {
+      "timestamp": "2026-09-24 16:16:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9855380058288574
+    },
+    {
+      "timestamp": "2026-09-24 16:16:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5097913146018982
+    },
+    {
+      "timestamp": "2026-09-24 16:17:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5842761397361755
+    },
+    {
+      "timestamp": "2026-09-24 16:17:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:17:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8116869105919493
+    },
+    {
+      "timestamp": "2026-09-24 16:17:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:17:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9940086603164673
+    },
+    {
+      "timestamp": "2026-09-24 16:17:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9711561799049377
+    },
+    {
+      "timestamp": "2026-09-24 16:17:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.988960920448413
+    },
+    {
+      "timestamp": "2026-09-24 16:17:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9897750616073608
+    },
+    {
+      "timestamp": "2026-09-24 16:17:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.950020080802431
+    },
+    {
+      "timestamp": "2026-09-24 16:17:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9892075061798096
+    },
+    {
+      "timestamp": "2026-09-24 16:18:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9984405636787415
+    },
+    {
+      "timestamp": "2026-09-24 16:18:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9603792428970337
+    },
+    {
+      "timestamp": "2026-09-24 16:18:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:18:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:18:21",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6581889986991882
+    },
+    {
+      "timestamp": "2026-09-24 16:18:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:18:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9942624565519367
+    },
+    {
+      "timestamp": "2026-09-24 16:18:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9725026471914439
+    },
+    {
+      "timestamp": "2026-09-24 16:18:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9923804998397827
+    },
+    {
+      "timestamp": "2026-09-24 16:18:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.996484637260437
+    },
+    {
+      "timestamp": "2026-09-24 16:18:58",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7629529237747192
+    },
+    {
+      "timestamp": "2026-09-24 16:19:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.998139500617981
+    },
+    {
+      "timestamp": "2026-09-24 16:19:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9710622412599469
+    },
+    {
+      "timestamp": "2026-09-24 16:19:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:19:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9975864887237549
+    },
+    {
+      "timestamp": "2026-09-24 16:19:29",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9833351393538546
+    },
+    {
+      "timestamp": "2026-09-24 16:19:34",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.958875830039481
+    },
+    {
+      "timestamp": "2026-09-24 16:19:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9046517014503479
+    },
+    {
+      "timestamp": "2026-09-24 16:19:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8116316199302673
+    },
+    {
+      "timestamp": "2026-09-24 16:19:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9100198745727539
+    },
+    {
+      "timestamp": "2026-09-24 16:19:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:20:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:20:16",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.6219305992126465
+    },
+    {
+      "timestamp": "2026-09-24 16:20:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9719992246626883
+    },
+    {
+      "timestamp": "2026-09-24 16:20:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9950474500656128
+    },
+    {
+      "timestamp": "2026-09-24 16:20:29",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.812078058719635
+    },
+    {
+      "timestamp": "2026-09-24 16:20:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:20:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9938184626318857
+    },
+    {
+      "timestamp": "2026-09-24 16:20:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9941322207450867
+    },
+    {
+      "timestamp": "2026-09-24 16:20:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9106308221817017
+    },
+    {
+      "timestamp": "2026-09-24 16:20:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9916553497314453
+    },
+    {
+      "timestamp": "2026-09-24 16:20:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.937577486038208
+    },
+    {
+      "timestamp": "2026-09-24 16:20:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.991891443246093
+    },
+    {
+      "timestamp": "2026-09-24 16:21:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9920021886826866
+    },
+    {
+      "timestamp": "2026-09-24 16:21:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9980149863967291
+    },
+    {
+      "timestamp": "2026-09-24 16:21:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.835513710975647
+    },
+    {
+      "timestamp": "2026-09-24 16:21:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9932228326797485
+    },
+    {
+      "timestamp": "2026-09-24 16:21:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9959004521369934
+    },
+    {
+      "timestamp": "2026-09-24 16:21:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:21:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:22:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9747014045715332
+    },
+    {
+      "timestamp": "2026-09-24 16:22:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5946224331855774
+    },
+    {
+      "timestamp": "2026-09-24 16:22:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.902705729007721
+    },
+    {
+      "timestamp": "2026-09-24 16:22:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:22:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8761611507034988
+    },
+    {
+      "timestamp": "2026-09-24 16:22:23",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9540646048822764
+    },
+    {
+      "timestamp": "2026-09-24 16:22:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:22:31",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7964726686477661
+    },
+    {
+      "timestamp": "2026-09-24 16:22:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:22:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:23:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:24:04",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6805624175406944
+    },
+    {
+      "timestamp": "2026-09-24 16:24:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:24:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9800483012141822
+    },
+    {
+      "timestamp": "2026-09-24 16:24:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9970749620109842
+    },
+    {
+      "timestamp": "2026-09-24 16:24:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9804179668426514
+    },
+    {
+      "timestamp": "2026-09-24 16:24:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4072113633155823
+    },
+    {
+      "timestamp": "2026-09-24 16:25:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9926226130274073
+    },
+    {
+      "timestamp": "2026-09-24 16:25:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.990656673351328
+    },
+    {
+      "timestamp": "2026-09-24 16:25:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:25:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:25:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9468119144439697
+    },
+    {
+      "timestamp": "2026-09-24 16:25:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8011204481792717
+    },
+    {
+      "timestamp": "2026-09-24 16:25:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.788740873336792
+    },
+    {
+      "timestamp": "2026-09-24 16:25:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:26:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9507564902305603
+    },
+    {
+      "timestamp": "2026-09-24 16:26:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:26:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:26:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9865913987159729
+    },
+    {
+      "timestamp": "2026-09-24 16:26:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7702789765762672
+    },
+    {
+      "timestamp": "2026-09-24 16:26:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:26:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9825825084795063
+    },
+    {
+      "timestamp": "2026-09-24 16:26:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8152266520531956
+    },
+    {
+      "timestamp": "2026-09-24 16:26:54",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.6569900512695312
+    },
+    {
+      "timestamp": "2026-09-24 16:27:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7891677021980286
+    },
+    {
+      "timestamp": "2026-09-24 16:27:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8193508982658386
+    },
+    {
+      "timestamp": "2026-09-24 16:27:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9823442090954906
+    },
+    {
+      "timestamp": "2026-09-24 16:27:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9342140555381775
+    },
+    {
+      "timestamp": "2026-09-24 16:27:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9596696471971063
+    },
+    {
+      "timestamp": "2026-09-24 16:27:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6091329325279078
+    },
+    {
+      "timestamp": "2026-09-24 16:27:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.921978771686554
+    },
+    {
+      "timestamp": "2026-09-24 16:27:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6336618065834045
+    },
+    {
+      "timestamp": "2026-09-24 16:27:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 16:27:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9758036718251509
+    },
+    {
+      "timestamp": "2026-09-24 16:27:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9653059819523085
+    },
+    {
+      "timestamp": "2026-09-24 16:27:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9853217005729675
+    },
+    {
+      "timestamp": "2026-09-24 16:27:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9951567048021204
+    },
+    {
+      "timestamp": "2026-09-24 16:28:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9678589701652527
+    },
+    {
+      "timestamp": "2026-09-24 16:28:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9728905558586121
+    },
+    {
+      "timestamp": "2026-09-24 20:18:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.99722820520401
+    },
+    {
+      "timestamp": "2026-09-24 20:18:41",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9972596168518066
+    },
+    {
+      "timestamp": "2026-09-24 20:18:47",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4025340618213452
+    },
+    {
+      "timestamp": "2026-09-24 20:18:52",
+      "name": "sobiya",
+      "emotion": "surprise",
+      "confidence": 0.5584161281585693
+    },
+    {
+      "timestamp": "2026-09-24 20:30:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:30:10",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9998530745418712
+    },
+    {
+      "timestamp": "2026-09-24 20:30:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:30:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9839372625313558
+    },
+    {
+      "timestamp": "2026-09-24 20:30:23",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5369118452072144
+    },
+    {
+      "timestamp": "2026-09-24 20:30:28",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6830035448074341
+    },
+    {
+      "timestamp": "2026-09-24 20:30:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:30:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:31:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:31:20",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9208890701400125
+    },
+    {
+      "timestamp": "2026-09-24 20:31:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9580399990081787
+    },
+    {
+      "timestamp": "2026-09-24 20:31:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:32:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:32:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:32:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9502762526438387
+    },
+    {
+      "timestamp": "2026-09-24 20:33:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:33:29",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9685258865356445
+    },
+    {
+      "timestamp": "2026-09-24 20:33:44",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9309733510017395
+    },
+    {
+      "timestamp": "2026-09-24 20:33:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:34:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:34:23",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9548821503064453
+    },
+    {
+      "timestamp": "2026-09-24 20:35:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:39:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4926953911781311
+    },
+    {
+      "timestamp": "2026-09-24 20:40:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8594080721979184
+    },
+    {
+      "timestamp": "2026-09-24 20:40:07",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9947361942968485
+    },
+    {
+      "timestamp": "2026-09-24 20:40:14",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.3818814982105194
+    },
+    {
+      "timestamp": "2026-09-24 20:40:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5941957235336304
+    },
+    {
+      "timestamp": "2026-09-24 20:40:23",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5684654116630554
+    },
+    {
+      "timestamp": "2026-09-24 20:40:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 20:41:30",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7559356689453125
+    },
+    {
+      "timestamp": "2026-09-24 21:12:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:12:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8742424249649048
+    },
+    {
+      "timestamp": "2026-09-24 21:12:49",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.8068112134933472
+    },
+    {
+      "timestamp": "2026-09-24 21:12:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:12:57",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.4630117416381836
+    },
+    {
+      "timestamp": "2026-09-24 21:13:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8891750574111938
+    },
+    {
+      "timestamp": "2026-09-24 21:13:06",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6263264790967988
+    },
+    {
+      "timestamp": "2026-09-24 21:13:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9908938418753336
+    },
+    {
+      "timestamp": "2026-09-24 21:13:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7239225239846081
+    },
+    {
+      "timestamp": "2026-09-24 21:13:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6745160222053528
+    },
+    {
+      "timestamp": "2026-09-24 21:13:24",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9218466281890869
+    },
+    {
+      "timestamp": "2026-09-24 21:13:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:13:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9658339003225506
+    },
+    {
+      "timestamp": "2026-09-24 21:13:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9902308583259583
+    },
+    {
+      "timestamp": "2026-09-24 21:13:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:13:58",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.46607211232185364
+    },
+    {
+      "timestamp": "2026-09-24 21:14:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:14:06",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9405094456065362
+    },
+    {
+      "timestamp": "2026-09-24 21:14:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9953112006187439
+    },
+    {
+      "timestamp": "2026-09-24 21:14:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9939898252487183
+    },
+    {
+      "timestamp": "2026-09-24 21:14:52",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7908985614776611
+    },
+    {
+      "timestamp": "2026-09-24 21:14:56",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5039331021269025
+    },
+    {
+      "timestamp": "2026-09-24 21:15:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9905175566673279
+    },
+    {
+      "timestamp": "2026-09-24 21:15:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:15:11",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9018877744674683
+    },
+    {
+      "timestamp": "2026-09-24 21:15:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:15:24",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8730073571205139
+    },
+    {
+      "timestamp": "2026-09-24 21:15:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:15:40",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9999297857200844
+    },
+    {
+      "timestamp": "2026-09-24 21:15:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9367836117744446
+    },
+    {
+      "timestamp": "2026-09-24 21:15:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7588696479797363
+    },
+    {
+      "timestamp": "2026-09-24 21:15:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6107292175292969
+    },
+    {
+      "timestamp": "2026-09-24 21:15:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8989999830126751
+    },
+    {
+      "timestamp": "2026-09-24 21:16:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7413407564163208
+    },
+    {
+      "timestamp": "2026-09-24 21:16:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:16:15",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8810466527938843
+    },
+    {
+      "timestamp": "2026-09-24 21:16:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9620524048805237
+    },
+    {
+      "timestamp": "2026-09-24 21:16:23",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9984871147259611
+    },
+    {
+      "timestamp": "2026-09-24 21:19:01",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9363620357081848
+    },
+    {
+      "timestamp": "2026-09-24 21:19:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6811424493789673
+    },
+    {
+      "timestamp": "2026-09-24 21:19:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7380316257476807
+    },
+    {
+      "timestamp": "2026-09-24 21:19:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9095789736258372
+    },
+    {
+      "timestamp": "2026-09-24 21:19:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.781811641562679
+    },
+    {
+      "timestamp": "2026-09-24 21:19:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:19:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:19:47",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9998539686203003
+    },
+    {
+      "timestamp": "2026-09-24 21:19:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:19:57",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5198220610618591
+    },
+    {
+      "timestamp": "2026-09-24 21:20:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:20:45",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7894753217697144
+    },
+    {
+      "timestamp": "2026-09-24 21:20:49",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5442922439749386
+    },
+    {
+      "timestamp": "2026-09-24 21:20:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.512886106967926
+    },
+    {
+      "timestamp": "2026-09-24 21:20:58",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9975722432136536
+    },
+    {
+      "timestamp": "2026-09-24 21:21:02",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6572590470314026
+    },
+    {
+      "timestamp": "2026-09-24 21:21:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:11",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5585771203041077
+    },
+    {
+      "timestamp": "2026-09-24 21:21:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:23",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9294736981391907
+    },
+    {
+      "timestamp": "2026-09-24 21:21:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:21:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:22:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:22:16",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9929327964782715
+    },
+    {
+      "timestamp": "2026-09-24 21:22:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:22:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.897238552570343
+    },
+    {
+      "timestamp": "2026-09-24 21:22:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:23:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:23:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.718724250793457
+    },
+    {
+      "timestamp": "2026-09-24 21:23:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:23:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:23:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:23:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.535187840461731
+    },
+    {
+      "timestamp": "2026-09-24 21:24:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:24:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5332279801368713
+    },
+    {
+      "timestamp": "2026-09-24 21:24:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7592219114303589
+    },
+    {
+      "timestamp": "2026-09-24 21:24:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:24:17",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9732224925293024
+    },
+    {
+      "timestamp": "2026-09-24 21:24:21",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.976250171661377
+    },
+    {
+      "timestamp": "2026-09-24 21:24:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9851608863568835
+    },
+    {
+      "timestamp": "2026-09-24 21:24:30",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9709689599853134
+    },
+    {
+      "timestamp": "2026-09-24 21:24:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:24:38",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.71917325258255
+    },
+    {
+      "timestamp": "2026-09-24 21:24:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7886688961185341
+    },
+    {
+      "timestamp": "2026-09-24 21:24:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:24:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.49941548705101013
+    },
+    {
+      "timestamp": "2026-09-24 21:24:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:24:59",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9994933008845628
+    },
+    {
+      "timestamp": "2026-09-24 21:25:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5795987248420715
+    },
+    {
+      "timestamp": "2026-09-24 21:25:08",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9885204448079533
+    },
+    {
+      "timestamp": "2026-09-24 21:25:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:25:16",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7987370491027832
+    },
+    {
+      "timestamp": "2026-09-24 21:25:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5105680227279663
+    },
+    {
+      "timestamp": "2026-09-24 21:25:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:25:29",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9181860089302063
+    },
+    {
+      "timestamp": "2026-09-24 21:25:33",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8380279734101328
+    },
+    {
+      "timestamp": "2026-09-24 21:25:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:25:41",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9319508035153629
+    },
+    {
+      "timestamp": "2026-09-24 21:25:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6355043649673462
+    },
+    {
+      "timestamp": "2026-09-24 21:25:49",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9310039281845093
+    },
+    {
+      "timestamp": "2026-09-24 21:26:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9535588677455344
+    },
+    {
+      "timestamp": "2026-09-24 21:26:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:26:33",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8470008373260498
+    },
+    {
+      "timestamp": "2026-09-24 21:26:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:26:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.827838122844696
+    },
+    {
+      "timestamp": "2026-09-24 21:29:14",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9832125306129456
+    },
+    {
+      "timestamp": "2026-09-24 21:29:18",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5755857825279236
+    },
+    {
+      "timestamp": "2026-09-24 21:29:22",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9361292123794556
+    },
+    {
+      "timestamp": "2026-09-24 21:29:27",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8873588971709547
+    },
+    {
+      "timestamp": "2026-09-24 21:29:31",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9861336366970973
+    },
+    {
+      "timestamp": "2026-09-24 21:29:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9403802227520677
+    },
+    {
+      "timestamp": "2026-09-24 21:29:39",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9813103068655913
+    },
+    {
+      "timestamp": "2026-09-24 21:29:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:29:48",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9980376362800598
+    },
+    {
+      "timestamp": "2026-09-24 21:29:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.996131420135498
+    },
+    {
+      "timestamp": "2026-09-24 21:29:56",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9989033340754112
+    },
+    {
+      "timestamp": "2026-09-24 21:30:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:30:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7252914905548096
+    },
+    {
+      "timestamp": "2026-09-24 21:30:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9742864370346069
+    },
+    {
+      "timestamp": "2026-09-24 21:30:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4962964355945587
+    },
+    {
+      "timestamp": "2026-09-24 21:30:18",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8232331275939941
+    },
+    {
+      "timestamp": "2026-09-24 21:30:22",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8330865402869309
+    },
+    {
+      "timestamp": "2026-09-24 21:30:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.647473931312561
+    },
+    {
+      "timestamp": "2026-09-24 21:30:31",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7718024117828852
+    },
+    {
+      "timestamp": "2026-09-24 21:30:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:30:39",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9934723385009362
+    },
+    {
+      "timestamp": "2026-09-24 21:30:44",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7658520936965942
+    },
+    {
+      "timestamp": "2026-09-24 21:30:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6360044858458331
+    },
+    {
+      "timestamp": "2026-09-24 21:30:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.960160796623135
+    },
+    {
+      "timestamp": "2026-09-24 21:30:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5555306077003479
+    },
+    {
+      "timestamp": "2026-09-24 21:31:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:13",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9677498321384091
+    },
+    {
+      "timestamp": "2026-09-24 21:31:18",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9975461363792419
+    },
+    {
+      "timestamp": "2026-09-24 21:31:22",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7278111414796794
+    },
+    {
+      "timestamp": "2026-09-24 21:31:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6117541060740821
+    },
+    {
+      "timestamp": "2026-09-24 21:31:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8296332955360413
+    },
+    {
+      "timestamp": "2026-09-24 21:31:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9282063245773315
+    },
+    {
+      "timestamp": "2026-09-24 21:31:48",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9334914048606994
+    },
+    {
+      "timestamp": "2026-09-24 21:31:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:31:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5491244792938232
+    },
+    {
+      "timestamp": "2026-09-24 21:32:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9727350457152751
+    },
+    {
+      "timestamp": "2026-09-24 21:32:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9247236803009319
+    },
+    {
+      "timestamp": "2026-09-24 21:32:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:32:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.3455307093579
+    },
+    {
+      "timestamp": "2026-09-24 21:33:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6253559439950056
+    },
+    {
+      "timestamp": "2026-09-24 21:33:13",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6669434309005737
+    },
+    {
+      "timestamp": "2026-09-24 21:33:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:22",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9970976114273071
+    },
+    {
+      "timestamp": "2026-09-24 21:33:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9947227832509746
+    },
+    {
+      "timestamp": "2026-09-24 21:33:38",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9970055222511292
+    },
+    {
+      "timestamp": "2026-09-24 21:33:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9926322102546692
+    },
+    {
+      "timestamp": "2026-09-24 21:33:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.570250928401947
+    },
+    {
+      "timestamp": "2026-09-24 21:33:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:33:55",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.4329022169113159
+    },
+    {
+      "timestamp": "2026-09-24 21:34:00",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.591802179813385
+    },
+    {
+      "timestamp": "2026-09-24 21:34:04",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6194752597183298
+    },
+    {
+      "timestamp": "2026-09-24 21:34:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:34:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:34:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:34:54",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8060441978030441
+    },
+    {
+      "timestamp": "2026-09-24 21:34:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4935871362686157
+    },
+    {
+      "timestamp": "2026-09-24 21:35:03",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7882804870605469
+    },
+    {
+      "timestamp": "2026-09-24 21:35:07",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.943881995215178
+    },
+    {
+      "timestamp": "2026-09-24 21:36:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8516159057617188
+    },
+    {
+      "timestamp": "2026-09-24 21:36:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:36:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9942203760147095
+    },
+    {
+      "timestamp": "2026-09-24 21:36:48",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.966698352492052
+    },
+    {
+      "timestamp": "2026-09-24 21:36:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5762938170082788
+    },
+    {
+      "timestamp": "2026-09-24 21:36:56",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7286695241928101
+    },
+    {
+      "timestamp": "2026-09-24 21:37:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:37:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:37:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9765698313713074
+    },
+    {
+      "timestamp": "2026-09-24 21:37:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:37:17",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7450873103789872
+    },
+    {
+      "timestamp": "2026-09-24 21:37:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:37:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9801627981759786
+    },
+    {
+      "timestamp": "2026-09-24 21:37:29",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8160384297370911
+    },
+    {
+      "timestamp": "2026-09-24 21:37:33",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9955013987720847
+    },
+    {
+      "timestamp": "2026-09-24 21:37:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:37:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9832927604564713
+    },
+    {
+      "timestamp": "2026-09-24 21:37:48",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6241028308868408
+    },
+    {
+      "timestamp": "2026-09-24 21:37:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9016292691230774
+    },
+    {
+      "timestamp": "2026-09-24 21:37:56",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.971455991268158
+    },
+    {
+      "timestamp": "2026-09-24 21:38:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.814612627029419
+    },
+    {
+      "timestamp": "2026-09-24 21:38:05",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.45515134930610657
+    },
+    {
+      "timestamp": "2026-09-24 21:38:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8105620032883885
+    },
+    {
+      "timestamp": "2026-09-24 21:38:13",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5708194119226583
+    },
+    {
+      "timestamp": "2026-09-24 21:38:17",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9916723370552063
+    },
+    {
+      "timestamp": "2026-09-24 21:38:21",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9973154664039612
+    },
+    {
+      "timestamp": "2026-09-24 21:38:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:38:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:38:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9834113717079163
+    },
+    {
+      "timestamp": "2026-09-24 21:38:38",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9731907248497009
+    },
+    {
+      "timestamp": "2026-09-24 21:38:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9235898165213843
+    },
+    {
+      "timestamp": "2026-09-24 21:38:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9987747073173523
+    },
+    {
+      "timestamp": "2026-09-24 21:39:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:39:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:40:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:40:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5189276933670044
+    },
+    {
+      "timestamp": "2026-09-24 21:40:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.736460268497467
+    },
+    {
+      "timestamp": "2026-09-24 21:40:41",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4862080804233599
+    },
+    {
+      "timestamp": "2026-09-24 21:40:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:40:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:40:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9319674372673035
+    },
+    {
+      "timestamp": "2026-09-24 21:40:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9690316952429181
+    },
+    {
+      "timestamp": "2026-09-24 21:42:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:42:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:43:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6571608577466521
+    },
+    {
+      "timestamp": "2026-09-24 21:43:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:43:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:43:56",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9999010562896729
+    },
+    {
+      "timestamp": "2026-09-24 21:44:00",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9381672217646573
+    },
+    {
+      "timestamp": "2026-09-24 21:44:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.785898745059967
+    },
+    {
+      "timestamp": "2026-09-24 21:44:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:44:16",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.866340696811676
+    },
+    {
+      "timestamp": "2026-09-24 21:44:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:44:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7096824645996094
+    },
+    {
+      "timestamp": "2026-09-24 21:45:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:45:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:45:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:46:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-24 21:47:02",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.993889748685941
+    },
+    {
+      "timestamp": "2026-09-24 21:47:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:12:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7842869758605957
+    },
+    {
+      "timestamp": "2026-09-25 11:12:47",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9390622973442078
+    },
+    {
+      "timestamp": "2026-09-25 11:12:51",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6668649911880493
+    },
+    {
+      "timestamp": "2026-09-25 11:12:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:14:12",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9966661330063502
+    },
+    {
+      "timestamp": "2026-09-25 11:14:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:14:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:15:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:16:21",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4359709322452545
+    },
+    {
+      "timestamp": "2026-09-25 11:16:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:17:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:17:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:17:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:17:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:17:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:18:03",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7234360309319459
+    },
+    {
+      "timestamp": "2026-09-25 11:18:10",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6709352135658264
+    },
+    {
+      "timestamp": "2026-09-25 11:18:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9413533736888615
+    },
+    {
+      "timestamp": "2026-09-25 11:19:30",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6873615756795912
+    },
+    {
+      "timestamp": "2026-09-25 11:19:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:19:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:19:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6658902168273926
+    },
+    {
+      "timestamp": "2026-09-25 11:20:15",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9010927677154541
+    },
+    {
+      "timestamp": "2026-09-25 11:20:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8583346178132751
+    },
+    {
+      "timestamp": "2026-09-25 11:20:25",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:20:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:21:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5027636885643005
+    },
+    {
+      "timestamp": "2026-09-25 11:22:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:23:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:23:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:23:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:23:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:23:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:24:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:24:26",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8830897212028503
+    },
+    {
+      "timestamp": "2026-09-25 11:25:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:25:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8678478598594666
+    },
+    {
+      "timestamp": "2026-09-25 11:26:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9741780161857605
+    },
+    {
+      "timestamp": "2026-09-25 11:26:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:26:48",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.70894455909729
+    },
+    {
+      "timestamp": "2026-09-25 11:26:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:27:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:27:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:27:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9726164324651022
+    },
+    {
+      "timestamp": "2026-09-25 11:27:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:27:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:27:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9993723034858704
+    },
+    {
+      "timestamp": "2026-09-25 11:27:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:28:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:28:27",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5303716975672065
+    },
+    {
+      "timestamp": "2026-09-25 11:28:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:28:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:29:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8377944424397419
+    },
+    {
+      "timestamp": "2026-09-25 11:29:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:30:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9055746793746948
+    },
+    {
+      "timestamp": "2026-09-25 11:30:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:30:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6903851628303528
+    },
+    {
+      "timestamp": "2026-09-25 11:30:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:30:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:31:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:31:17",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5876571044513113
+    },
+    {
+      "timestamp": "2026-09-25 11:31:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4232554688009899
+    },
+    {
+      "timestamp": "2026-09-25 11:31:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:31:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7085458636283875
+    },
+    {
+      "timestamp": "2026-09-25 11:32:00",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8526216149330139
+    },
+    {
+      "timestamp": "2026-09-25 11:32:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:32:34",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8204781413078308
+    },
+    {
+      "timestamp": "2026-09-25 11:33:12",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9938032027365686
+    },
+    {
+      "timestamp": "2026-09-25 11:33:25",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9964163897285694
+    },
+    {
+      "timestamp": "2026-09-25 11:33:34",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9628155827522278
+    },
+    {
+      "timestamp": "2026-09-25 11:33:54",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.984821617603302
+    },
+    {
+      "timestamp": "2026-09-25 11:34:05",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8532219529151917
+    },
+    {
+      "timestamp": "2026-09-25 11:34:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7343757152557373
+    },
+    {
+      "timestamp": "2026-09-25 11:34:56",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5374203324317932
+    },
+    {
+      "timestamp": "2026-09-25 11:35:25",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:35:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:36:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:36:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:36:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9964455364016018
+    },
+    {
+      "timestamp": "2026-09-25 11:36:57",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.46616294980049133
+    },
+    {
+      "timestamp": "2026-09-25 11:37:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:44",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.4623759090900421
+    },
+    {
+      "timestamp": "2026-09-25 11:37:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:37:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.38931044936180115
+    },
+    {
+      "timestamp": "2026-09-25 11:38:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:38:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9983873962394831
+    },
+    {
+      "timestamp": "2026-09-25 11:38:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6788104772567749
+    },
+    {
+      "timestamp": "2026-09-25 11:38:48",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.963526306362528
+    },
+    {
+      "timestamp": "2026-09-25 11:39:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:39:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:40:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9833516478538513
+    },
+    {
+      "timestamp": "2026-09-25 11:40:28",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.44310688972473145
+    },
+    {
+      "timestamp": "2026-09-25 11:40:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:41:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:41:13",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4800015091896057
+    },
+    {
+      "timestamp": "2026-09-25 11:41:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:41:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:42:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:43:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5730452537536621
+    },
+    {
+      "timestamp": "2026-09-25 11:43:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7642030119895935
+    },
+    {
+      "timestamp": "2026-09-25 11:44:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6120420694351196
+    },
+    {
+      "timestamp": "2026-09-25 11:44:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7388644814491272
+    },
+    {
+      "timestamp": "2026-09-25 11:44:52",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7767009735107422
+    },
+    {
+      "timestamp": "2026-09-25 11:45:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:45:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9963783621788025
+    },
+    {
+      "timestamp": "2026-09-25 11:46:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:46:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:46:21",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5587252378463745
+    },
+    {
+      "timestamp": "2026-09-25 11:46:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:46:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:47:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:47:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.537294864654541
+    },
+    {
+      "timestamp": "2026-09-25 11:47:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:47:39",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.71955480808673
+    },
+    {
+      "timestamp": "2026-09-25 11:48:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:48:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9919396052432531
+    },
+    {
+      "timestamp": "2026-09-25 11:48:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7721363306045532
+    },
+    {
+      "timestamp": "2026-09-25 11:48:44",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7243143648726504
+    },
+    {
+      "timestamp": "2026-09-25 11:48:49",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.946002721786499
+    },
+    {
+      "timestamp": "2026-09-25 11:48:56",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9030547680291395
+    },
+    {
+      "timestamp": "2026-09-25 11:49:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8825697302818298
+    },
+    {
+      "timestamp": "2026-09-25 11:49:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:49:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8455371856689453
+    },
+    {
+      "timestamp": "2026-09-25 11:50:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6922799944877625
+    },
+    {
+      "timestamp": "2026-09-25 11:50:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:45",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.81868577003479
+    },
+    {
+      "timestamp": "2026-09-25 11:50:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:50:57",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9914393435192891
+    },
+    {
+      "timestamp": "2026-09-25 11:51:03",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9926672577857971
+    },
+    {
+      "timestamp": "2026-09-25 11:51:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:51:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:51:16",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:51:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:51:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7098212242126465
+    },
+    {
+      "timestamp": "2026-09-25 11:51:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5864329934120178
+    },
+    {
+      "timestamp": "2026-09-25 11:51:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.36330607533454895
+    },
+    {
+      "timestamp": "2026-09-25 11:51:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:51:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7470110058784485
+    },
+    {
+      "timestamp": "2026-09-25 11:51:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9988460540771484
+    },
+    {
+      "timestamp": "2026-09-25 11:51:55",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5988824963569641
+    },
+    {
+      "timestamp": "2026-09-25 11:52:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:52:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:52:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9927104111141212
+    },
+    {
+      "timestamp": "2026-09-25 11:52:19",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.6294232386006855
+    },
+    {
+      "timestamp": "2026-09-25 11:52:23",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7889574766159058
+    },
+    {
+      "timestamp": "2026-09-25 11:52:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:52:33",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9967411160469055
+    },
+    {
+      "timestamp": "2026-09-25 11:52:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:52:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:52:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9979552030563354
+    },
+    {
+      "timestamp": "2026-09-25 11:53:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:53:09",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5946910977363586
+    },
+    {
+      "timestamp": "2026-09-25 11:53:13",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9617672562599182
+    },
+    {
+      "timestamp": "2026-09-25 11:54:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5836957693099976
+    },
+    {
+      "timestamp": "2026-09-25 11:54:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:54:49",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5929948444959429
+    },
+    {
+      "timestamp": "2026-09-25 11:54:53",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9607765651212076
+    },
+    {
+      "timestamp": "2026-09-25 11:55:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9605885720603807
+    },
+    {
+      "timestamp": "2026-09-25 11:55:10",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5102816820144653
+    },
+    {
+      "timestamp": "2026-09-25 11:55:17",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9084752147480973
+    },
+    {
+      "timestamp": "2026-09-25 11:55:21",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5816172957420349
+    },
+    {
+      "timestamp": "2026-09-25 11:55:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:55:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9831915517817077
+    },
+    {
+      "timestamp": "2026-09-25 11:55:36",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9833812107671029
+    },
+    {
+      "timestamp": "2026-09-25 11:55:41",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8267379999160767
+    },
+    {
+      "timestamp": "2026-09-25 11:55:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9758328184981834
+    },
+    {
+      "timestamp": "2026-09-25 11:56:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:56:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:56:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6792735266252474
+    },
+    {
+      "timestamp": "2026-09-25 11:56:18",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9990789293693858
+    },
+    {
+      "timestamp": "2026-09-25 11:56:28",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9288821220397949
+    },
+    {
+      "timestamp": "2026-09-25 11:56:34",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8380067251924709
+    },
+    {
+      "timestamp": "2026-09-25 11:56:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:56:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:56:52",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9772443771362305
+    },
+    {
+      "timestamp": "2026-09-25 11:56:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.925147533416748
+    },
+    {
+      "timestamp": "2026-09-25 11:57:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.999417781829834
+    },
+    {
+      "timestamp": "2026-09-25 11:57:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:45",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7963281869888306
+    },
+    {
+      "timestamp": "2026-09-25 11:57:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:57:55",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5451182126998901
+    },
+    {
+      "timestamp": "2026-09-25 11:58:00",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.4398785197662425
+    },
+    {
+      "timestamp": "2026-09-25 11:58:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6047942042350769
+    },
+    {
+      "timestamp": "2026-09-25 11:58:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:58:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:58:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:58:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8306122321255346
+    },
+    {
+      "timestamp": "2026-09-25 11:58:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:59:14",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5825604298782862
+    },
+    {
+      "timestamp": "2026-09-25 11:59:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9992268681065362
+    },
+    {
+      "timestamp": "2026-09-25 11:59:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:59:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 11:59:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9712962508201599
+    },
+    {
+      "timestamp": "2026-09-25 12:00:00",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9800722622785255
+    },
+    {
+      "timestamp": "2026-09-25 12:00:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:00:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.794329047203064
+    },
+    {
+      "timestamp": "2026-09-25 12:00:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7663766145706177
+    },
+    {
+      "timestamp": "2026-09-25 12:00:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9914775490760803
+    },
+    {
+      "timestamp": "2026-09-25 12:00:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8126801475667778
+    },
+    {
+      "timestamp": "2026-09-25 12:00:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:00:35",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6200059056282043
+    },
+    {
+      "timestamp": "2026-09-25 12:00:40",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.587160050868988
+    },
+    {
+      "timestamp": "2026-09-25 12:00:45",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9946129322052002
+    },
+    {
+      "timestamp": "2026-09-25 12:00:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4263516962528229
+    },
+    {
+      "timestamp": "2026-09-25 12:01:26",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9014971969727043
+    },
+    {
+      "timestamp": "2026-09-25 12:01:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:01:47",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5632445812225342
+    },
+    {
+      "timestamp": "2026-09-25 12:02:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:02:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4580300450325012
+    },
+    {
+      "timestamp": "2026-09-25 12:02:32",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.41591366624317566
+    },
+    {
+      "timestamp": "2026-09-25 12:03:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:03:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:03:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9812333606203364
+    },
+    {
+      "timestamp": "2026-09-25 12:03:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:03:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:03:58",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9993445277995434
+    },
+    {
+      "timestamp": "2026-09-25 12:04:03",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8666634559631348
+    },
+    {
+      "timestamp": "2026-09-25 12:04:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:04:13",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6053569316864014
+    },
+    {
+      "timestamp": "2026-09-25 12:04:24",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9499097436612692
+    },
+    {
+      "timestamp": "2026-09-25 12:04:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:04:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:04:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:04:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8735387325286865
+    },
+    {
+      "timestamp": "2026-09-25 12:04:48",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6691173911094666
+    },
+    {
+      "timestamp": "2026-09-25 12:04:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:04:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:05:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:06:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9499363958911424
+    },
+    {
+      "timestamp": "2026-09-25 12:06:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5050933957099915
+    },
+    {
+      "timestamp": "2026-09-25 12:06:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:06:24",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9992852807044983
+    },
+    {
+      "timestamp": "2026-09-25 12:06:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.46360689401626587
+    },
+    {
+      "timestamp": "2026-09-25 12:06:43",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5976459383964539
+    },
+    {
+      "timestamp": "2026-09-25 12:06:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:07:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9785566329956055
+    },
+    {
+      "timestamp": "2026-09-25 12:07:11",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8733397050702396
+    },
+    {
+      "timestamp": "2026-09-25 12:07:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:07:20",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8842417597770691
+    },
+    {
+      "timestamp": "2026-09-25 12:07:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.677436351776123
+    },
+    {
+      "timestamp": "2026-09-25 12:07:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:07:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:07:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.501349925994873
+    },
+    {
+      "timestamp": "2026-09-25 12:07:59",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9529152512550354
+    },
+    {
+      "timestamp": "2026-09-25 12:08:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:08",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9150357842445374
+    },
+    {
+      "timestamp": "2026-09-25 12:08:13",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9946573969517587
+    },
+    {
+      "timestamp": "2026-09-25 12:08:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:33",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5754287838935852
+    },
+    {
+      "timestamp": "2026-09-25 12:08:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:08:51",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9914181823383679
+    },
+    {
+      "timestamp": "2026-09-25 12:08:56",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9132049187177516
+    },
+    {
+      "timestamp": "2026-09-25 12:09:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:09:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:09:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:09:24",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7221316695213318
+    },
+    {
+      "timestamp": "2026-09-25 12:09:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:09:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:10:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:10:45",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9595940709114075
+    },
+    {
+      "timestamp": "2026-09-25 12:10:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:11:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:11:13",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.8568189740180969
+    },
+    {
+      "timestamp": "2026-09-25 12:11:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:11:27",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9780560758047013
+    },
+    {
+      "timestamp": "2026-09-25 12:11:33",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.94875896587861
+    },
+    {
+      "timestamp": "2026-09-25 12:12:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:12:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:12:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:12:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:12:38",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9958861470222473
+    },
+    {
+      "timestamp": "2026-09-25 12:12:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:12:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.781662106513977
+    },
+    {
+      "timestamp": "2026-09-25 12:12:56",
+      "name": "sobiya",
+      "emotion": "surprise",
+      "confidence": 0.5252747535705566
+    },
+    {
+      "timestamp": "2026-09-25 12:13:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:13:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:13:12",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6594760227827998
+    },
+    {
+      "timestamp": "2026-09-25 12:13:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9742510914802551
+    },
+    {
+      "timestamp": "2026-09-25 12:13:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:13:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9383054934922154
+    },
+    {
+      "timestamp": "2026-09-25 12:13:38",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5220487713813782
+    },
+    {
+      "timestamp": "2026-09-25 12:13:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:13:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:13:51",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9067192077636719
+    },
+    {
+      "timestamp": "2026-09-25 12:13:58",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9999486803977895
+    },
+    {
+      "timestamp": "2026-09-25 12:14:13",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9984344840049744
+    },
+    {
+      "timestamp": "2026-09-25 12:14:18",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9766926169395447
+    },
+    {
+      "timestamp": "2026-09-25 12:14:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8186787366867065
+    },
+    {
+      "timestamp": "2026-09-25 12:14:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:14:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9999630451202393
+    },
+    {
+      "timestamp": "2026-09-25 12:14:38",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5327094754326969
+    },
+    {
+      "timestamp": "2026-09-25 12:14:42",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7745928629990138
+    },
+    {
+      "timestamp": "2026-09-25 12:14:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9996615648269653
+    },
+    {
+      "timestamp": "2026-09-25 12:14:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:14:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9969934819336821
+    },
+    {
+      "timestamp": "2026-09-25 12:15:03",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.748918890953064
+    },
+    {
+      "timestamp": "2026-09-25 12:15:07",
+      "name": "sobiya",
+      "emotion": "surprise",
+      "confidence": 0.6454906848365476
+    },
+    {
+      "timestamp": "2026-09-25 12:15:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:15:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9972067475318909
+    },
+    {
+      "timestamp": "2026-09-25 12:15:23",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9878373734854087
+    },
+    {
+      "timestamp": "2026-09-25 12:15:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:15:34",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6600725054740906
+    },
+    {
+      "timestamp": "2026-09-25 12:15:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:15:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.982847454208439
+    },
+    {
+      "timestamp": "2026-09-25 12:15:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:15:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 12:16:00",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9927593469619751
+    },
+    {
+      "timestamp": "2026-09-25 14:03:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:03:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:03:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9860150814056396
+    },
+    {
+      "timestamp": "2026-09-25 14:03:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4574356947800931
+    },
+    {
+      "timestamp": "2026-09-25 14:03:57",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.47467386571609177
+    },
+    {
+      "timestamp": "2026-09-25 14:04:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9786357866904608
+    },
+    {
+      "timestamp": "2026-09-25 14:04:09",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.596083402633667
+    },
+    {
+      "timestamp": "2026-09-25 14:04:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:04:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:04:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:04:30",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5690283096994985
+    },
+    {
+      "timestamp": "2026-09-25 14:04:42",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8618521094322205
+    },
+    {
+      "timestamp": "2026-09-25 14:04:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:05:00",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8523595929145813
+    },
+    {
+      "timestamp": "2026-09-25 14:05:17",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6625377334676823
+    },
+    {
+      "timestamp": "2026-09-25 14:05:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:06:00",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5758474469184875
+    },
+    {
+      "timestamp": "2026-09-25 14:06:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6222273482219784
+    },
+    {
+      "timestamp": "2026-09-25 14:06:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9843431711196899
+    },
+    {
+      "timestamp": "2026-09-25 14:06:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:06:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:06:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:07:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:07:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.46005693078041077
+    },
+    {
+      "timestamp": "2026-09-25 14:07:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8373048499459208
+    },
+    {
+      "timestamp": "2026-09-25 14:07:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7188881970777277
+    },
+    {
+      "timestamp": "2026-09-25 14:07:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5642863252333596
+    },
+    {
+      "timestamp": "2026-09-25 14:07:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9999138116836548
+    },
+    {
+      "timestamp": "2026-09-25 14:07:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9520840644836426
+    },
+    {
+      "timestamp": "2026-09-25 14:08:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:08:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9994025826098074
+    },
+    {
+      "timestamp": "2026-09-25 14:08:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9036890268325806
+    },
+    {
+      "timestamp": "2026-09-25 14:08:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:08:25",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7357082366943359
+    },
+    {
+      "timestamp": "2026-09-25 14:08:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:08:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:08:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:09:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:09:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:09:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7972171781788575
+    },
+    {
+      "timestamp": "2026-09-25 14:09:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:09:23",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9834450473454623
+    },
+    {
+      "timestamp": "2026-09-25 14:09:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:11:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:11:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:11:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:12:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7799521684646606
+    },
+    {
+      "timestamp": "2026-09-25 14:12:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:12:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:12:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:12:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:12:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.825862467288971
+    },
+    {
+      "timestamp": "2026-09-25 14:12:54",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6601605212784125
+    },
+    {
+      "timestamp": "2026-09-25 14:12:59",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5756921172142029
+    },
+    {
+      "timestamp": "2026-09-25 14:13:04",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9928053021430969
+    },
+    {
+      "timestamp": "2026-09-25 14:13:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:13:39",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5408520698547363
+    },
+    {
+      "timestamp": "2026-09-25 14:13:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:13:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7677175264190153
+    },
+    {
+      "timestamp": "2026-09-25 14:13:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:13:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.38451042771339417
+    },
+    {
+      "timestamp": "2026-09-25 14:14:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9392052852633764
+    },
+    {
+      "timestamp": "2026-09-25 14:14:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9357730150222778
+    },
+    {
+      "timestamp": "2026-09-25 14:14:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5546558499336243
+    },
+    {
+      "timestamp": "2026-09-25 14:14:57",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7663971781730652
+    },
+    {
+      "timestamp": "2026-09-25 14:15:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7036203742027283
+    },
+    {
+      "timestamp": "2026-09-25 14:15:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:15:11",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9851629155680043
+    },
+    {
+      "timestamp": "2026-09-25 14:15:17",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9888365255399377
+    },
+    {
+      "timestamp": "2026-09-25 14:15:22",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9536039205553485
+    },
+    {
+      "timestamp": "2026-09-25 14:15:27",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9719074368476868
+    },
+    {
+      "timestamp": "2026-09-25 14:15:32",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8746849298477173
+    },
+    {
+      "timestamp": "2026-09-25 14:15:38",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:15:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9016927480697632
+    },
+    {
+      "timestamp": "2026-09-25 14:15:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:17:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:17:49",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.8228527903556824
+    },
+    {
+      "timestamp": "2026-09-25 14:17:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:17:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9378167986869812
+    },
+    {
+      "timestamp": "2026-09-25 14:18:05",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.835824728012085
+    },
+    {
+      "timestamp": "2026-09-25 14:18:42",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9951142665811936
+    },
+    {
+      "timestamp": "2026-09-25 14:18:55",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6858144402503967
+    },
+    {
+      "timestamp": "2026-09-25 14:19:00",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9009191989898682
+    },
+    {
+      "timestamp": "2026-09-25 14:19:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.5827251672744751
+    },
+    {
+      "timestamp": "2026-09-25 14:19:27",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:19:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9143245169117759
+    },
+    {
+      "timestamp": "2026-09-25 14:19:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8003113865852356
+    },
+    {
+      "timestamp": "2026-09-25 14:19:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:20:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:21:00",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8386190533638
+    },
+    {
+      "timestamp": "2026-09-25 14:21:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7434621759102135
+    },
+    {
+      "timestamp": "2026-09-25 14:22:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9099321472725692
+    },
+    {
+      "timestamp": "2026-09-25 14:25:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9133931398391724
+    },
+    {
+      "timestamp": "2026-09-25 14:26:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:26:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:26:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9647030809344698
+    },
+    {
+      "timestamp": "2026-09-25 14:26:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:26:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:26:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:26:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:28:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:28:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:28:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:28:36",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9971235394477844
+    },
+    {
+      "timestamp": "2026-09-25 14:30:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9837088584899902
+    },
+    {
+      "timestamp": "2026-09-25 14:30:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9873079053943101
+    },
+    {
+      "timestamp": "2026-09-25 14:30:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.889506393045568
+    },
+    {
+      "timestamp": "2026-09-25 14:31:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:31:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9107681512832642
+    },
+    {
+      "timestamp": "2026-09-25 14:31:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8330612182617188
+    },
+    {
+      "timestamp": "2026-09-25 14:31:32",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7011763871417277
+    },
+    {
+      "timestamp": "2026-09-25 14:31:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:31:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:32:01",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5956316590309143
+    },
+    {
+      "timestamp": "2026-09-25 14:32:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9987393616878606
+    },
+    {
+      "timestamp": "2026-09-25 14:32:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:32:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:32:21",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6842718344058792
+    },
+    {
+      "timestamp": "2026-09-25 14:32:32",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:32:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:32:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4195488691329956
+    },
+    {
+      "timestamp": "2026-09-25 14:33:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6486062407493591
+    },
+    {
+      "timestamp": "2026-09-25 14:33:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9684174060821533
+    },
+    {
+      "timestamp": "2026-09-25 14:33:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6951198577880859
+    },
+    {
+      "timestamp": "2026-09-25 14:33:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8766511605174041
+    },
+    {
+      "timestamp": "2026-09-25 14:33:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.69843153348157
+    },
+    {
+      "timestamp": "2026-09-25 14:33:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8623489141464233
+    },
+    {
+      "timestamp": "2026-09-25 14:33:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:34:07",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:34:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:34:34",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9968820212413085
+    },
+    {
+      "timestamp": "2026-09-25 14:34:40",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7240869135753019
+    },
+    {
+      "timestamp": "2026-09-25 14:34:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7469964623451233
+    },
+    {
+      "timestamp": "2026-09-25 14:35:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6018886566162109
+    },
+    {
+      "timestamp": "2026-09-25 14:35:35",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4107645994880557
+    },
+    {
+      "timestamp": "2026-09-25 14:35:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:35:57",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:11",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:36:52",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9671396017074585
+    },
+    {
+      "timestamp": "2026-09-25 14:38:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:39:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:39:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:39:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.831720997793734
+    },
+    {
+      "timestamp": "2026-09-25 14:39:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5210970044136047
+    },
+    {
+      "timestamp": "2026-09-25 14:39:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:39:31",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9985749723225865
+    },
+    {
+      "timestamp": "2026-09-25 14:39:35",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:39:40",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.579737042172971
+    },
+    {
+      "timestamp": "2026-09-25 14:39:46",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6689473390579224
+    },
+    {
+      "timestamp": "2026-09-25 14:39:50",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.8262618184089661
+    },
+    {
+      "timestamp": "2026-09-25 14:39:55",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9998424053004271
+    },
+    {
+      "timestamp": "2026-09-25 14:40:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:40:06",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9618726349993131
+    },
+    {
+      "timestamp": "2026-09-25 14:40:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:40:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:40:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:40:24",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9993417859077454
+    },
+    {
+      "timestamp": "2026-09-25 14:40:28",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5366933941841125
+    },
+    {
+      "timestamp": "2026-09-25 14:40:32",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.832500914633383
+    },
+    {
+      "timestamp": "2026-09-25 14:40:37",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5896378755569458
+    },
+    {
+      "timestamp": "2026-09-25 14:40:41",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.7299584746360779
+    },
+    {
+      "timestamp": "2026-09-25 14:40:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:40:53",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9576601982116699
+    },
+    {
+      "timestamp": "2026-09-25 14:40:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8776574876716748
+    },
+    {
+      "timestamp": "2026-09-25 14:41:17",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.9047109371079131
+    },
+    {
+      "timestamp": "2026-09-25 14:41:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:51",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:41:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:42:27",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5361818628094359
+    },
+    {
+      "timestamp": "2026-09-25 14:42:31",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8457413223827673
+    },
+    {
+      "timestamp": "2026-09-25 14:42:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8219714164733887
+    },
+    {
+      "timestamp": "2026-09-25 14:42:59",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.3669811705935699
+    },
+    {
+      "timestamp": "2026-09-25 14:43:04",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7493866980806949
+    },
+    {
+      "timestamp": "2026-09-25 14:43:09",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.28858750598579574
+    },
+    {
+      "timestamp": "2026-09-25 14:43:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.27251884609685495
+    },
+    {
+      "timestamp": "2026-09-25 14:43:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.38782939314842224
+    },
+    {
+      "timestamp": "2026-09-25 14:43:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9493482678740185
+    },
+    {
+      "timestamp": "2026-09-25 14:43:58",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4729520710763847
+    },
+    {
+      "timestamp": "2026-09-25 14:44:03",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5161052346229553
+    },
+    {
+      "timestamp": "2026-09-25 14:44:08",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5051039162340114
+    },
+    {
+      "timestamp": "2026-09-25 14:44:13",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6658080220222473
+    },
+    {
+      "timestamp": "2026-09-25 14:44:19",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7143261177151062
+    },
+    {
+      "timestamp": "2026-09-25 14:44:24",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.49022990465164185
+    },
+    {
+      "timestamp": "2026-09-25 14:44:29",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.6022843718528748
+    },
+    {
+      "timestamp": "2026-09-25 14:44:34",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5703977942466736
+    },
+    {
+      "timestamp": "2026-09-25 14:44:38",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.44241249561309814
+    },
+    {
+      "timestamp": "2026-09-25 14:44:43",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4631258249282837
+    },
+    {
+      "timestamp": "2026-09-25 14:44:49",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8345940906293283
+    },
+    {
+      "timestamp": "2026-09-25 14:44:54",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6509630084037781
+    },
+    {
+      "timestamp": "2026-09-25 14:44:59",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.5594941973686218
+    },
+    {
+      "timestamp": "2026-09-25 14:45:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.2718689441680908
+    },
+    {
+      "timestamp": "2026-09-25 14:45:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.3668135702610016
+    },
+    {
+      "timestamp": "2026-09-25 14:45:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.355444997549057
+    },
+    {
+      "timestamp": "2026-09-25 14:45:18",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.2785845398902893
+    },
+    {
+      "timestamp": "2026-09-25 14:45:23",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.38875001668930054
+    },
+    {
+      "timestamp": "2026-09-25 14:45:28",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5687177181243896
+    },
+    {
+      "timestamp": "2026-09-25 14:45:32",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4378826394221021
+    },
+    {
+      "timestamp": "2026-09-25 14:45:37",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.37191158533096313
+    },
+    {
+      "timestamp": "2026-09-25 14:45:43",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4492193520999727
+    },
+    {
+      "timestamp": "2026-09-25 14:45:48",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8849530747504875
+    },
+    {
+      "timestamp": "2026-09-25 14:45:52",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6305069171778063
+    },
+    {
+      "timestamp": "2026-09-25 14:45:56",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5875610709190369
+    },
+    {
+      "timestamp": "2026-09-25 14:46:01",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:46:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:46:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:46:15",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6955706710303631
+    },
+    {
+      "timestamp": "2026-09-25 14:46:19",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.3689360462350901
+    },
+    {
+      "timestamp": "2026-09-25 14:46:24",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5359821915626526
+    },
+    {
+      "timestamp": "2026-09-25 14:46:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7769091129302979
+    },
+    {
+      "timestamp": "2026-09-25 14:46:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5384956002235413
+    },
+    {
+      "timestamp": "2026-09-25 14:46:38",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.4974428117275238
+    },
+    {
+      "timestamp": "2026-09-25 14:46:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8514819741249084
+    },
+    {
+      "timestamp": "2026-09-25 14:46:46",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.3823756277561188
+    },
+    {
+      "timestamp": "2026-09-25 14:46:51",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7182278633117676
+    },
+    {
+      "timestamp": "2026-09-25 14:46:56",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.3692154288291931
+    },
+    {
+      "timestamp": "2026-09-25 14:47:00",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.3416596055030823
+    },
+    {
+      "timestamp": "2026-09-25 14:47:05",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5388695001602173
+    },
+    {
+      "timestamp": "2026-09-25 14:47:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:18",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:22",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:28",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4170506845146826
+    },
+    {
+      "timestamp": "2026-09-25 14:47:32",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5618391633033752
+    },
+    {
+      "timestamp": "2026-09-25 14:47:37",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:47:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:48:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.725616779996965
+    },
+    {
+      "timestamp": "2026-09-25 14:48:09",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5601775574472478
+    },
+    {
+      "timestamp": "2026-09-25 14:48:13",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.39135658740997314
+    },
+    {
+      "timestamp": "2026-09-25 14:48:17",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7832589745521545
+    },
+    {
+      "timestamp": "2026-09-25 14:48:21",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.4473065435886383
+    },
+    {
+      "timestamp": "2026-09-25 14:48:26",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.5448954105377197
+    },
+    {
+      "timestamp": "2026-09-25 14:48:30",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6741280555725098
+    },
+    {
+      "timestamp": "2026-09-25 14:48:34",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6785224676132202
+    },
+    {
+      "timestamp": "2026-09-25 14:48:38",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5007438958134589
+    },
+    {
+      "timestamp": "2026-09-25 14:48:43",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.37241125106811523
+    },
+    {
+      "timestamp": "2026-09-25 14:48:47",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7373217783762084
+    },
+    {
+      "timestamp": "2026-09-25 14:48:51",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.5486704111099243
+    },
+    {
+      "timestamp": "2026-09-25 14:48:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:49:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:49:06",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:49:11",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4848428657557288
+    },
+    {
+      "timestamp": "2026-09-25 14:49:15",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.5169396996498108
+    },
+    {
+      "timestamp": "2026-09-25 14:49:20",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.4452434778213501
+    },
+    {
+      "timestamp": "2026-09-25 14:49:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.4414677619934082
+    },
+    {
+      "timestamp": "2026-09-25 14:49:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7566691492002695
+    },
+    {
+      "timestamp": "2026-09-25 14:49:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:49:40",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9757023453712463
+    },
+    {
+      "timestamp": "2026-09-25 14:49:45",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.406686931848526
+    },
+    {
+      "timestamp": "2026-09-25 14:49:50",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6349765440807666
+    },
+    {
+      "timestamp": "2026-09-25 14:49:55",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.6600378751754761
+    },
+    {
+      "timestamp": "2026-09-25 14:50:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7185836434364319
+    },
+    {
+      "timestamp": "2026-09-25 14:50:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8511505722999573
+    },
+    {
+      "timestamp": "2026-09-25 14:50:10",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:24",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:29",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:44",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:50:49",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.965335184097621
+    },
+    {
+      "timestamp": "2026-09-25 14:50:54",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9991635084152222
+    },
+    {
+      "timestamp": "2026-09-25 14:50:59",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:04",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:09",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.7027615308761597
+    },
+    {
+      "timestamp": "2026-09-25 14:51:14",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9949339038212414
+    },
+    {
+      "timestamp": "2026-09-25 14:51:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:31",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:36",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6083868612781929
+    },
+    {
+      "timestamp": "2026-09-25 14:51:41",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:46",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:51:58",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:52:05",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:52:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8444604277610779
+    },
+    {
+      "timestamp": "2026-09-25 14:52:23",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9575967788696289
+    },
+    {
+      "timestamp": "2026-09-25 14:52:28",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9614923573429798
+    },
+    {
+      "timestamp": "2026-09-25 14:53:59",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9995866418377588
+    },
+    {
+      "timestamp": "2026-09-25 14:54:03",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:54:09",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:54:15",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:54:21",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:54:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:54:31",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9959769849804658
+    },
+    {
+      "timestamp": "2026-09-25 14:54:40",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9875810146331787
+    },
+    {
+      "timestamp": "2026-09-25 14:54:50",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9959340100367058
+    },
+    {
+      "timestamp": "2026-09-25 14:54:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:55:03",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9374818205833435
+    },
+    {
+      "timestamp": "2026-09-25 14:55:08",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:55:15",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9116830229759216
+    },
+    {
+      "timestamp": "2026-09-25 14:55:21",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.9995239973068237
+    },
+    {
+      "timestamp": "2026-09-25 14:55:25",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.9981681108474731
+    },
+    {
+      "timestamp": "2026-09-25 14:55:30",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.6696703833145132
+    },
+    {
+      "timestamp": "2026-09-25 14:55:34",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7249352171978484
+    },
+    {
+      "timestamp": "2026-09-25 14:55:39",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.8099169021795334
+    },
+    {
+      "timestamp": "2026-09-25 14:55:43",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.7072082757949829
+    },
+    {
+      "timestamp": "2026-09-25 14:55:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:56:31",
+      "name": "sobiya",
+      "emotion": "fear",
+      "confidence": 0.7664022724148903
+    },
+    {
+      "timestamp": "2026-09-25 14:58:42",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:58:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:58:52",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 14:58:57",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9382808804512024
+    },
+    {
+      "timestamp": "2026-09-25 14:59:04",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.43026071786880493
+    },
+    {
+      "timestamp": "2026-09-25 14:59:18",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.6946144700050354
+    },
+    {
+      "timestamp": "2026-09-25 14:59:53",
+      "name": "sobiya",
+      "emotion": "angry",
+      "confidence": 0.39486051859134214
+    },
+    {
+      "timestamp": "2026-09-25 15:00:56",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 15:01:02",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.7930855751037598
+    },
+    {
+      "timestamp": "2026-09-25 15:01:07",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.8474998383223914
+    },
+    {
+      "timestamp": "2026-09-25 15:01:12",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 15:01:20",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.977622926235199
+    },
+    {
+      "timestamp": "2026-09-25 15:01:26",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 15:01:32",
+      "name": "sobiya",
+      "emotion": "sad",
+      "confidence": 0.8214158032636877
+    },
+    {
+      "timestamp": "2026-09-25 15:02:14",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 15:04:00",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.9049691671169796
+    },
+    {
+      "timestamp": "2026-09-25 15:04:47",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    },
+    {
+      "timestamp": "2026-09-25 15:06:00",
+      "name": "sobiya",
+      "emotion": "happy",
+      "confidence": 0.9724036438705709
+    },
+    {
+      "timestamp": "2026-09-25 15:06:33",
+      "name": "sobiya",
+      "emotion": "neutral",
+      "confidence": 0.0
+    }
+  ]
+}

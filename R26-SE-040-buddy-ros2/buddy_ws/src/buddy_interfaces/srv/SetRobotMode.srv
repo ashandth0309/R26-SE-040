@@ -1,0 +1,7 @@
+uint8 requested_mode
+string source
+string request_id
+---
+bool accepted
+uint8 active_mode
+string message

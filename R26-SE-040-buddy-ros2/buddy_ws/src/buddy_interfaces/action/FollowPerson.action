@@ -1,0 +1,11 @@
+string person_id
+float32 desired_distance_m
+builtin_interfaces/Duration timeout
+---
+bool success
+string reason
+---
+bool target_visible
+float32 target_confidence
+float32 estimated_distance_m
+string state

@@ -1,0 +1,18 @@
+runtime:
+  environment: "ultrasonic_test"
+  log_level: "INFO"
+
+hardware:
+  enabled: true
+  simulation: false
+
+  motors:
+    enabled: false
+
+  ultrasonic:
+    enabled: true
+
+features:
+  movement: false
+  navigation: false
+  patrol: false

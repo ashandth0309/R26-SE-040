@@ -1,0 +1,21 @@
+[Unit]
+Description=BUDDY Robot Demo
+After=network.target sound.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=ashandth
+Group=ashandth
+WorkingDirectory=/home/ashandth/R26-SE-040
+
+ExecStart=/home/ashandth/R26-SE-040/scripts/start_buddy_demo.sh
+
+Restart=on-failure
+RestartSec=5
+
+Environment=HOME=/home/ashandth
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
