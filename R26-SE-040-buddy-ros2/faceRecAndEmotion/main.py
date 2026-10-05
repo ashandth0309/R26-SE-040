@@ -1,5 +1,5 @@
 """
-Smart AI Dog Robot - Integrated Face/Eye, Object Learning & Mobile App Sync System
+Smart AI Dog Robot - Integrated Face/Eye, Object Learning, Speech & Mobile App Sync System
 """
 
 import base64
@@ -13,8 +13,18 @@ from datetime import datetime
 import tkinter as tk
 from tkinter import simpledialog
 import numpy as np
+from flask import Flask, Response, jsonify, request, send_from_directory
+from flask_cors import CORS 
 
-# Voice output import from speech.py
+# 1. Internal Folder Paths Setup (Nested strictly inside faceRecAndEmotion)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CAPTURES_DIR = os.path.join(BASE_DIR, "captures")
+DATASET_DIR = os.path.join(BASE_DIR, "dataset")
+
+os.makedirs(CAPTURES_DIR, exist_ok=True)
+os.makedirs(DATASET_DIR, exist_ok=True)
+
+# Speech module import - buddy_speak connect aagum
 try:
     from speech import buddy_speak
 except Exception:
@@ -24,10 +34,6 @@ except Exception:
         def buddy_speak(text):
             print(f"🗣️ BUDDY: {text}")
 
-# Flask & Web/App streaming
-from flask import Flask, Response, jsonify, request
-
-# Internal module imports
 from faceRecAndEmotion.config import *
 from faceRecAndEmotion.database_manager import DatabaseManager
 from faceRecAndEmotion.emotion_detection import EmotionDetector
@@ -36,25 +42,26 @@ from faceRecAndEmotion.face_recognition_module import FaceRecognition
 from faceRecAndEmotion.frame_manager import FrameManager
 from faceRecAndEmotion.robot_controller import RobotController
 
-# Optional simple memory fallback
 try:
     from faceRecAndEmotion.simple_face_memory import SimpleFaceMemory
 except Exception:
     SimpleFaceMemory = None
 
-# Object Learning Module import
 try:
     from faceRecAndEmotion.object_learning_module import ObjectLearningModule
 except Exception:
     from object_learning_module import ObjectLearningModule
 
-# Global state instances
 global_robot_app = None
-global learner
 learner = ObjectLearningModule(threshold=0.70)
 flask_app = Flask(__name__)
+CORS(flask_app)        
 
-# Buffer for Mobile App Unknown Person Alert
+# Global Recording Variables
+is_recording = False
+video_writer = None
+current_record_filename = None
+
 latest_unknown_alert = {
     "has_alert": False,
     "timestamp": None,
@@ -63,9 +70,8 @@ latest_unknown_alert = {
 }
 
 last_unknown_sent_time = 0
-ALERT_COOLDOWN_SECONDS = 45  # ஒரு முறை அலர்ட் அனுப்பினால் 45 விநாடிகளுக்கு மீண்டும் லூப்பில் அனுப்பாது
+ALERT_COOLDOWN_SECONDS = 20
 
-# Live Telemetry State for Mobile App
 robot_telemetry = {
     "battery": 92,
     "state": "Patrolling",
@@ -87,29 +93,26 @@ robot_telemetry = {
 }
 
 
-# ============================================================
-# FLASK APIS FOR MOBILE FLUTTER APP
-# ============================================================
-
+# ==========================================
+# 📷 CAMERA, RECORDING & PERSISTENT MEDIA API
+# ==========================================
 
 @flask_app.route("/video_call")
-
-
-
 def video_call():
-    """Video call live stream endpoint for web and mobile."""
-
+    """Smooth, non-blocking MJPEG live stream generator with Object Learning overlay"""
     def generate():
         global global_robot_app, learner
         while True:
             if global_robot_app is None or global_robot_app.cap is None:
-                time.sleep(0.1)
+                time.sleep(0.05)
                 continue
 
             ret, frame = global_robot_app.cap.read()
             if not ret or frame is None:
+                time.sleep(0.01)
                 continue
 
+            # Original Object Learning module process frame integration
             frame, box, text, obj = learner.process_frame(frame)
 
             x1, y1, x2, y2 = box
@@ -119,7 +122,7 @@ def video_call():
                 frame, text, (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2
             )
 
-            ret_enc, buffer = cv2.imencode(".jpg", frame)
+            ret_enc, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
             if not ret_enc:
                 continue
 
@@ -128,15 +131,186 @@ def video_call():
                 b"--frame\r\n"
                 b"Content-Type: image/jpeg\r\n\r\n" + frame_bytes + b"\r\n"
             )
+            time.sleep(0.03) # Prevents video lag and stream freezing
 
     return Response(
         generate(), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
 
+@flask_app.route("/api/camera/snapshot", methods=["POST"])
+def camera_snapshot():
+    global global_robot_app
+    if global_robot_app and global_robot_app.current_live_frame is not None:
+        filename = f"snapshot_{int(time.time())}.jpg"
+        filepath = os.path.join(CAPTURES_DIR, filename)
+        cv2.imwrite(filepath, global_robot_app.current_live_frame)
+        print(f"📸 Snapshot saved inside captures: {filepath}")
+        return jsonify({
+            "status": "success",
+            "file": filename,
+            "url": f"/captures/{filename}"
+        }), 200
+    return jsonify({"status": "failed", "message": "Frame not available"}), 400
+
+
+@flask_app.route("/api/camera/record/start", methods=["POST"])
+def start_recording():
+    global is_recording, video_writer, current_record_filename
+    if is_recording:
+        return jsonify({"status": "already_recording"}), 200
+
+    filename = f"record_{int(time.time())}.avi"
+    filepath = os.path.join(CAPTURES_DIR, filename)
+    current_record_filename = filename
+
+    fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+    video_writer = cv2.VideoWriter(filepath, fourcc, 20.0, (640, 480))
+    is_recording = True
+    print(f"🔴 Video recording started: {filepath}")
+    return jsonify({"status": "recording_started", "file": filename}), 200
+
+
+@flask_app.route("/api/camera/record/stop", methods=["POST"])
+def stop_recording():
+    global is_recording, video_writer, current_record_filename
+    if not is_recording:
+        return jsonify({"status": "not_recording"}), 200
+
+    is_recording = False
+    if video_writer is not None:
+        video_writer.release()
+        video_writer = None
+
+    saved_file = current_record_filename
+    print(f"⏹️ Video recording completed and saved: {saved_file}")
+    return jsonify({
+        "status": "recording_stopped",
+        "file": saved_file,
+        "url": f"/captures/{saved_file}"
+    }), 200
+
+
+@flask_app.route("/captures/<path:filename>")
+def serve_capture(filename):
+    return send_from_directory(CAPTURES_DIR, filename)
+
+
+@flask_app.route("/api/camera/media_list", methods=["GET"])
+def get_media_list():
+    files = []
+    if os.path.exists(CAPTURES_DIR):
+        for f in sorted(os.listdir(CAPTURES_DIR), reverse=True):
+            if f.endswith(('.jpg', '.avi', '.mp4')):
+                filepath = os.path.join(CAPTURES_DIR, f)
+                mod_time = os.path.getmtime(filepath)
+                time_str = datetime.fromtimestamp(mod_time).strftime("%I:%M %p")
+                files.append({
+                    "name": f,
+                    "title": "Front Cam" if f.endswith('.jpg') else "Record Video",
+                    "time": time_str,
+                    "type": "photo" if f.endswith('.jpg') else "video",
+                    "url": f"/captures/{f}"
+                })
+    return jsonify(files), 200
+
+
+@flask_app.route("/api/camera/delete_media", methods=["POST"])
+def delete_media():
+    data = request.get_json(silent=True) or {}
+    filename = data.get("filename", "")
+    target_path = os.path.join(CAPTURES_DIR, filename)
+    if os.path.exists(target_path):
+        os.remove(target_path)
+        print(f"🗑️ Deleted media: {filename}")
+        return jsonify({"status": "success", "message": "File deleted"}), 200
+    return jsonify({"status": "failed", "message": "File not found"}), 404
+
+
+@flask_app.route("/api/camera/torch", methods=["POST"])
+def camera_torch():
+    data = request.get_json(silent=True) or {}
+    state = data.get("state", False)
+    print(f"🔦 Robot Light State: {state}")
+    return jsonify({"status": "success", "torch": state}), 200
+
+
+@flask_app.route("/api/camera/reset", methods=["POST"])
+def camera_reset():
+    global global_robot_app
+    if global_robot_app and hasattr(global_robot_app, 'robot'):
+        try:
+            global_robot_app.robot.pan_camera(0)
+            global_robot_app.robot.tilt_camera(0)
+        except Exception:
+            pass
+    print("🔄 Camera pan-tilt reset to center.")
+    return jsonify({"status": "success", "message": "Camera reset to center"}), 200
+
+
+# =======================================================
+# 👤 ENROLLMENT & OBJECT LEARNING API ENDPOINTS
+# =======================================================
+
+@flask_app.route("/api/enroll_unknown_person", methods=["POST"])
+def enroll_unknown_person():
+    global latest_unknown_alert, global_robot_app, robot_telemetry
+    try:
+        data = request.get_json(silent=True) or {}
+        person_name = data.get("name", "").strip().lower()
+
+        if not person_name:
+            return jsonify({"status": "failed", "message": "Name is empty"}), 400
+
+        # Normalization: "sobiya a" -> "sobiya" to avoid duplicate folders
+        clean_folder_name = person_name.split()[0]
+
+        person_dataset_dir = os.path.join(DATASET_DIR, clean_folder_name)
+        os.makedirs(person_dataset_dir, exist_ok=True)
+
+        face_img = latest_unknown_alert.get("raw_frame")
+        if face_img is None and data.get("image"):
+            b64_str = data.get("image")
+            if "," in b64_str:
+                b64_str = b64_str.split(",")[1]
+            nparr = np.frombuffer(base64.b64decode(b64_str), np.uint8)
+            face_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+        if face_img is None:
+            return jsonify({"status": "failed", "message": "No face image available"}), 400
+
+        img_filename = f"{clean_folder_name}_{int(time.time())}.jpg"
+        save_path = os.path.join(person_dataset_dir, img_filename)
+        cv2.imwrite(save_path, face_img)
+        print(f"📁 Image stored cleanly inside: {save_path}")
+
+        if global_robot_app and hasattr(global_robot_app, 'face_recognizer'):
+            emb = global_robot_app.face_recognizer.get_embedding(face_img)
+            if emb is not None and hasattr(global_robot_app, 'database'):
+                if hasattr(global_robot_app.database, 'add_person'):
+                    global_robot_app.database.add_person(clean_folder_name, emb)
+                elif hasattr(global_robot_app.database, 'save_person'):
+                    global_robot_app.database.save_person(clean_folder_name, emb)
+                print(f"🎉 Enrolled & linked into known_faces.json: {clean_folder_name}")
+
+        latest_unknown_alert["has_alert"] = False
+        latest_unknown_alert["image_base64"] = None
+        latest_unknown_alert["raw_frame"] = None
+        latest_unknown_alert["timestamp"] = None
+        robot_telemetry["threats_count"] = 0
+
+        return jsonify({
+            "status": "success",
+            "message": f"{clean_folder_name} registered successfully!"
+        }), 200
+
+    except Exception as err:
+        print(f"❌ Critical Enrollment Error: {err}")
+        return jsonify({"status": "failed", "message": str(err)}), 500
+
+
 @flask_app.route("/api/get_unknown_alert", methods=["GET"])
 def get_unknown_alert():
-    """Mobile app polls this endpoint to fetch clear unknown face."""
     global latest_unknown_alert
     if latest_unknown_alert["has_alert"] and latest_unknown_alert["image_base64"]:
         return jsonify(
@@ -148,6 +322,18 @@ def get_unknown_alert():
         )
     return jsonify({"status": "idle", "image": None})
 
+
+@flask_app.route("/api/clear_unknown_alert", methods=["POST"])
+@flask_app.route("/api/clear_alert", methods=["POST"])
+def clear_alert():
+    global latest_unknown_alert
+    latest_unknown_alert["has_alert"] = False
+    latest_unknown_alert["image_base64"] = None
+    latest_unknown_alert["raw_frame"] = None
+    robot_telemetry["threats_count"] = 0
+    return jsonify({"status": "cleared", "success": True})
+
+
 @flask_app.route('/learn/<obj_name>', methods=['GET', 'POST'])
 def api_learn_object(obj_name):
     global learner
@@ -157,66 +343,85 @@ def api_learn_object(obj_name):
         return {"status": "success", "object": obj_name}, 200
     return {"status": "error", "message": "Learner not found"}, 500
 
+
 @flask_app.route('/identify', methods=['GET'])
 def api_identify_object():
     global learner
     name = learner.last_detected_name if learner else "unknown"
     return {"detected": name}    
 
-@flask_app.route("/api/clear_unknown_alert", methods=["POST"])
-@flask_app.route("/api/clear_alert", methods=["POST"])
-def clear_alert():
-    """Reset alert status after mobile app dismisses or registers."""
-    global latest_unknown_alert
-    latest_unknown_alert["has_alert"] = False
-    latest_unknown_alert["image_base64"] = None
-    latest_unknown_alert["raw_frame"] = None
-    robot_telemetry["threats_count"] = 0
-    return jsonify({"status": "cleared", "success": True})
 
+# ==========================================
+# 🎙️ VOICE COMMANDS & TELEMETRY
+# ==========================================
 
-@flask_app.route("/api/enroll_unknown_person", methods=["POST"])
-def enroll_unknown_person():
-    """Mobile app submits user name to enroll the detected face."""
-    global latest_unknown_alert, global_robot_app
+@flask_app.route("/api/control/voice_command", methods=["POST"])
+def voice_command():
+    global global_robot_app
     data = request.get_json(silent=True) or {}
-    person_name = data.get("name", "").strip()
-    image_b64 = data.get("image", "")
+    cmd = data.get("command", "").strip()
+    print(f"🎙️ Mobile Voice Command Received: '{cmd}'")
 
-    face_img = None
-    if latest_unknown_alert["raw_frame"] is not None:
-        face_img = latest_unknown_alert["raw_frame"]
-    elif image_b64:
-        try:
-            if "," in image_b64:
-                image_b64 = image_b64.split(",")[1]
-            nparr = np.frombuffer(base64.b64decode(image_b64), np.uint8)
-            face_img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-        except Exception as e:
-            print(f"Image decode error: {e}")
+    response_text = "Command executed."
+    cmd_lower = cmd.lower()
 
-    if person_name and face_img is not None and global_robot_app:
-        emb = global_robot_app.face_recognizer.get_embedding(face_img)
-        if emb is not None:
-            global_robot_app.database.save_person(person_name, emb)
-            print(f"🎉 Enrolled from Mobile: {person_name} registered successfully!")
-            latest_unknown_alert["has_alert"] = False
-            latest_unknown_alert["image_base64"] = None
-            latest_unknown_alert["raw_frame"] = None
-            robot_telemetry["threats_count"] = 0
-            return jsonify(
-                {
-                    "status": "success",
-                    "message": f"{person_name} registered successfully!",
-                }
-            )
+    if "come here" in cmd_lower or "move forward" in cmd_lower:
+        response_text = "Motors active. Rolling towards you now."
+        if global_robot_app and hasattr(global_robot_app, 'robot'):
+            try:
+                global_robot_app.robot.move_forward()
+            except Exception as e:
+                print(f"Motor error: {e}")
 
-    return jsonify({"status": "failed", "message": "Could not register face"})
+    elif "stop" in cmd_lower:
+        response_text = "Brakes applied. Robot stationary."
+        if global_robot_app and hasattr(global_robot_app, 'robot'):
+            try:
+                global_robot_app.robot.stop()
+            except Exception as e:
+                print(f"Motor stop error: {e}")
+
+    elif "patrol" in cmd_lower:
+        robot_telemetry["patrol_active"] = True
+        robot_telemetry["state"] = "Patrolling"
+        response_text = "Patrol route started. Monitoring room."
+
+    elif "scan" in cmd_lower:
+        response_text = "Starting camera sensor sweep to scan surroundings."
+        if global_robot_app and hasattr(global_robot_app, 'robot'):
+            try:
+                global_robot_app.robot.pan_camera(0)
+            except Exception:
+                pass
+    else:
+        response_text = f"Executing {cmd} now."
+
+    threading.Thread(target=lambda: buddy_speak(response_text), daemon=True).start()
+
+    return jsonify({
+        "status": "success",
+        "response": response_text
+    }), 200
+
+
+@flask_app.route("/api/control/action", methods=["POST"])
+def control_action():
+    data = request.get_json(silent=True) or {}
+    action = data.get("action", "")
+    print(f"🎮 Mobile Command: {action}")
+    if action == "RETURN_BASE":
+        response_msg = "Returning to docking base."
+    elif action == "SPEAK":
+        response_msg = "Hello, I am Buddy your companion."
+    else:
+        response_msg = f"Action {action} dispatched."
+        
+    threading.Thread(target=lambda: buddy_speak(response_msg), daemon=True).start()
+    return jsonify({"status": "success", "action": action, "response": response_msg})
 
 
 @flask_app.route("/api/robot_status", methods=["GET"])
 def get_robot_status():
-    """Live telemetry for HomeScreen."""
     return jsonify({
         "status": "online",
         "battery": robot_telemetry["battery"],
@@ -227,25 +432,19 @@ def get_robot_status():
     })
 
 
-@flask_app.route("/api/emotion_status", methods=["GET"])
-def get_emotion_status():
-    """Real-time Emotion status for ScreenEmotion."""
-    return jsonify({
-        "name": robot_telemetry["last_face"],
-        "emotion": robot_telemetry["last_emotion"],
-        "confidence": robot_telemetry["confidence"],
-    })
-
-
 @flask_app.route("/api/household_members", methods=["GET"])
 def get_household_members():
-    """Returns all registered persons in database for Household Profile screen."""
     members = [
         {"name": "Sobiya", "role": "Owner", "status": "RECOGNIZED"},
         {"name": "Rayan", "role": "Member", "status": "RECOGNIZED"},
     ]
-    if latest_unknown_alert["has_alert"]:
-        members.append({"name": "Zara", "role": "Guest", "status": "UNREGISTERED"})
+    if latest_unknown_alert["has_alert"] and latest_unknown_alert["image_base64"]:
+        members.append({
+            "name": "Unknown Visitor",
+            "role": "Guest",
+            "status": "UNREGISTERED",
+            "image": latest_unknown_alert["image_base64"]
+        })
     return jsonify(members)
 
 
@@ -294,21 +493,6 @@ def control_move():
     return jsonify({"status": "moving", "direction": direction})
 
 
-@flask_app.route("/api/control/action", methods=["POST"])
-def control_action():
-    data = request.get_json(silent=True) or {}
-    action = data.get("action", "")
-    print(f"🎮 Mobile Command: {action}")
-    return jsonify({"status": "success", "action": action})
-
-
-@flask_app.route("/api/control/voice_command", methods=["POST"])
-def voice_command():
-    data = request.get_json(silent=True) or {}
-    cmd = data.get("command", "")
-    return jsonify({"status": "success", "response": f"Buddy received command: {cmd}"})
-
-
 @flask_app.route("/api/settings/get", methods=["GET"])
 def get_settings():
     return jsonify({
@@ -331,17 +515,18 @@ def update_settings():
 @flask_app.route("/api/notifications", methods=["GET"])
 def get_notifications():
     notifications = []
-    if latest_unknown_alert["has_alert"]:
+    if latest_unknown_alert["has_alert"] and latest_unknown_alert["image_base64"]:
         notifications.append({
             "id": "1",
             "title": "CRITICAL: Unregistered Person",
-            "desc": "Unknown target detected at Front Yard perimeter.",
+            "desc": "Unknown face confirmed. Click to verify & enroll into household.",
             "time": latest_unknown_alert["timestamp"] or "Just now",
             "isUnread": True,
             "category": "Security",
             "hasAction": True,
-            "actionText": "View Stream",
-            "actionType": "camera",
+            "actionText": "Register Face",
+            "actionType": "enroll",
+            "image": latest_unknown_alert["image_base64"]
         })
     notifications.append({
         "id": "2",
@@ -351,18 +536,16 @@ def get_notifications():
         "isUnread": False,
         "category": "System",
         "hasAction": False,
+        "image": None
     })
     return jsonify(notifications)
 
 
-# ============================================================
-# SMART AI DOG ROBOT MAIN ENGINE
-# ============================================================
-
+# ==========================================
+# 🐶 SMART AI DOG ROBOT CLASS
+# ==========================================
 
 class SmartAIDogRobot:
-
-    
 
     def __init__(self, shared_state=None, robot=None):
         print("=" * 50)
@@ -373,32 +556,23 @@ class SmartAIDogRobot:
         self.face_recognizer = FaceRecognition()
         self.emotion_detector = EmotionDetector()
         self.database = DatabaseManager()
-        # Voice greeting tracking
         self.already_greeted_people = set()
 
-        # Object Learning initialization
+        self.unknown_consecutive_count = 0
         self.object_module = ObjectLearningModule(threshold=0.70)
         self.latest_object_status = ""
         self.current_live_frame = None
 
-
-        
-       
         if SimpleFaceMemory is not None:
             try:
                 self.simple_face_memory = SimpleFaceMemory()
             except Exception as error:
-                print(f"⚠️ Simple LBPH face memory unavailable: {error}")
                 self.simple_face_memory = None
         else:
             self.simple_face_memory = None
 
         self.frame_manager = FrameManager()
-        self.robot = (
-            robot
-            if robot is not None
-            else RobotController(shared_state=shared_state)
-        )
+        self.robot = robot if robot is not None else RobotController(shared_state=shared_state)
         self.emotion_logger = EmotionLogger()
 
         telegram_thread = threading.Thread(
@@ -407,10 +581,6 @@ class SmartAIDogRobot:
         telegram_thread.start()
 
         self.cap = None
-        self.fps = 0
-        self.frame_count = 0
-        self.last_fps_time = time.time()
-        self.fps_counter = 0
         self.frame_counter = 0
 
         self.cached_faces = []
@@ -426,9 +596,7 @@ class SmartAIDogRobot:
 
         self.last_recognition_time = {}
         self.recognition_cooldown = 2.0
-        self.show_details = True
-
-        print("✅ Face/Eye System Ready!")
+        print("✅ System Ready!")
 
     def start_camera(self):
         self.cap = cv2.VideoCapture(0)
@@ -436,9 +604,9 @@ class SmartAIDogRobot:
             print("❌ Cannot access camera")
             return False
 
-        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, CAMERA_WIDTH)
-        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, CAMERA_HEIGHT)
-        self.cap.set(cv2.CAP_PROP_FPS, CAMERA_FPS)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+        self.cap.set(cv2.CAP_PROP_FPS, 30)
         return True
 
     def start_enrollment(self):
@@ -484,8 +652,13 @@ class SmartAIDogRobot:
 
     def process_frame(self, frame):
         self.current_live_frame = frame.copy()
-        
-        # speech.py வாய்ஸ் வழியாகப் படிக்க learner-க்கு ஃபிரேமைப் பகிர்தல்:
+
+        # Video recording pipeline frame writer
+        global is_recording, video_writer
+        if is_recording and video_writer is not None:
+            resized_frame = cv2.resize(frame, (640, 480))
+            video_writer.write(resized_frame)
+
         if 'learner' in globals() and learner is not None:
             learner.current_frame = frame.copy()
 
@@ -493,10 +666,9 @@ class SmartAIDogRobot:
         self.frame_counter += 1
         display_frame = frame.copy()
 
-        # --- Low-light enhancement (Contrast & Brightness Boost) ---
+        # Low-light auto enhance
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         brightness = np.mean(gray)
-
         if brightness < 80:
             lab = cv2.cvtColor(frame, cv2.COLOR_BGR2LAB)
             l, a, b = cv2.split(lab)
@@ -504,9 +676,9 @@ class SmartAIDogRobot:
             cl = clahe.apply(l)
             enhanced_lab = cv2.merge((cl, a, b))
             frame = cv2.cvtColor(enhanced_lab, cv2.COLOR_LAB2BGR)
+            display_frame = frame.copy()
 
-        display_frame = frame.copy()
-
+        # Offline enrollment mode capture
         if self.enrollment_mode:
             faces = self.face_recognizer.detect_faces(frame)
             if faces:
@@ -536,6 +708,7 @@ class SmartAIDogRobot:
                         self.enrollment_frames = []
             return display_frame
 
+        # Face detection interval
         if self.frame_counter % FACE_DETECTION_INTERVAL == 0:
             self.cached_faces = self.face_recognizer.detect_faces(frame)
             self.cached_names = []
@@ -601,30 +774,6 @@ class SmartAIDogRobot:
                                 args=(name, emotion, confidence),
                                 daemon=True,
                             ).start()
-                    else:
-                        # Unknown Face Detection
-                        if not self.frame_manager.is_capturing:
-                            self.frame_manager.start_capture()
-                        self.frame_manager.add_frame(frame, bbox)
-
-                        w_box, h_box = bbox[2], bbox[3]
-                        current_ts = time.time()
-                        if (
-                            w_box * h_box > 8500
-                            and (not latest_unknown_alert["has_alert"])
-                            and (current_ts - last_unknown_sent_time > ALERT_COOLDOWN_SECONDS)
-                        ):
-                            face_crop = self.face_recognizer.extract_face(frame, bbox)
-                            if face_crop is not None:
-                                _, buffer = cv2.imencode(".jpg", face_crop, [cv2.IMWRITE_JPEG_QUALITY, 95])
-                                img_b64 = base64.b64encode(buffer).decode("utf-8")
-                                latest_unknown_alert["has_alert"] = True
-                                latest_unknown_alert["timestamp"] = time.strftime("%I:%M %p")
-                                latest_unknown_alert["image_base64"] = img_b64
-                                latest_unknown_alert["raw_frame"] = face_crop
-                                last_unknown_sent_time = current_ts
-                                robot_telemetry["threats_count"] = 1
-                                print(f"🚨 Crisp single unknown face dispatched to app at {latest_unknown_alert['timestamp']}")
                 else:
                     self.cached_names.append(None)
                     self.cached_sources.append("invalid_face")
@@ -632,37 +781,79 @@ class SmartAIDogRobot:
                     self.cached_confidences.append(0)
                     self.cached_all_emotions.append({})
 
-        # Overlays
+        found_unknown_this_frame = False
+
         for idx, bbox in enumerate(self.cached_faces):
             x, y, w, h = bbox
             name = self.cached_names[idx] if idx < len(self.cached_names) else None
             emotion = self.cached_emotions[idx] if idx < len(self.cached_emotions) else "neutral"
             confidence = self.cached_confidences[idx] if idx < len(self.cached_confidences) else 0
 
-            # --- 80% CONFIDENCE STRICT FILTER ---
             conf_percent = confidence * 100.0 if confidence <= 1.0 else float(confidence)
 
-            if conf_percent < 80.0 or not name or str(name).strip().lower() == "unknown":
+            # Default box_color assignment prevents UnboundLocalError
+            box_color = BOX_COLOR
+
+            # ==========================================================
+            # 🛡️ STRICT 70% THRESHOLD FILTER
+            # ==========================================================
+            if not name or str(name).strip().upper() == "UNKNOWN" or conf_percent < 70.0:
                 name = "UNKNOWN"
-                box_color = UNKNOWN_BOX_COLOR   # சிவப்பு நிறம்
+                box_color = UNKNOWN_BOX_COLOR
+                found_unknown_this_frame = True
+                self.unknown_consecutive_count += 1
+
+                if self.unknown_consecutive_count >= 8:
+                    current_ts = time.time()
+                    if (not latest_unknown_alert["has_alert"]) and (current_ts - last_unknown_sent_time > ALERT_COOLDOWN_SECONDS):
+                        face_crop = self.face_recognizer.extract_face(frame, bbox)
+                        if face_crop is not None and face_crop.shape[0] > 50 and face_crop.shape[1] > 50:
+                            
+                            is_registered = False
+                            try:
+                                emb = self.face_recognizer.get_embedding(face_crop)
+                                if emb is not None:
+                                    db_name, db_score = self.database.find_person(emb)
+                                    if db_name and db_score >= 0.70:
+                                        is_registered = True
+                                        name = db_name
+                            except Exception:
+                                pass
+
+                            if not is_registered:
+                                name = "UNKNOWN"
+                                box_color = UNKNOWN_BOX_COLOR
+                                _, buffer = cv2.imencode(".jpg", face_crop, [cv2.IMWRITE_JPEG_QUALITY, 90])
+                                img_b64 = base64.b64encode(buffer).decode("utf-8")
+                                latest_unknown_alert["has_alert"] = True
+                                latest_unknown_alert["timestamp"] = time.strftime("%I:%M %p")
+                                latest_unknown_alert["image_base64"] = img_b64
+                                latest_unknown_alert["raw_frame"] = face_crop
+                                last_unknown_sent_time = current_ts
+                                robot_telemetry["threats_count"] = 1
+                                print(f"🚨 CONFIRMED UNKNOWN VISITOR: Sent snapshot to app ({latest_unknown_alert['timestamp']})")
+                                self.unknown_consecutive_count = 0
+                            else:
+                                box_color = BOX_COLOR
             else:
-                box_color = BOX_COLOR           # பச்சை நிறம்
+                box_color = BOX_COLOR
+                self.unknown_consecutive_count = 0
 
-            label = f"{name} [{emotion.upper()}] {conf_percent:.0f}%"
-
+            label = f"{name or 'UNKNOWN'} [{emotion.upper()}] {conf_percent:.0f}%"
             cv2.rectangle(display_frame, (x, y), (x + w, y + h), box_color, 2)
             label_y = max(20, y - 10 if y - 10 > 10 else y + h + 20)
             cv2.putText(display_frame, label, (x + 2, label_y - 3), cv2.FONT_HERSHEY_SIMPLEX, 0.5, TEXT_COLOR, 2)
 
-            # --- STRICT ONE-TIME GREETING (80%+ CONFIRMED ONLY) ---
-            if name != "UNKNOWN":
+            if name and name != "UNKNOWN":
                 if name not in self.already_greeted_people:
                     self.already_greeted_people.add(name)
                     greeting_text = f"Hi {name}, what's up!"
-                    print(f"🗣️ Buddy Greeting (Once): {greeting_text}")
+                    print(f"🗣️ Buddy Greeting: {greeting_text}")
                     threading.Thread(target=lambda: buddy_speak(greeting_text), daemon=True).start()
 
-        # --- Object Status Text on Screen (லூப்புக்கு வெளியே) ---
+        if not found_unknown_this_frame:
+            self.unknown_consecutive_count = 0
+
         if self.latest_object_status:
             cv2.putText(display_frame, f"Obj: {self.latest_object_status}", (20, 70),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 255), 2)
@@ -676,7 +867,7 @@ class SmartAIDogRobot:
         if not self.start_camera():
             return
 
-        print("🚀 Face/Eye & Telemetry streaming system active")
+        print("🚀 Face/Eye & Telemetry streaming system active (Optimized 30 FPS)")
 
         while True:
             if self.shared_state and not self.shared_state.get_snapshot().get("running", True):
@@ -690,6 +881,8 @@ class SmartAIDogRobot:
                 self.shared_state.set_latest_frame(frame)
 
             display_frame = self.process_frame(frame)
+            
+            # Original Object Learning processing integration in run loop
             display_frame, box, text, obj = learner.process_frame(display_frame)
             
             x1, y1, x2, y2 = box
@@ -717,7 +910,7 @@ class SmartAIDogRobot:
 
 def start_flask_server():
     print("🌐 API Server online on http://0.0.0.0:5000")
-    flask_app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
+    flask_app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False, threaded=True)
 
 
 def run_robot_voice():
@@ -725,7 +918,7 @@ def run_robot_voice():
         import speech
         speech.start_conversation()
     except Exception as e:
-        print(f"⚠️ Voice error: {e}")
+        print(f"⚠️ Voice loop status: {e}")
 
 
 if __name__ == "__main__":

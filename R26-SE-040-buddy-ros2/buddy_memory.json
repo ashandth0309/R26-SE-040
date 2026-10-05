@@ -1,21 +1,34 @@
 {
-  "name": "Shoulder",
-  "conversation_count": 274,
+  "name": "A Software",
+  "conversation_count": 437,
   "likes": [
-    "I love you"
+    "I love you",
+    "finally I found my favorite",
+    "because I found my favorite show I heard before that was very famous",
+    "I searched my favorite black long frock finally",
+    "my favorite",
+    "finally I relaxed and take an idea for my project that is my favorite",
+    "my favorite place is",
+    "foods and my mother made of my favorite photos",
+    "people enjoying their families with a spacious activities",
+    "my favorite",
+    "to enjoy myself sometimes I am reading story book",
+    "I want to play together and enjoy",
+    "my sister's birthday party I invited my old friends and relatives that time there are many interesting activities we played my grandmother was and her favorite song for us that is very",
+    "knife and also I I Was Heard first time for my grandmother's favorite"
   ],
   "dislikes": [],
   "recent_topics": [
-    "எங்க அண்ணி மாதிரி ஒரு ஆளு தனியா இருக்கணும் எனக்கு இந்த ஓடுனது வாழ்க்கை தான் சரியில்லை",
-    "hari hari",
-    "hindi film",
-    "nandita",
-    "என்ன ஜோக் தான் நாங்க ரெண்டு பேரும் போட்டுட்டு ரிங்டோன்",
-    "அவளுக்கு ஒரு சீரியஸ் மெசேஜ் இல்லாம இருக்கா இல்ல உனக்கு தெரிஞ்சது",
-    "கிளம்பிட்டீங்களா",
-    "pani pani",
-    "டெலிட் பண்ணாத அவர் இல்லை இவன்தான் நம்முடைய ஓடி வந்தாலே அவன் தான்",
-    "இந்தியாவில் உள்ள நடந்திருக்கு"
+    "knife and also i i was heard first time for my grandmother's favorite",
+    "நீ",
+    "time out",
+    "i'm a software",
+    "ஓசோ ஐ வாண்ட் டு லண்டே பை",
+    "that was very hard but when i start to learn that technology it's very easy",
+    "if i feel is easy that always easy sometimes i feel hot that always hard for me so everything",
+    "டெக்னாலஜி",
+    "is is a phone",
+    "ஓகே"
   ],
   "emotion_pattern": [
     "neutral",
@@ -26,13 +39,13 @@
     "neutral",
     "neutral",
     "neutral",
+    "calm",
+    "neutral",
+    "joy",
+    "joy",
     "neutral",
     "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
-    "neutral",
+    "anger",
     "neutral",
     "neutral",
     "neutral",
@@ -69,129 +82,129 @@
     "neutral",
     "neutral"
   ],
-  "last_user_question": "இந்தியாவில் உள்ள நடந்திருக்கு",
-  "last_bot_answer": "சரி, இன்னும் கொஞ்சம் சொல்லுங்க.",
-  "last_topic": "இந்தியாவில் உள்ள நடந்திருக்கு",
+  "last_user_question": "ஓகே",
+  "last_bot_answer": "புரியுது. அடுத்தது என்ன?",
+  "last_topic": "ஓகே",
   "saved_questions": [
     {
-      "time": "2026-09-25T14:48:36.685229",
-      "question": "double meaning",
-      "answer": "That's interesting. Tell me more.",
-      "topic": "double meaning"
-    },
-    {
-      "time": "2026-09-25T14:48:43.754532",
-      "question": "ஐடியை",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "ஐடியை"
-    },
-    {
-      "time": "2026-09-25T14:50:11.238794",
-      "question": "உன்னோட அக்கவுண்ட் கேக்கணும் நீ அதை எடுத்துக்கொண்டு கூட அதுக்குள்ள நான் ஃபுல்லா வந்து நீங்க என்ன செய்றீங்க என்ன சர்ச் பண்றீங்க ஜஸ்ட் ஃப்ரை பண்ணி பார்த்து இருக்கேன் போன்",
-      "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "உன்னோட அக்கவுண்ட் கேக்கணும் நீ அதை எடுத்துக்கொண்டு கூட அதுக்குள்ள நான் ஃபுல்லா வந்து நீங்க என்ன செய்"
-    },
-    {
-      "time": "2026-09-25T14:50:59.791790",
-      "question": "உங்களுக்கு என்ன செய்ய வேண்டும்",
-      "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "உங்களுக்கு என்ன செய்ய வேண்டும்"
-    },
-    {
-      "time": "2026-09-25T14:59:37.190350",
-      "question": "கொஞ்சம் படிப்பவன் நீங்க சொல்றீங்க அவனும் அவனும் நடிக்கிற சண்டை பிடிச்சதா",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "கொஞ்சம் படிப்பவன் நீங்க சொல்றீங்க அவனும் அவனும் நடிக்கிற சண்டை பிடிச்சதா"
-    },
-    {
-      "time": "2026-09-25T15:01:13.696403",
-      "question": "girlfriend",
-      "answer": "That's interesting. Tell me more.",
-      "topic": "girlfriend"
-    },
-    {
-      "time": "2026-09-25T15:05:06.736526",
-      "question": "நம்ம என்ன போடாட்டி காலையிலேயே ஒருக்கா என்ன ஊரு எனக்கு வெளியில் தெரிஞ்சது வந்த உடனே டஸ்ட் ஒரு மாதிரி வரும்",
-      "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "நம்ம என்ன போடாட்டி காலையிலேயே ஒருக்கா என்ன ஊரு எனக்கு வெளியில் தெரிஞ்சது வந்த உடனே டஸ்ட் ஒரு மாதிரி "
-    },
-    {
-      "time": "2026-09-25T15:08:28.135082",
-      "question": "atmosphere",
-      "answer": "Hmm, go on.",
-      "topic": "atmosphere"
-    },
-    {
-      "time": "2026-09-25T15:09:04.834972",
-      "question": "தாடி எல்லாம் வளர்த்துக்கிட்டு",
-      "answer": "சரி, இன்னும் கொஞ்சம் சொல்லுங்க.",
-      "topic": "தாடி எல்லாம் வளர்த்துக்கிட்டு"
-    },
-    {
-      "time": "2026-09-25T15:09:32.296870",
-      "question": "யாரு கல்யாணம்",
-      "answer": "சரி, இன்னும் கொஞ்சம் சொல்லுங்க.",
-      "topic": "யாரு கல்யாணம்"
-    },
-    {
-      "time": "2026-09-25T15:11:09.736040",
-      "question": "எங்க அண்ணி மாதிரி ஒரு ஆளு தனியா இருக்கணும் எனக்கு இந்த ஓடுனது வாழ்க்கை தான் சரியில்லை",
-      "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "எங்க அண்ணி மாதிரி ஒரு ஆளு தனியா இருக்கணும் எனக்கு இந்த ஓடுனது வாழ்க்கை தான் சரியில்லை"
-    },
-    {
-      "time": "2026-09-25T15:14:09.939577",
-      "question": "Hari Hari",
-      "answer": "That's interesting. Tell me more.",
-      "topic": "hari hari"
-    },
-    {
-      "time": "2026-09-25T15:14:55.368281",
-      "question": "Hindi film",
-      "answer": "Hey Shoulder!",
-      "topic": "hindi film"
-    },
-    {
-      "time": "2026-09-25T15:15:21.561908",
-      "question": "Nandita",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "nandita"
-    },
-    {
-      "time": "2026-09-25T15:16:53.506839",
-      "question": "என்ன ஜோக் தான் நாங்க ரெண்டு பேரும் போட்டுட்டு ரிங்டோன்",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "என்ன ஜோக் தான் நாங்க ரெண்டு பேரும் போட்டுட்டு ரிங்டோன்"
-    },
-    {
-      "time": "2026-09-25T15:18:11.199025",
-      "question": "அவளுக்கு ஒரு சீரியஸ் மெசேஜ் இல்லாம இருக்கா இல்ல உனக்கு தெரிஞ்சது",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "அவளுக்கு ஒரு சீரியஸ் மெசேஜ் இல்லாம இருக்கா இல்ல உனக்கு தெரிஞ்சது"
-    },
-    {
-      "time": "2026-09-25T15:34:51.803678",
-      "question": "கிளம்பிட்டீங்களா",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "கிளம்பிட்டீங்களா"
-    },
-    {
-      "time": "2026-09-25T15:40:37.266974",
-      "question": "Pani Pani",
+      "time": "2026-10-05T15:06:27.680627",
+      "question": "how to speak",
       "answer": "I'm listening.",
-      "topic": "pani pani"
+      "topic": "how to speak"
     },
     {
-      "time": "2026-09-25T15:44:46.704035",
-      "question": "டெலிட் பண்ணாத அவர் இல்லை இவன்தான் நம்முடைய ஓடி வந்தாலே அவன் தான்",
-      "answer": "சரி, continue பண்ணுங்க.",
-      "topic": "டெலிட் பண்ணாத அவர் இல்லை இவன்தான் நம்முடைய ஓடி வந்தாலே அவன் தான்"
+      "time": "2026-10-05T15:06:35.140839",
+      "question": "and I don't",
+      "answer": "Hmm, go on.",
+      "topic": "and i dont"
     },
     {
-      "time": "2026-09-25T15:50:57.921898",
-      "question": "இந்தியாவில் உள்ள நடந்திருக்கு",
-      "answer": "சரி, இன்னும் கொஞ்சம் சொல்லுங்க.",
-      "topic": "இந்தியாவில் உள்ள நடந்திருக்கு"
+      "time": "2026-10-05T15:06:50.811339",
+      "question": "மை",
+      "answer": "ஹ்ம்ம், கேக்கறேன்.",
+      "topic": "மை"
+    },
+    {
+      "time": "2026-10-05T15:07:01.830492",
+      "question": "my favorite",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "my favorite"
+    },
+    {
+      "time": "2026-10-05T15:07:14.537541",
+      "question": "to enjoy myself sometimes I am reading story book",
+      "answer": "It's 03:07 PM.",
+      "topic": "to enjoy myself sometimes i am reading story book"
+    },
+    {
+      "time": "2026-10-05T15:07:46.760724",
+      "question": "yesterday I was very stressed so I ended my garden and relax free and I find my solution for my problem so I feel always feel",
+      "answer": "I see. What else is on your mind?",
+      "topic": "yesterday i was very stressed so i ended my garden and relax free and i find my solution for my prob"
+    },
+    {
+      "time": "2026-10-05T15:08:29.336654",
+      "question": "I was very stressed so I ended my garden",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "i was very stressed so i ended my garden"
+    },
+    {
+      "time": "2026-10-05T15:09:29.176826",
+      "question": "we are celebrated my sister's birthday and I invited my old friends",
+      "answer": "I see. What else is on your mind?",
+      "topic": "we are celebrated my sisters birthday and i invited my old friends"
+    },
+    {
+      "time": "2026-10-05T15:09:40.097608",
+      "question": "I want to play together and enjoy",
+      "answer": "I'm listening.",
+      "topic": "i want to play together and enjoy"
+    },
+    {
+      "time": "2026-10-05T15:10:42.460692",
+      "question": "my sister's birthday party I invited my old friends and relatives that time there are many interesting activities we played my grandmother was and her favorite song for us that is very",
+      "answer": "It's 03:10 PM.",
+      "topic": "my sisters birthday party i invited my old friends and relatives that time there are many interestin"
+    },
+    {
+      "time": "2026-10-05T15:11:04.967783",
+      "question": "knife and also I I Was Heard first time for my grandmother's favorite",
+      "answer": "It's 03:11 PM.",
+      "topic": "knife and also i i was heard first time for my grandmothers favorite"
+    },
+    {
+      "time": "2026-10-05T15:11:13.502648",
+      "question": "நீ",
+      "answer": "புரியுது. அடுத்தது என்ன?",
+      "topic": "நீ"
+    },
+    {
+      "time": "2026-10-05T15:12:05.161798",
+      "question": "time out",
+      "answer": "It's 03:12 PM.",
+      "topic": "time out"
+    },
+    {
+      "time": "2026-10-05T15:12:28.779861",
+      "question": "I'm a software",
+      "answer": "Got it, A Software. Nice to meet you.",
+      "topic": "im a software"
+    },
+    {
+      "time": "2026-10-05T15:12:41.801979",
+      "question": "ஓசோ ஐ வாண்ட் டு லண்டே பை",
+      "answer": "ஹ்ம்ம், கேக்கறேன்.",
+      "topic": "ஓசோ ஐ வாண்ட் டு லண்டே பை"
+    },
+    {
+      "time": "2026-10-05T15:13:09.883791",
+      "question": "that was very hard but when I start to learn that technology it's very easy",
+      "answer": "Hmm, go on.",
+      "topic": "that was very hard but when i start to learn that technology its very easy"
+    },
+    {
+      "time": "2026-10-05T15:13:31.657077",
+      "question": "if I feel is easy that always easy sometimes I feel hot that always hard for me so everything",
+      "answer": "It's 03:13 PM.",
+      "topic": "if i feel is easy that always easy sometimes i feel hot that always hard for me so everything"
+    },
+    {
+      "time": "2026-10-05T15:14:00.267515",
+      "question": "டெக்னாலஜி",
+      "answer": "ஹ்ம்ம், கேக்கறேன்.",
+      "topic": "டெக்னாலஜி"
+    },
+    {
+      "time": "2026-10-05T15:39:28.358690",
+      "question": "is is a phone",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "is is a phone"
+    },
+    {
+      "time": "2026-10-05T15:40:02.455863",
+      "question": "ஓகே",
+      "answer": "புரியுது. அடுத்தது என்ன?",
+      "topic": "ஓகே"
     }
   ]
 }
