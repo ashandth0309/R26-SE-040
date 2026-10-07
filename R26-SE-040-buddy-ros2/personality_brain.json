@@ -8,7 +8,8 @@
     "sports": 3,
     "science": 1,
     "food": 1,
-    "music": 5
+    "music": 6,
+    "work": 2
   },
   "style": {
     "formality": 0.3,
@@ -17,70 +18,6 @@
     "conciseness": 0.6
   },
   "history": [
-    {
-      "timestamp": "2026-10-04T22:17:00.197271",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:17:10.304306",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:18:52.349824",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:19:05.163968",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:19:42.166258",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:28:12.414204",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-04T22:28:22.940663",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:12:52.766517",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:13:03.847119",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:13:27.830038",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:14:13.384137",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:31:33.716622",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T12:31:40.896822",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T13:38:53.455697",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T13:39:08.055708",
-      "emotion": "neutral"
-    },
-    {
-      "timestamp": "2026-10-05T13:40:14.792696",
-      "emotion": "neutral"
-    },
     {
       "timestamp": "2026-10-05T13:40:25.015514",
       "emotion": "neutral"
@@ -415,6 +352,70 @@
     },
     {
       "timestamp": "2026-10-05T15:40:02.452733",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:01.489926",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:25.652238",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:36.426401",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:48:05.451264",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:49:52.979816",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:05.836877",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:15.412817",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:29.918256",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:38.714479",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:49.585484",
+      "emotion": "sadness"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:01.775775",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:15.065192",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:23.390576",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:32.516235",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:47.105853",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:52:19.420193",
       "emotion": "neutral"
     }
   ]

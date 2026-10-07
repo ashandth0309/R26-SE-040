@@ -14,7 +14,7 @@ import tkinter as tk
 from tkinter import simpledialog
 import numpy as np
 from flask import Flask, Response, jsonify, request, send_from_directory
-from flask_cors import CORS 
+from flask_cors import CORS
 
 # 1. Internal Folder Paths Setup (Nested strictly inside faceRecAndEmotion)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -55,7 +55,7 @@ except Exception:
 global_robot_app = None
 learner = ObjectLearningModule(threshold=0.70)
 flask_app = Flask(__name__)
-CORS(flask_app)        
+CORS(flask_app)
 
 # Global Recording Variables
 is_recording = False
@@ -348,7 +348,7 @@ def api_learn_object(obj_name):
 def api_identify_object():
     global learner
     name = learner.last_detected_name if learner else "unknown"
-    return {"detected": name}    
+    return {"detected": name}
 
 
 # ==========================================
@@ -415,7 +415,7 @@ def control_action():
         response_msg = "Hello, I am Buddy your companion."
     else:
         response_msg = f"Action {action} dispatched."
-        
+
     threading.Thread(target=lambda: buddy_speak(response_msg), daemon=True).start()
     return jsonify({"status": "success", "action": action, "response": response_msg})
 
@@ -599,7 +599,7 @@ class SmartAIDogRobot:
         print("✅ System Ready!")
 
     def start_camera(self):
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
         if not self.cap.isOpened():
             print("❌ Cannot access camera")
             return False
@@ -808,7 +808,7 @@ class SmartAIDogRobot:
                     if (not latest_unknown_alert["has_alert"]) and (current_ts - last_unknown_sent_time > ALERT_COOLDOWN_SECONDS):
                         face_crop = self.face_recognizer.extract_face(frame, bbox)
                         if face_crop is not None and face_crop.shape[0] > 50 and face_crop.shape[1] > 50:
-                            
+
                             is_registered = False
                             try:
                                 emb = self.face_recognizer.get_embedding(face_crop)
@@ -881,10 +881,10 @@ class SmartAIDogRobot:
                 self.shared_state.set_latest_frame(frame)
 
             display_frame = self.process_frame(frame)
-            
+
             # Original Object Learning processing integration in run loop
             display_frame, box, text, obj = learner.process_frame(display_frame)
-            
+
             x1, y1, x2, y2 = box
             color = (0, 0, 255) if learner.is_learning else (0, 255, 0)
             cv2.rectangle(display_frame, (x1, y1), (x2, y2), color, 2)
