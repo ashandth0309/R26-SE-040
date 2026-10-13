@@ -1,6 +1,11 @@
 {
+<<<<<<< HEAD
   "name": "A Software",
   "conversation_count": 572,
+=======
+  "name": "Going After This I Will If It Works Perfectly Then I Will Just Put Into The Hospital But The Thing Is Like Its Like It Is Slow And Why You Have So Much",
+  "conversation_count": 453,
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
   "likes": [
     "I love you",
     "finally I found my favorite",
@@ -15,10 +20,12 @@
     "to enjoy myself sometimes I am reading story book",
     "I want to play together and enjoy",
     "my sister's birthday party I invited my old friends and relatives that time there are many interesting activities we played my grandmother was and her favorite song for us that is very",
-    "knife and also I I Was Heard first time for my grandmother's favorite"
+    "knife and also I I Was Heard first time for my grandmother's favorite",
+    "so after this what I'm going after this I will if it works perfectly then I will just put into the hospital but the thing is like it's like it is slow and why you have so much"
   ],
   "dislikes": [],
   "recent_topics": [
+<<<<<<< HEAD
     "what is",
     "what is",
     "what is",
@@ -29,6 +36,18 @@
     "what is",
     "play music",
     "what's the time now"
+=======
+    "can you play me a music",
+    "how do you work for the name",
+    "do you know who am i",
+    "you are not listening and i'm sad",
+    "can you hear me",
+    "தெய்வ பிரசாத்",
+    "best of the purina purell",
+    "இன்னைக்கு என்ன நாள்",
+    "not this weather report",
+    "putting it all wrong wrong wrong hurry hurry krishna hare krishna hare krishna do you know who is krishna"
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
   ],
   "emotion_pattern": [
     "neutral",
@@ -39,6 +58,16 @@
     "neutral",
     "neutral",
     "neutral",
+<<<<<<< HEAD
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+=======
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
     "neutral",
     "neutral",
     "neutral",
@@ -74,7 +103,7 @@
     "neutral",
     "neutral",
     "neutral",
-    "neutral",
+    "sadness",
     "neutral",
     "neutral",
     "neutral",
@@ -82,6 +111,7 @@
     "neutral",
     "neutral"
   ],
+<<<<<<< HEAD
   "last_user_question": "what's the time now",
   "last_bot_answer": "It's 11:49 PM.",
   "last_topic": "whats the time now",
@@ -95,10 +125,32 @@
     {
       "time": "2026-10-13T22:05:03.387729",
       "question": "video film",
+=======
+  "last_user_question": "putting it all wrong wrong wrong hurry hurry Krishna Hare Krishna Hare Krishna do you know who is Krishna",
+  "last_bot_answer": "Hmm, go on.",
+  "last_topic": "putting it all wrong wrong wrong hurry hurry krishna hare krishna hare krishna do you know krishna",
+  "saved_questions": [
+    {
+      "time": "2026-10-05T15:13:31.657077",
+      "question": "if I feel is easy that always easy sometimes I feel hot that always hard for me so everything",
+      "answer": "It's 03:13 PM.",
+      "topic": "if i feel is easy that always easy sometimes i feel hot that always hard for me so everything"
+    },
+    {
+      "time": "2026-10-05T15:14:00.267515",
+      "question": "டெக்னாலஜி",
+      "answer": "ஹ்ம்ம், கேக்கறேன்.",
+      "topic": "டெக்னாலஜி"
+    },
+    {
+      "time": "2026-10-05T15:39:28.358690",
+      "question": "is is a phone",
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
       "answer": "That's interesting. Tell me more.",
       "topic": "video film"
     },
     {
+<<<<<<< HEAD
       "time": "2026-10-13T22:05:53.189669",
       "question": "Kundli",
       "answer": "I see. What else is on your mind?",
@@ -205,6 +257,108 @@
       "question": "what's the time now",
       "answer": "It's 11:49 PM.",
       "topic": "whats the time now"
+=======
+      "time": "2026-10-05T15:40:02.455863",
+      "question": "ஓகே",
+      "answer": "புரியுது. அடுத்தது என்ன?",
+      "topic": "ஓகே"
+    },
+    {
+      "time": "2026-10-07T12:47:01.491934",
+      "question": "so after this what I'm going after this I will if it works perfectly then I will just put into the hospital but the thing is like it's like it is slow and why you have so much",
+      "answer": "Got it, Going After This I Will If It Works Perfectly Then I Will Just Put Into The Hospital But The Thing Is Like Its Like It Is Slow And Why You Have So Much. Nice to meet you.",
+      "topic": "so after this what im going after this i will if it works perfectly then i will just put into the ho"
+    },
+    {
+      "time": "2026-10-07T12:47:25.661306",
+      "question": "so going to stay now",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "so going to stay now"
+    },
+    {
+      "time": "2026-10-07T12:47:36.429953",
+      "question": "big booty",
+      "answer": "Hmm, go on.",
+      "topic": "big booty"
+    },
+    {
+      "time": "2026-10-07T12:48:05.452261",
+      "question": "Emerson 8224",
+      "answer": "I see. What else is on your mind?",
+      "topic": "emerson 8224"
+    },
+    {
+      "time": "2026-10-07T12:49:52.980895",
+      "question": "nice to meet you so buddy over there",
+      "answer": "I'm listening.",
+      "topic": "nice to meet you so buddy over there"
+    },
+    {
+      "time": "2026-10-07T12:50:05.838385",
+      "question": "yes so what's the date today",
+      "answer": "Today is Wednesday, October 07, 2026.",
+      "topic": "yes so whats the date today"
+    },
+    {
+      "time": "2026-10-07T12:50:15.413817",
+      "question": "can you play me a music",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "can you play me a music"
+    },
+    {
+      "time": "2026-10-07T12:50:29.919521",
+      "question": "how do you work for the name",
+      "answer": "Hmm, go on.",
+      "topic": "how do you work for the name"
+    },
+    {
+      "time": "2026-10-07T12:50:38.715490",
+      "question": "do you know who am I",
+      "answer": "I'm listening.",
+      "topic": "do you know who am i"
+    },
+    {
+      "time": "2026-10-07T12:50:49.587484",
+      "question": "you are not listening and I'm sad",
+      "answer": "Hmm, go on.",
+      "topic": "you are not listening and im sad"
+    },
+    {
+      "time": "2026-10-07T12:51:01.776777",
+      "question": "can you hear me",
+      "answer": "I see. What else is on your mind?",
+      "topic": "can you hear me"
+    },
+    {
+      "time": "2026-10-07T12:51:15.066097",
+      "question": "தெய்வ பிரசாத்",
+      "answer": "சரி, இன்னும் கொஞ்சம் சொல்லுங்க.",
+      "topic": "தெய்வ பிரசாத்"
+    },
+    {
+      "time": "2026-10-07T12:51:23.392577",
+      "question": "best of the Purina Purell",
+      "answer": "I'm listening.",
+      "topic": "best of the purina purell"
+    },
+    {
+      "time": "2026-10-07T12:51:32.518235",
+      "question": "இன்னைக்கு என்ன நாள்",
+      "answer": "சரி, continue பண்ணுங்க.",
+      "topic": "இன்னைக்கு என்ன நாள்"
+    },
+    {
+      "time": "2026-10-07T12:51:47.106851",
+      "question": "not this weather report",
+      "answer": "Weather for current location: Clear  +3°C.",
+      "topic": "not this weather report"
+    },
+    {
+      "time": "2026-10-07T12:52:19.421202",
+      "question": "putting it all wrong wrong wrong hurry hurry Krishna Hare Krishna Hare Krishna do you know who is Krishna",
+      "answer": "Hmm, go on.",
+      "topic": "putting it all wrong wrong wrong hurry hurry krishna hare krishna hare krishna do you know krishna"
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
     }
   ]
 }

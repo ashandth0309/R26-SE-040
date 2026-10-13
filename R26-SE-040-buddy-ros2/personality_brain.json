@@ -8,7 +8,12 @@
     "sports": 3,
     "science": 1,
     "food": 1,
+<<<<<<< HEAD
     "music": 17
+=======
+    "music": 6,
+    "work": 2
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
   },
   "style": {
     "formality": 0.3,
@@ -18,6 +23,7 @@
   },
   "history": [
     {
+<<<<<<< HEAD
       "timestamp": "2026-10-12T18:39:42.890346",
       "emotion": "neutral"
     },
@@ -83,6 +89,9 @@
     },
     {
       "timestamp": "2026-10-12T19:57:46.223497",
+=======
+      "timestamp": "2026-10-05T13:40:25.015514",
+>>>>>>> 87575446822062ec34837d3f78f0335378be60b8
       "emotion": "neutral"
     },
     {
@@ -415,6 +424,70 @@
     },
     {
       "timestamp": "2026-10-13T23:49:06.391937",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:01.489926",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:25.652238",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:47:36.426401",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:48:05.451264",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:49:52.979816",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:05.836877",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:15.412817",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:29.918256",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:38.714479",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:50:49.585484",
+      "emotion": "sadness"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:01.775775",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:15.065192",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:23.390576",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:32.516235",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:51:47.105853",
+      "emotion": "neutral"
+    },
+    {
+      "timestamp": "2026-10-07T12:52:19.420193",
       "emotion": "neutral"
     }
   ]
