@@ -5,6 +5,11 @@ Smart AI Dog Robot - Integrated Face/Eye, Object Learning, Speech & Mobile App S
 import base64
 import cv2
 import glob
+import hashlib
+import pygame
+
+import speech_recognition as sr  # Speech-to-text-ku (illaivittal pyttsx3 mattum podalam)
+import json
 import os
 import re
 import time
@@ -16,6 +21,12 @@ import numpy as np
 from flask import Flask, Response, jsonify, request, send_from_directory
 from flask_cors import CORS 
 
+from datetime import datetime, timedelta
+import pandas as pd
+from flask import Flask, Response, jsonify, request, send_from_directory
+
+
+pygame.mixer.init()
 # 1. Internal Folder Paths Setup (Nested strictly inside faceRecAndEmotion)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CAPTURES_DIR = os.path.join(BASE_DIR, "captures")
@@ -41,11 +52,13 @@ from faceRecAndEmotion.emotion_logger import EmotionLogger
 from faceRecAndEmotion.face_recognition_module import FaceRecognition
 from faceRecAndEmotion.frame_manager import FrameManager
 from faceRecAndEmotion.robot_controller import RobotController
+from faceRecAndEmotion.fall_detection_module import FallDetector
 
 try:
     from faceRecAndEmotion.simple_face_memory import SimpleFaceMemory
 except Exception:
     SimpleFaceMemory = None
+
 
 try:
     from faceRecAndEmotion.object_learning_module import ObjectLearningModule
@@ -56,6 +69,17 @@ global_robot_app = None
 learner = ObjectLearningModule(threshold=0.70)
 flask_app = Flask(__name__)
 CORS(flask_app)        
+
+# Fall detector initialize panrom
+fall_detector = FallDetector(min_confidence=0.5)
+
+# Fall alert-kkum oru global dictionary
+latest_fall_alert = {
+    "has_alert": False,
+    "timestamp": None,
+    "image_base64": None,
+    "raw_frame": None
+}
 
 # Global Recording Variables
 is_recording = False
@@ -94,6 +118,179 @@ robot_telemetry = {
 
 
 # ==========================================
+# 📊 EMOTION REPORT & MUSIC THERAPY APIs
+# ==========================================
+
+# Global tracking variables for music therapy state
+music_state = {
+    "is_playing": False,
+    "last_played_time": "None",
+    "target": "None",
+    "current_song": ""
+}
+
+# Root folder-ai point panra maathiri BASE_DIR-ai adjust panrom
+ROOT_DIR = os.path.dirname(BASE_DIR) if os.path.basename(BASE_DIR) == "faceRecAndEmotion" else BASE_DIR
+
+playlist = [
+    os.path.join(ROOT_DIR, "sounds", "relax1.mp3"),
+    os.path.join(ROOT_DIR, "sounds", "relax2.mp3")
+]
+current_song_index = 0
+
+def play_current_relax_song():
+    global current_song_index
+    try:
+        song_path = playlist[current_song_index]
+        print(f"🔍 Checking song path: {song_path}")
+        
+        if not os.path.exists(song_path):
+            print(f"❌ Error: File not found at {song_path}")
+            return
+            
+        pygame.mixer.music.load(song_path)
+        pygame.mixer.music.play()
+        print(f"🎶 Playing local song: {song_path}")
+    except Exception as e:
+        print(f"Error playing song: {e}")
+
+# 1. 24-Hour Emotion Report Endpoint with Music Status Sync (Defined ONLY ONCE)
+@flask_app.route("/api/emotion_report/<name>", methods=["GET"])
+def get_emotion_report(name):
+  try:
+    log_path = os.path.join(BASE_DIR, "database", "emotion_logs.json")
+    reports_list = []
+    
+    if os.path.exists(log_path):
+        with open(log_path, "r") as f:
+            file_data = json.load(f)
+        logs = file_data if isinstance(file_data, list) else file_data.get("logs", [])
+        df = pd.DataFrame(logs)
+        if not df.empty and "name" in df.columns:
+            df["name"] = df["name"].astype(str).str.strip().str.lower()
+            person_df = df[df["name"] == name.strip().lower()]
+            if not person_df.empty:
+                person_df["timestamp"] = pd.to_datetime(person_df["timestamp"])
+                now = datetime.now()
+                past_24h = now - timedelta(hours=24)
+                recent_df = person_df[person_df["timestamp"] >= past_24h]
+                recent_df["timestamp"] = recent_df["timestamp"].dt.strftime("%Y-%m-%d %H:%M:%S")
+                reports_list = recent_df.to_dict(orient="records")
+
+    # Music playing state response
+    is_music_active = pygame.mixer.music.get_busy() or music_state.get("is_playing", False)
+
+    return jsonify({
+        "name": name, 
+        "reports": reports_list,
+        "music_playing": is_music_active,
+        "last_played_time": music_state.get("last_played_time", "None"),
+        "music_target": music_state.get("target", "None")
+    }), 200
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
+
+
+@flask_app.route("/api/control/action", methods=["POST"])
+def music_control_action():
+  global current_song_index
+  try:
+    data = request.get_json() or {}
+    action = data.get("action")
+    mood = data.get("mood", "Neutral")
+    target = data.get("target", "User")
+
+    if action == "PLAY_MUSIC":
+        if pygame.mixer.music.get_busy() or music_state["is_playing"]:
+            return jsonify({
+                "status": "playing",
+                "message": "Music is already playing.",
+                "last_played_time": music_state["last_played_time"],
+                "target": music_state["target"]
+            }), 200
+
+        # Safe Background Thread for Music & Clean Command Handling
+        def run_music_therapy_flow():
+            global current_song_index
+            try:
+                print(f"🎶 [MUSIC THERAPY]: {target} is feeling {mood}.")
+                
+                is_direct_click = data.get("direct_trigger", False)
+                user_said_yes = is_direct_click
+
+                if not is_direct_click:
+                    try:
+                        buddy_speak(f"You seem a bit {mood}, {target}. Would you like me to play soothing music for you?")
+                        recognizer = sr.Recognizer()
+                        with sr.Microphone() as source:
+                            recognizer.adjust_for_ambient_noise(source, duration=0.5)
+                            audio = recognizer.listen(source, timeout=5, phrase_time_limit=3)
+                            command = recognizer.recognize_google(audio).lower()
+                            print(f"🔗 Bridge heard: {command}")
+                            if any(word in command for word in ["yes", "yeah", "ok", "sure", "play"]):
+                                user_said_yes = True
+                    except Exception as ex:
+                        print(f"Voice confirmation note: {ex}")
+                        user_said_yes = True  # Fallback to help user smoothly
+
+                if user_said_yes:
+                    buddy_speak("Playing your relaxing music now. Enjoy!")
+                    
+                    music_state["is_playing"] = True
+                    music_state["target"] = target
+                    music_state["last_played_time"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    
+                    play_current_relax_song()
+                    
+                    # Safe separate command loop without assistant conflict
+                    while pygame.mixer.music.get_busy():
+                        try:
+                            recognizer_cmd = sr.Recognizer()
+                            with sr.Microphone() as src:
+                                recognizer_cmd.adjust_for_ambient_noise(src, duration=0.2)
+                                audio_cmd = recognizer_cmd.listen(src, timeout=3, phrase_time_limit=2)
+                                next_cmd = recognizer_cmd.recognize_google(audio_cmd).lower()
+                                
+                                if "next" in next_cmd:
+                                    current_song_index = (current_song_index + 1) % len(playlist)
+                                    buddy_speak("Playing next song.")
+                                    play_current_relax_song()
+                                elif "stop" in next_cmd or "pause" in next_cmd:
+                                    pygame.mixer.music.stop()
+                                    buddy_speak("Music stopped.")
+                                    break
+                        except sr.WaitTimeoutError:
+                            continue
+                        except Exception:
+                            continue
+                else:
+                    try:
+                        buddy_speak("Alright, I will not play music.")
+                    except:
+                        pass
+            except Exception as ex:
+                print(f"Flow error: {ex}")
+            finally:
+                music_state["is_playing"] = False
+
+        threading.Thread(target=run_music_therapy_flow, daemon=True).start()
+
+        return jsonify({
+            "status": "success",
+            "message": "Music therapy flow initiated.",
+            "last_played_time": music_state["last_played_time"],
+            "target": target
+        }), 200
+
+    elif action == "STOP_MUSIC":
+        pygame.mixer.music.stop()
+        music_state["is_playing"] = False
+        return jsonify({"status": "stopped", "message": "Stopped."}), 200
+
+    return jsonify({"status": "success"}), 200
+  except Exception as e:
+    return jsonify({"error": str(e)}), 500
+# ==========================================
 # 📷 CAMERA, RECORDING & PERSISTENT MEDIA API
 # ==========================================
 
@@ -112,7 +309,22 @@ def video_call():
                 time.sleep(0.01)
                 continue
 
-            # Original Object Learning module process frame integration
+            # 1. Fall Detector process pannum pothu frame-la skeleton draw aagum
+            is_fallen, box = fall_detector.process_frame(frame)
+
+            if is_fallen and not latest_fall_alert["has_alert"]:
+                latest_fall_alert["has_alert"] = True
+                latest_fall_alert["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+                latest_fall_alert["raw_frame"] = frame.copy()
+                
+                # Snapshot-ai base64-ku convert panrom
+                _, buffer = cv2.imencode('.jpg', frame)
+                b64_str = base64.b64encode(buffer).decode('utf-8')
+                latest_fall_alert["image_base64"] = f"data:image/jpeg;base64,{b64_str}"
+                
+                print("⚠️ [FALL DETECTION]: Person fall detected! Alert triggered.")
+
+            # 2. Object Learning module process frame integration
             frame, box, text, obj = learner.process_frame(frame)
 
             x1, y1, x2, y2 = box
@@ -137,6 +349,24 @@ def video_call():
         generate(), mimetype="multipart/x-mixed-replace; boundary=frame"
     )
 
+@flask_app.route("/api/get_fall_alert", methods=["GET"])
+def get_fall_alert():
+    global latest_fall_alert
+    if latest_fall_alert["has_alert"] and latest_fall_alert["image_base64"]:
+        return jsonify({
+            "status": "alert",
+            "time": latest_fall_alert["timestamp"],
+            "image": latest_fall_alert["image_base64"]
+        })
+    return jsonify({"status": "idle", "image": None})
+
+@flask_app.route("/api/clear_fall_alert", methods=["POST"])
+def clear_fall_alert():
+    global latest_fall_alert
+    latest_fall_alert["has_alert"] = False
+    latest_fall_alert["image_base64"] = None
+    latest_fall_alert["raw_frame"] = None
+    return jsonify({"status": "cleared", "success": True})
 
 @flask_app.route("/api/camera/snapshot", methods=["POST"])
 def camera_snapshot():
@@ -334,6 +564,65 @@ def clear_alert():
     return jsonify({"status": "cleared", "success": True})
 
 
+# 1. Folder-il antha image munnadiye irukka nu MD5 hash vachu check panra function
+def is_duplicate_image(person_dir, new_image_bytes):
+    # New image-kku unique hash generate panrom
+    new_hash = hashlib.md5(new_image_bytes).hexdigest()
+    
+    if not os.path.exists(person_dir):
+        return False
+        
+    # Dataset folder-kku kulla ulla ovvoru file-aiyum check panrom
+    for filename in os.listdir(person_dir):
+        file_path = os.path.join(person_dir, filename)
+        if os.path.isfile(file_path):
+            with open(file_path, "rb") as f:
+                existing_bytes = f.read()
+                existing_hash = hashlib.md5(existing_bytes).hexdigest()
+                # Same image iruntha True return pannum
+                if new_hash == existing_hash:
+                    return True
+    return False
+
+
+# 2. Unknown visitor-ai active learning moolam dataset-kku add panra API route
+@flask_app.route("/api/add_to_dataset", methods=["POST"])
+def add_to_dataset():
+    data = request.get_json() or {}
+    name = data.get("name")
+    image_base64 = data.get("image")
+    
+    # Name illana allathu image illana error anuppum
+    if not name or not image_base64:
+        return jsonify({"status": "error", "message": "Name and image required"}), 400
+        
+    # Antha perula folder create panrom (e.g., dataset/s/)
+    person_dir = os.path.join("faceRecAndEmotion/dataset", name)
+    os.makedirs(person_dir, exist_ok=True)
+    
+    try:
+        # Base64 string-ai bytes-ah decode panrom
+        if ',' in image_base64:
+            image_base64 = image_base64.split(',')[1]
+        image_bytes = base64.b64decode(image_base64)
+        
+        # Duplicate image-ah nu check panrom
+        if is_duplicate_image(person_dir, image_bytes):
+            return jsonify({"status": "exists", "message": "This image is already in the dataset!"})
+            
+        # Unique timestampoda filename create panni save panrom
+        filename = f"{name}_{int(time.time())}.jpg"
+        filepath = os.path.join(person_dir, filename)
+        
+        with open(filepath, "wb") as f:
+            f.write(image_bytes)
+            
+        print(f"📸 [ACTIVE LEARNING]: New unique image added to {name}'s dataset -> {filename}")
+        return jsonify({"status": "success", "message": f"Image successfully added to {name} dataset!"})
+    except Exception as e:
+        print(f"❌ Error: {e}")
+        return jsonify({"status": "error", "message": str(e)}), 500
+
 @flask_app.route('/learn/<obj_name>', methods=['GET', 'POST'])
 def api_learn_object(obj_name):
     global learner
@@ -434,10 +723,22 @@ def get_robot_status():
 
 @flask_app.route("/api/household_members", methods=["GET"])
 def get_household_members():
-    members = [
-        {"name": "Sobiya", "role": "Owner", "status": "RECOGNIZED"},
-        {"name": "Rayan", "role": "Member", "status": "RECOGNIZED"},
-    ]
+    members = []
+    
+    # Ungalathu project path-ku sariyaana dataset folder path-ai inge kodungal
+    dataset_path = "faceRecAndEmotion/dataset"  # or direct "dataset" depending on your main_robot.py location
+    if os.path.exists(dataset_path):
+        for person_name in os.listdir(dataset_path):
+            person_dir = os.path.join(dataset_path, person_name)
+            if os.path.isdir(person_dir):
+                role = "Owner" if person_name.lower() == "sobiya" else "Member"
+                members.append({
+                    "name": person_name,
+                    "role": role,
+                    "status": "RECOGNIZED"
+                })
+
+    # Unknown visitor alert irunthal athaiyum add panrom
     if latest_unknown_alert["has_alert"] and latest_unknown_alert["image_base64"]:
         members.append({
             "name": "Unknown Visitor",
@@ -445,6 +746,7 @@ def get_household_members():
             "status": "UNREGISTERED",
             "image": latest_unknown_alert["image_base64"]
         })
+        
     return jsonify(members)
 
 

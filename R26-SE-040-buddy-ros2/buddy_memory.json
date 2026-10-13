@@ -1,6 +1,6 @@
 {
   "name": "A Software",
-  "conversation_count": 437,
+  "conversation_count": 572,
   "likes": [
     "I love you",
     "finally I found my favorite",
@@ -19,16 +19,16 @@
   ],
   "dislikes": [],
   "recent_topics": [
-    "knife and also i i was heard first time for my grandmother's favorite",
-    "நீ",
-    "time out",
-    "i'm a software",
-    "ஓசோ ஐ வாண்ட் டு லண்டே பை",
-    "that was very hard but when i start to learn that technology it's very easy",
-    "if i feel is easy that always easy sometimes i feel hot that always hard for me so everything",
-    "டெக்னாலஜி",
-    "is is a phone",
-    "ஓகே"
+    "what is",
+    "what is",
+    "what is",
+    "now tell",
+    "what is the spelling",
+    "what is",
+    "what",
+    "what is",
+    "play music",
+    "what's the time now"
   ],
   "emotion_pattern": [
     "neutral",
@@ -39,13 +39,13 @@
     "neutral",
     "neutral",
     "neutral",
-    "calm",
-    "neutral",
-    "joy",
-    "joy",
     "neutral",
     "neutral",
-    "anger",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
+    "neutral",
     "neutral",
     "neutral",
     "neutral",
@@ -82,129 +82,129 @@
     "neutral",
     "neutral"
   ],
-  "last_user_question": "ஓகே",
-  "last_bot_answer": "புரியுது. அடுத்தது என்ன?",
-  "last_topic": "ஓகே",
+  "last_user_question": "what's the time now",
+  "last_bot_answer": "It's 11:49 PM.",
+  "last_topic": "whats the time now",
   "saved_questions": [
     {
-      "time": "2026-10-05T15:06:27.680627",
-      "question": "how to speak",
-      "answer": "I'm listening.",
-      "topic": "how to speak"
-    },
-    {
-      "time": "2026-10-05T15:06:35.140839",
-      "question": "and I don't",
-      "answer": "Hmm, go on.",
-      "topic": "and i dont"
-    },
-    {
-      "time": "2026-10-05T15:06:50.811339",
-      "question": "மை",
-      "answer": "ஹ்ம்ம், கேக்கறேன்.",
-      "topic": "மை"
-    },
-    {
-      "time": "2026-10-05T15:07:01.830492",
-      "question": "my favorite",
-      "answer": "That's interesting. Tell me more.",
-      "topic": "my favorite"
-    },
-    {
-      "time": "2026-10-05T15:07:14.537541",
-      "question": "to enjoy myself sometimes I am reading story book",
-      "answer": "It's 03:07 PM.",
-      "topic": "to enjoy myself sometimes i am reading story book"
-    },
-    {
-      "time": "2026-10-05T15:07:46.760724",
-      "question": "yesterday I was very stressed so I ended my garden and relax free and I find my solution for my problem so I feel always feel",
-      "answer": "I see. What else is on your mind?",
-      "topic": "yesterday i was very stressed so i ended my garden and relax free and i find my solution for my prob"
-    },
-    {
-      "time": "2026-10-05T15:08:29.336654",
-      "question": "I was very stressed so I ended my garden",
-      "answer": "That's interesting. Tell me more.",
-      "topic": "i was very stressed so i ended my garden"
-    },
-    {
-      "time": "2026-10-05T15:09:29.176826",
-      "question": "we are celebrated my sister's birthday and I invited my old friends",
-      "answer": "I see. What else is on your mind?",
-      "topic": "we are celebrated my sisters birthday and i invited my old friends"
-    },
-    {
-      "time": "2026-10-05T15:09:40.097608",
-      "question": "I want to play together and enjoy",
-      "answer": "I'm listening.",
-      "topic": "i want to play together and enjoy"
-    },
-    {
-      "time": "2026-10-05T15:10:42.460692",
-      "question": "my sister's birthday party I invited my old friends and relatives that time there are many interesting activities we played my grandmother was and her favorite song for us that is very",
-      "answer": "It's 03:10 PM.",
-      "topic": "my sisters birthday party i invited my old friends and relatives that time there are many interestin"
-    },
-    {
-      "time": "2026-10-05T15:11:04.967783",
-      "question": "knife and also I I Was Heard first time for my grandmother's favorite",
-      "answer": "It's 03:11 PM.",
-      "topic": "knife and also i i was heard first time for my grandmothers favorite"
-    },
-    {
-      "time": "2026-10-05T15:11:13.502648",
-      "question": "நீ",
+      "time": "2026-10-13T22:04:09.068861",
+      "question": "தனித்தனியா எடுத்து போட்டு சேர்ப்பாங்க",
       "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "நீ"
+      "topic": "தனித்தனியா எடுத்து போட்டு சேர்ப்பாங்க"
     },
     {
-      "time": "2026-10-05T15:12:05.161798",
-      "question": "time out",
-      "answer": "It's 03:12 PM.",
-      "topic": "time out"
-    },
-    {
-      "time": "2026-10-05T15:12:28.779861",
-      "question": "I'm a software",
-      "answer": "Got it, A Software. Nice to meet you.",
-      "topic": "im a software"
-    },
-    {
-      "time": "2026-10-05T15:12:41.801979",
-      "question": "ஓசோ ஐ வாண்ட் டு லண்டே பை",
-      "answer": "ஹ்ம்ம், கேக்கறேன்.",
-      "topic": "ஓசோ ஐ வாண்ட் டு லண்டே பை"
-    },
-    {
-      "time": "2026-10-05T15:13:09.883791",
-      "question": "that was very hard but when I start to learn that technology it's very easy",
-      "answer": "Hmm, go on.",
-      "topic": "that was very hard but when i start to learn that technology its very easy"
-    },
-    {
-      "time": "2026-10-05T15:13:31.657077",
-      "question": "if I feel is easy that always easy sometimes I feel hot that always hard for me so everything",
-      "answer": "It's 03:13 PM.",
-      "topic": "if i feel is easy that always easy sometimes i feel hot that always hard for me so everything"
-    },
-    {
-      "time": "2026-10-05T15:14:00.267515",
-      "question": "டெக்னாலஜி",
-      "answer": "ஹ்ம்ம், கேக்கறேன்.",
-      "topic": "டெக்னாலஜி"
-    },
-    {
-      "time": "2026-10-05T15:39:28.358690",
-      "question": "is is a phone",
+      "time": "2026-10-13T22:05:03.387729",
+      "question": "video film",
       "answer": "That's interesting. Tell me more.",
-      "topic": "is is a phone"
+      "topic": "video film"
     },
     {
-      "time": "2026-10-05T15:40:02.455863",
-      "question": "ஓகே",
-      "answer": "புரியுது. அடுத்தது என்ன?",
-      "topic": "ஓகே"
+      "time": "2026-10-13T22:05:53.189669",
+      "question": "Kundli",
+      "answer": "I see. What else is on your mind?",
+      "topic": "kundli"
+    },
+    {
+      "time": "2026-10-13T22:07:33.380391",
+      "question": "அம்மு உன்னை அனுப்புற வீடியோ பத்தின லைசன் கேக்கலாம் கொடுக்க கூடாது பிள்ளைகளுக்கு",
+      "answer": "ஹ்ம்ம், கேக்கறேன்.",
+      "topic": "அம்மு உன்னை அனுப்புற வீடியோ பத்தின லைசன் கேக்கலாம் கொடுக்க கூடாது பிள்ளைகளுக்கு"
+    },
+    {
+      "time": "2026-10-13T22:07:46.310765",
+      "question": "Bakery",
+      "answer": "I see. What else is on your mind?",
+      "topic": "bakery"
+    },
+    {
+      "time": "2026-10-13T22:08:07.175772",
+      "question": "Zimbabwe live",
+      "answer": "I'm listening.",
+      "topic": "zimbabwe live"
+    },
+    {
+      "time": "2026-10-13T22:10:10.527303",
+      "question": "தயவு செய்து",
+      "answer": "சரி, continue பண்ணுங்க.",
+      "topic": "தயவு செய்து"
+    },
+    {
+      "time": "2026-10-13T22:32:38.690924",
+      "question": "Institute situated in India",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "institute situated in india"
+    },
+    {
+      "time": "2026-10-13T22:32:59.429284",
+      "question": "comedy video edit karne wali video",
+      "answer": "Hmm, go on.",
+      "topic": "comedy video edit karne wali video"
+    },
+    {
+      "time": "2026-10-13T23:42:35.929171",
+      "question": "what is the time",
+      "answer": "It's 11:42 PM.",
+      "topic": "the time"
+    },
+    {
+      "time": "2026-10-13T23:43:52.686763",
+      "question": "what is",
+      "answer": "I'm listening.",
+      "topic": ""
+    },
+    {
+      "time": "2026-10-13T23:44:00.909045",
+      "question": "what is",
+      "answer": "Hmm, go on.",
+      "topic": ""
+    },
+    {
+      "time": "2026-10-13T23:44:08.862398",
+      "question": "what is",
+      "answer": "Hmm, go on.",
+      "topic": ""
+    },
+    {
+      "time": "2026-10-13T23:44:55.529795",
+      "question": "now tell",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "now tell"
+    },
+    {
+      "time": "2026-10-13T23:45:55.945284",
+      "question": "what is the spelling",
+      "answer": "That's interesting. Tell me more.",
+      "topic": "the spelling"
+    },
+    {
+      "time": "2026-10-13T23:46:06.690704",
+      "question": "what is",
+      "answer": "I see. What else is on your mind?",
+      "topic": ""
+    },
+    {
+      "time": "2026-10-13T23:46:57.360426",
+      "question": "what",
+      "answer": "I'm listening.",
+      "topic": "what"
+    },
+    {
+      "time": "2026-10-13T23:47:08.705744",
+      "question": "what is",
+      "answer": "That's interesting. Tell me more.",
+      "topic": ""
+    },
+    {
+      "time": "2026-10-13T23:47:34.010043",
+      "question": "play music",
+      "answer": "Tell me which song to play.",
+      "topic": "play music"
+    },
+    {
+      "time": "2026-10-13T23:49:06.393938",
+      "question": "what's the time now",
+      "answer": "It's 11:49 PM.",
+      "topic": "whats the time now"
     }
   ]
 }

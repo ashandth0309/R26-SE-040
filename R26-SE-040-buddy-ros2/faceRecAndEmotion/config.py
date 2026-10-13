@@ -60,7 +60,7 @@ EMOTION_COLORS = {
 }
 
 # Face recognition
-SIMILARITY_THRESHOLD = 0.68  # Lower threshold for better matching
+SIMILARITY_THRESHOLD = 0.88  # Lower threshold for better matching
 EMBEDDING_SIZE = 128
 
 # Emotion detection

@@ -1,14 +1,14 @@
 {
   "preferences": {},
   "topics": {
-    "technology": 15,
-    "study": 1,
-    "family": 5,
-    "movies": 2,
+    "technology": 18,
+    "study": 3,
+    "family": 6,
+    "movies": 3,
     "sports": 3,
     "science": 1,
     "food": 1,
-    "music": 5
+    "music": 17
   },
   "style": {
     "formality": 0.3,
@@ -18,403 +18,403 @@
   },
   "history": [
     {
-      "timestamp": "2026-10-04T22:17:00.197271",
+      "timestamp": "2026-10-12T18:39:42.890346",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:17:10.304306",
+      "timestamp": "2026-10-12T18:40:36.982502",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:18:52.349824",
+      "timestamp": "2026-10-12T18:40:53.806385",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:19:05.163968",
+      "timestamp": "2026-10-12T18:41:43.553400",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:19:42.166258",
+      "timestamp": "2026-10-12T18:42:19.386733",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:28:12.414204",
+      "timestamp": "2026-10-12T18:43:54.224965",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-04T22:28:22.940663",
+      "timestamp": "2026-10-12T18:45:43.192869",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:12:52.766517",
+      "timestamp": "2026-10-12T18:45:52.450672",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:13:03.847119",
+      "timestamp": "2026-10-12T18:46:52.103758",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:13:27.830038",
+      "timestamp": "2026-10-12T18:47:16.376539",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:14:13.384137",
+      "timestamp": "2026-10-12T18:51:34.275830",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:31:33.716622",
+      "timestamp": "2026-10-12T18:51:45.079642",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T12:31:40.896822",
+      "timestamp": "2026-10-12T19:30:15.979498",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:38:53.455697",
+      "timestamp": "2026-10-12T19:32:42.837900",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:39:08.055708",
+      "timestamp": "2026-10-12T19:39:19.056758",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:40:14.792696",
+      "timestamp": "2026-10-12T19:53:46.712529",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:40:25.015514",
+      "timestamp": "2026-10-12T19:57:46.223497",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:41:14.484549",
+      "timestamp": "2026-10-13T11:59:56.437154",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:41:45.876179",
+      "timestamp": "2026-10-13T12:00:08.013271",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:42:28.010005",
+      "timestamp": "2026-10-13T13:31:44.941964",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:42:44.875110",
+      "timestamp": "2026-10-13T13:32:06.061176",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:43:12.686507",
+      "timestamp": "2026-10-13T13:33:24.155435",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:43:56.498078",
+      "timestamp": "2026-10-13T14:03:53.434487",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:45:38.886487",
+      "timestamp": "2026-10-13T14:52:19.711540",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:45:55.308705",
+      "timestamp": "2026-10-13T15:00:54.905574",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:46:20.562466",
+      "timestamp": "2026-10-13T15:03:19.310855",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:54:00.136192",
+      "timestamp": "2026-10-13T15:03:37.715815",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T13:59:38.985863",
+      "timestamp": "2026-10-13T15:09:00.665670",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:20:56.290095",
+      "timestamp": "2026-10-13T15:10:14.336296",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:21:26.573059",
+      "timestamp": "2026-10-13T15:11:00.978301",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:41:21.611330",
+      "timestamp": "2026-10-13T15:11:40.335381",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:47:35.367518",
+      "timestamp": "2026-10-13T15:18:56.192217",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:49:10.868060",
+      "timestamp": "2026-10-13T15:19:34.958300",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:49:58.442198",
+      "timestamp": "2026-10-13T15:19:51.513403",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:50:13.001431",
+      "timestamp": "2026-10-13T15:21:56.229460",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:50:34.542391",
+      "timestamp": "2026-10-13T15:37:05.580657",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:50:42.807454",
+      "timestamp": "2026-10-13T15:44:22.507530",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:50:52.921048",
+      "timestamp": "2026-10-13T15:46:12.745451",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:51:02.450362",
+      "timestamp": "2026-10-13T15:46:47.543874",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:51:11.443526",
+      "timestamp": "2026-10-13T16:28:11.309283",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:51:24.909638",
+      "timestamp": "2026-10-13T16:28:44.798692",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:51:48.318713",
+      "timestamp": "2026-10-13T16:31:02.026843",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:52:03.795576",
+      "timestamp": "2026-10-13T16:39:50.107758",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:52:33.304020",
+      "timestamp": "2026-10-13T16:40:05.971645",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:53:39.425810",
-      "emotion": "joy"
+      "timestamp": "2026-10-13T16:40:40.060653",
+      "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:53:51.677556",
+      "timestamp": "2026-10-13T16:42:33.657477",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:54:06.879765",
+      "timestamp": "2026-10-13T16:58:29.129015",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:54:28.739592",
+      "timestamp": "2026-10-13T17:03:42.665942",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:54:38.875171",
+      "timestamp": "2026-10-13T17:10:16.690657",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:55:18.530767",
+      "timestamp": "2026-10-13T17:11:05.737787",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:55:35.021632",
+      "timestamp": "2026-10-13T17:11:53.036017",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:55:56.165859",
+      "timestamp": "2026-10-13T17:12:18.260450",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:56:09.529003",
+      "timestamp": "2026-10-13T17:17:38.828107",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:56:17.139160",
+      "timestamp": "2026-10-13T17:17:46.777395",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:57:22.134706",
+      "timestamp": "2026-10-13T17:17:54.491185",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:57:36.352002",
+      "timestamp": "2026-10-13T17:18:10.578227",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:57:49.011697",
+      "timestamp": "2026-10-13T17:18:21.455292",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:58:27.431746",
+      "timestamp": "2026-10-13T17:18:33.191237",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:58:53.406818",
-      "emotion": "calm"
+      "timestamp": "2026-10-13T17:21:21.428242",
+      "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:59:14.216088",
+      "timestamp": "2026-10-13T17:31:32.034163",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:59:30.945066",
-      "emotion": "joy"
+      "timestamp": "2026-10-13T17:35:09.831796",
+      "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:59:50.390669",
-      "emotion": "joy"
+      "timestamp": "2026-10-13T19:16:40.672208",
+      "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T14:59:59.935768",
+      "timestamp": "2026-10-13T19:17:40.857357",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:00:38.464222",
+      "timestamp": "2026-10-13T19:36:13.804599",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:00:52.326661",
-      "emotion": "anger"
+      "timestamp": "2026-10-13T19:36:52.810635",
+      "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:01:33.146347",
+      "timestamp": "2026-10-13T19:37:26.414275",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:01:49.654695",
+      "timestamp": "2026-10-13T19:37:52.119928",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:02:06.418940",
+      "timestamp": "2026-10-13T19:43:59.166940",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:02:45.936981",
+      "timestamp": "2026-10-13T19:44:10.196862",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:03:08.503003",
+      "timestamp": "2026-10-13T19:45:51.625241",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:03:23.906089",
+      "timestamp": "2026-10-13T19:46:01.477804",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:03:36.789779",
+      "timestamp": "2026-10-13T19:47:37.312525",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:03:51.319539",
+      "timestamp": "2026-10-13T19:47:58.342515",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:04:07.502407",
+      "timestamp": "2026-10-13T19:48:06.376419",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:04:34.228421",
+      "timestamp": "2026-10-13T19:48:19.729158",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:04:50.175865",
+      "timestamp": "2026-10-13T19:50:58.158522",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:05:03.142574",
+      "timestamp": "2026-10-13T21:54:31.623345",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:05:13.512960",
+      "timestamp": "2026-10-13T21:55:47.571169",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:05:30.327645",
+      "timestamp": "2026-10-13T22:03:16.553654",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:05:41.698985",
+      "timestamp": "2026-10-13T22:03:31.494004",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:06:27.678871",
+      "timestamp": "2026-10-13T22:04:09.066896",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:06:35.137673",
+      "timestamp": "2026-10-13T22:05:03.384688",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:06:50.809327",
+      "timestamp": "2026-10-13T22:05:53.187630",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:07:01.829076",
+      "timestamp": "2026-10-13T22:07:33.378390",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:07:14.531537",
+      "timestamp": "2026-10-13T22:07:46.308799",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:07:46.758769",
+      "timestamp": "2026-10-13T22:08:07.172773",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:08:29.325576",
+      "timestamp": "2026-10-13T22:10:10.525305",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:09:29.173820",
+      "timestamp": "2026-10-13T22:32:38.684919",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:09:40.094429",
+      "timestamp": "2026-10-13T22:32:59.426284",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:10:42.458735",
+      "timestamp": "2026-10-13T23:42:35.925171",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:11:04.965623",
+      "timestamp": "2026-10-13T23:43:52.684799",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:11:13.500647",
+      "timestamp": "2026-10-13T23:44:00.905050",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:12:05.157896",
+      "timestamp": "2026-10-13T23:44:08.859552",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:12:28.777701",
+      "timestamp": "2026-10-13T23:44:55.527466",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:12:41.799707",
+      "timestamp": "2026-10-13T23:45:55.942281",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:13:09.878685",
+      "timestamp": "2026-10-13T23:46:06.684460",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:13:31.651077",
+      "timestamp": "2026-10-13T23:46:57.357424",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:14:00.265739",
+      "timestamp": "2026-10-13T23:47:08.700742",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:39:28.354559",
+      "timestamp": "2026-10-13T23:47:34.006268",
       "emotion": "neutral"
     },
     {
-      "timestamp": "2026-10-05T15:40:02.452733",
+      "timestamp": "2026-10-13T23:49:06.391937",
       "emotion": "neutral"
     }
   ]
