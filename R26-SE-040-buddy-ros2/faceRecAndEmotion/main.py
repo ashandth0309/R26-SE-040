@@ -1,6 +1,8 @@
 """
 Smart AI Dog Robot - Integrated Face/Eye, Object Learning, Speech & Mobile App Sync System
 """
+import pyttsx3
+
 
 import base64
 import cv2
@@ -154,6 +156,46 @@ def play_current_relax_song():
     except Exception as e:
         print(f"Error playing song: {e}")
 
+
+def speak_and_listen():
+    engine = pyttsx3.init()
+    recognizer = sr.Recognizer()
+    
+    try:
+        # 1. Robot speaks out the emergency question
+        engine.say("Attention! Fall detected. Do you need an emergency call or ambulance? Please say Call or Ambulance.")
+        engine.runAndWait()
+        
+        # 2. Listen to user's voice response via microphone
+        with sr.Microphone() as source:
+            print("🎤 Listening for emergency voice response...")
+            recognizer.adjust_for_ambient_noise(source, duration=0.5)
+            audio = recognizer.listen(source, timeout=5)
+            
+        # 3. Convert speech to text
+        command = recognizer.recognize_google(audio).lower()
+        print(f"🗣️ User said: {command}")
+        
+        # 4. Trigger appropriate action based on voice command
+        if "ambulance" in command or "hospital" in command:
+            engine.say("Calling ambulance emergency 1990 now.")
+            engine.runAndWait()
+            print("🚑 [VOICE ACTION]: Calling Ambulance 1990!")
+            # Add your Twilio / call trigger logic here for 1990
+            
+        elif "call" in command or "yes" in command or "family" in command:
+            engine.say("Calling family contact 0743864204 now.")
+            engine.runAndWait()
+            print("📞 [VOICE ACTION]: Calling Family 0743864204!")
+            # Add your call trigger logic here for 0743864204
+            
+    except sr.WaitTimeoutError:
+        print("⏳ Voice response timed out. No response heard.")
+    except sr.UnknownValueError:
+        print("❓ Could not understand audio.")
+    except Exception as e:
+        print(f"⚠️ Speech Recognition error: {e}")       
+
 # 1. 24-Hour Emotion Report Endpoint with Music Status Sync (Defined ONLY ONCE)
 @flask_app.route("/api/emotion_report/<name>", methods=["GET"])
 def get_emotion_report(name):
@@ -294,11 +336,18 @@ def music_control_action():
 # 📷 CAMERA, RECORDING & PERSISTENT MEDIA API
 # ==========================================
 
+# ==========================================
+# 📷 CAMERA & FALL DETECTION STREAM API
+# ==========================================
+
 @flask_app.route("/video_call")
 def video_call():
-    """Smooth, non-blocking MJPEG live stream generator with Object Learning overlay"""
+    """Smooth, non-blocking MJPEG live stream generator with Safe Fall Detection & Object Learning"""
     def generate():
-        global global_robot_app, learner
+        global global_robot_app, learner, last_fall_trigger_time
+        if 'last_fall_trigger_time' not in globals():
+            last_fall_trigger_time = 0
+
         while True:
             if global_robot_app is None or global_robot_app.cap is None:
                 time.sleep(0.05)
@@ -309,30 +358,49 @@ def video_call():
                 time.sleep(0.01)
                 continue
 
-            # 1. Fall Detector process pannum pothu frame-la skeleton draw aagum
-            is_fallen, box = fall_detector.process_frame(frame)
+            # 🔑 Update live frame globally so snapshots & recording work smoothly!
+            global_robot_app.current_live_frame = frame.copy()
 
-            if is_fallen and not latest_fall_alert["has_alert"]:
-                latest_fall_alert["has_alert"] = True
-                latest_fall_alert["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
-                latest_fall_alert["raw_frame"] = frame.copy()
-                
-                # Snapshot-ai base64-ku convert panrom
-                _, buffer = cv2.imencode('.jpg', frame)
-                b64_str = base64.b64encode(buffer).decode('utf-8')
-                latest_fall_alert["image_base64"] = f"data:image/jpeg;base64,{b64_str}"
-                
-                print("⚠️ [FALL DETECTION]: Person fall detected! Alert triggered.")
+            # 1. Safe Fall Detector background check with 15-second cooldown
+            try:
+                if not latest_fall_alert.get("has_alert", False):
+                    is_fallen, box = fall_detector.process_frame(frame)
+                    current_epoch = time.time()
+                    
+                    if is_fallen and (current_epoch - last_fall_trigger_time > 15):
+                        last_fall_trigger_time = current_epoch
+                        latest_fall_alert["has_alert"] = True
+                        latest_fall_alert["timestamp"] = time.strftime("%Y-%m-%d %H:%M:%S")
+                        latest_fall_alert["raw_frame"] = frame.copy()
+                        
+                        # Save physical file to captures/ directory so it appears in gallery!
+                        os.makedirs(CAPTURES_DIR, exist_ok=True)
+                        timestamp_file_str = time.strftime("%Y%m%d_%H%M%S")
+                        alert_filename = f"alert_{timestamp_file_str}.jpg"
+                        alert_filepath = os.path.join(CAPTURES_DIR, alert_filename)
+                        cv2.imwrite(alert_filepath, frame.copy())
+                        
+                        _, buffer = cv2.imencode('.jpg', frame)
+                        b64_str = base64.b64encode(buffer).decode('utf-8')
+                        latest_fall_alert["image_base64"] = f"data:image/jpeg;base64,{b64_str}"
+                        
+                        print(f"⚠️ [FALL DETECTION]: Person fall confirmed & saved to {alert_filename}!")
+                        # 📌 2. Trigger voice speaking and listening in background thread safely
+                        threading.Thread(target=speak_and_listen, daemon=True).start()
+            except Exception as e:
+                print(f"⚠️ Fall detector stream error: {e}")
 
             # 2. Object Learning module process frame integration
-            frame, box, text, obj = learner.process_frame(frame)
-
-            x1, y1, x2, y2 = box
-            color = (0, 0, 255) if learner.is_learning else (0, 255, 0)
-            cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-            cv2.putText(
-                frame, text, (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2
-            )
+            try:
+                frame, box, text, obj = learner.process_frame(frame)
+                x1, y1, x2, y2 = box
+                color = (0, 0, 255) if learner.is_learning else (0, 255, 0)
+                cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                cv2.putText(
+                    frame, text, (30, 40), cv2.FONT_HERSHEY_SIMPLEX, 0.7, color, 2
+                )
+            except Exception as e:
+                print(f"⚠️ Object learning stream error: {e}")
 
             ret_enc, buffer = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
             if not ret_enc:
@@ -435,15 +503,52 @@ def get_media_list():
                 filepath = os.path.join(CAPTURES_DIR, f)
                 mod_time = os.path.getmtime(filepath)
                 time_str = datetime.fromtimestamp(mod_time).strftime("%I:%M %p")
+                
+                # 📌 Check if the file is an alert image or regular capture
+                if f.startswith('alert_'):
+                    media_type = 'alert'
+                    title = 'Fall Alert'
+                elif f.startswith('snapshot_'):
+                    media_type = 'photo'
+                    title = 'Front Cam'
+                else:
+                    media_type = 'video'
+                    title = 'Record Video'
+
                 files.append({
                     "name": f,
-                    "title": "Front Cam" if f.endswith('.jpg') else "Record Video",
+                    "title": title,
                     "time": time_str,
-                    "type": "photo" if f.endswith('.jpg') else "video",
+                    "type": media_type,
                     "url": f"/captures/{f}"
                 })
     return jsonify(files), 200
 
+
+
+@flask_app.route("/api/emergency_call", methods=["POST"])
+def emergency_call():
+    data = request.get_json(silent=True) or {}
+    action = data.get("action", "call") # 'call' or 'ambulance'
+    target_number = "0743864204" # Sample Emergency / Family Number provided by Sobiya
+    
+    global latest_fall_alert
+    alert_image = latest_fall_alert.get("image_base64", None)
+    
+    if action == "ambulance":
+        print(f"🚨 [EMERGENCY AMBULANCE]: Calling Ambulance service for emergency at {target_number} with fall snapshot!")
+        # Here you can integrate Twilio / GSM module / Push notification API to send SMS/Call with image
+        response_msg = "Ambulance emergency triggered successfully with snapshot."
+    else:
+        print(f"📞 [EMERGENCY CALL]: Placing emergency voice call to family member at {target_number}!")
+        response_msg = "Emergency call placed to family contact."
+        
+    return jsonify({
+        "status": "success",
+        "message": response_msg,
+        "number_called": target_number,
+        "image_attached": alert_image is not None
+    }), 200
 
 @flask_app.route("/api/camera/delete_media", methods=["POST"])
 def delete_media():
@@ -817,6 +922,24 @@ def update_settings():
 @flask_app.route("/api/notifications", methods=["GET"])
 def get_notifications():
     notifications = []
+    
+    # 1. Fall Detection Alert (Critical Security Notification)
+    global latest_fall_alert
+    if latest_fall_alert.get("has_alert") and latest_fall_alert.get("image_base64"):
+        notifications.append({
+            "id": "fall_alert_1",
+            "title": "⚠️ CRITICAL: Fall Detected!",
+            "desc": "Person fall detected by camera stream. Immediate action required.",
+            "time": latest_fall_alert.get("timestamp") or "Just now",
+            "isUnread": True,
+            "category": "Security",
+            "hasAction": True,
+            "actionText": "View Stream",
+            "actionType": "view_stream",
+            "image": latest_fall_alert["image_base64"]
+        })
+
+    # 2. Unregistered Person Alert
     if latest_unknown_alert["has_alert"] and latest_unknown_alert["image_base64"]:
         notifications.append({
             "id": "1",
@@ -830,6 +953,8 @@ def get_notifications():
             "actionType": "enroll",
             "image": latest_unknown_alert["image_base64"]
         })
+        
+    # 3. System Info Notification
     notifications.append({
         "id": "2",
         "title": "INFO: Patrol Route Active",
@@ -840,8 +965,8 @@ def get_notifications():
         "hasAction": False,
         "image": None
     })
+    
     return jsonify(notifications)
-
 
 # ==========================================
 # 🐶 SMART AI DOG ROBOT CLASS

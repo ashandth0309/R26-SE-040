@@ -1,62 +1,41 @@
 import cv2
-import mediapipe as mp
 import numpy as np
 
 class FallDetector:
     def __init__(self, min_confidence=0.5):
-        # MediaPipe Pose initialize panrom
-        self.mp_pose = mp.solutions.pose
-        self.pose = self.mp_pose.Pose(
-            min_detection_confidence=min_confidence,
-            min_tracking_confidence=min_confidence
-        )
-        # Skeleton drawing utilities-ai add panrom
-        self.mp_drawing = mp.solutions.drawing_utils
-        
+        self.min_confidence = min_confidence
+
     def process_frame(self, frame):
-        """
-        Frame-ai analyze panni person vizhunthuttaraanu allathu mayanki padithirukkaannu check pannum.
-        Returns: (is_fallen (bool), bounding_box (tuple or None))
-        """
-        if frame is None:
-            return False, None
+        try:
+            height, width, _ = frame.shape
             
-        height, width, _ = frame.shape
-        # OpenCV BGR to RGB conversion
-        image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        results = self.pose.process(image_rgb)
-        
-        if results.pose_landmarks:
-            # 1. Frame-la red joints & white/colored skeleton lines-ai draw panrom
-            self.mp_drawing.draw_landmarks(
-                frame, 
-                results.pose_landmarks, 
-                self.mp_pose.POSE_CONNECTIONS,
-                self.mp_drawing.DrawingSpec(color=(0, 0, 255), thickness=2, circle_radius=3), # Red joints
-                self.mp_drawing.DrawingSpec(color=(255, 255, 255), thickness=2) # Skeleton lines
-            )
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            blurred = cv2.GaussianBlur(gray, (7, 7), 0)
             
-            landmarks = results.pose_landmarks.landmark
+            _, thresh = cv2.threshold(blurred, 75, 255, cv2.THRESH_BINARY_INV)
+            contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
             
-            # Keypoints-in X and Y coordinates-ai edukkrom
-            x_coords = [lm.x * width for lm in landmarks]
-            y_coords = [lm.y * height for lm in landmarks]
+            is_fallen = False
+            box = (0, 0, width, height)
             
-            min_x, max_x = min(x_coords), max(x_coords)
-            min_y, max_y = min(y_coords), max(y_coords)
-            
-            box_width = max_x - min_x
-            box_height = max_y - min_y
-            
-            # 2. Advanced Fall & Unconscious / Fainted Detection Logic:
-            # - Condition A: Width height-ai vida athigamagirum (Horizontal posture / Keezha vizhunthal)
-            # - Condition B: Head (Nose) matrum Hips ore horizontal line-kku varum (Mayanki padithirunthal diff romba kammiya irukkum)
-            nose_y = landmarks[self.mp_pose.PoseLandmark.NOSE].y * height
-            left_hip_y = landmarks[self.mp_pose.PoseLandmark.LEFT_HIP].y * height
-            right_hip_y = landmarks[self.mp_pose.PoseLandmark.RIGHT_HIP].y * height
-            avg_hip_y = (left_hip_y + right_hip_y) / 2
-            
-            if box_width > box_height * 1.1 or abs(nose_y - avg_hip_y) < 70:
-                return True, (int(min_x), int(min_y), int(max_x), int(max_y))
+            if contours:
+                largest_contour = max(contours, key=cv2.contourArea)
+                area = cv2.contourArea(largest_contour)
                 
-        return False, None
+                # Area romba perusa iruntha mattume (ignore small glares/half light)
+                if area > 4000:
+                    x, y, w, h = cv2.boundingRect(largest_contour)
+                    box = (x, y, x + w, y + h)
+                    
+                    # 🛡️ STRICT CONDITION FOR FLOOR ONLY:
+                    # 1. Width must be significantly greater than height (Horizontal layout)
+                    # 2. Y-position must start below the middle (y > height * 0.35) so upper body lights won't trigger!
+                    # 3. Bottom edge must be on the floor (y + h > height * 0.65)
+                    if w > h * 1.35 and y > (height * 0.35) and (y + h) > (height * 0.65):
+                        is_fallen = True
+
+            return is_fallen, box
+
+        except Exception as e:
+            print(f"⚠️ FallDetector error: {e}")
+            return False, (0, 0, 100, 100)
