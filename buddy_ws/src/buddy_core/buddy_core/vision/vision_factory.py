@@ -31,7 +31,8 @@ from buddy_core.vision.proactive import (
     ProactiveInteractionManager, StoreState)
 from buddy_core.vision.vision_commands import VisionController
 from buddy_core.vision.vision_settings import (
-    PLANS, VisionSettings, load as load_settings)
+    PLANS, SettingsError, VisionSettings, load as load_settings,
+    save as save_settings)
 
 
 def default_data_dir() -> Path:
@@ -52,6 +53,7 @@ class BuiltVision:
     unavailable: dict = field(default_factory=dict)
     embedder: object | None = None
     object_embedder: object | None = None
+    apply_settings: Callable | None = None   # applies and persists
 
 
 def make_namer(embedder, recognizer: ObjectRecognizer) -> Callable:
@@ -88,8 +90,21 @@ def build_vision(data_dir: str | os.PathLike | None = None,
     if not in_memory:
         d.mkdir(parents=True, exist_ok=True, mode=0o700)
 
-    settings = settings or (VisionSettings() if in_memory
-                            else load_settings(d / "settings.json"))
+    settings_path = None if in_memory else d / "settings.json"
+
+    if settings is None:
+        if settings_path is None:
+            settings = VisionSettings()
+        else:
+            try:
+                settings = load_settings(settings_path)
+            except SettingsError:
+                # Privacy first: if the saved choices cannot be read, do not
+                # assume the camera may be on.
+                settings = VisionSettings(camera_enabled=False)
+                unavailable["settings"] = (
+                    "settings file unreadable; camera left OFF until you "
+                    "turn it on")
     p = (lambda n: ":memory:" if in_memory else str(d / n))
     store = FaceProfileStore(p("faces.db"))
     objstore = ObjectStore(p("objects.db"))
@@ -156,9 +171,18 @@ def build_vision(data_dir: str | os.PathLike | None = None,
         gestures=GestureRecognizer(), memory=memory, scene=scene,
         proactive=proactive, greeting=greeting, store=store)
     manager = VisualContextManager(comps, settings, clock=clock)
+
+    def apply_settings(new: VisionSettings) -> None:
+        """Apply a settings change and remember it across restarts."""
+
+        manager.apply_settings(new)
+
+        if settings_path is not None:
+            save_settings(new, settings_path)
+
     controller = VisionController(
-        settings, manager.apply_settings, store, memory, proactive,
-        greeting)
+        settings, apply_settings, store, memory, proactive, greeting)
 
     return BuiltVision(manager, controller, store, objstore, memory,
-                       settings, unavailable, embedder, object_embedder)
+                       settings, unavailable, embedder, object_embedder,
+                       apply_settings)

@@ -458,10 +458,18 @@ class VisionNodeCore:
         with self._lock:
             from dataclasses import replace
             s = replace(self.b.manager.settings, camera_enabled=enabled)
-            self.b.manager.apply_settings(s)
+            (self.b.apply_settings or self.b.manager.apply_settings)(s)
             self.b.controller.settings = s
 
             return True, "camera on" if enabled else "camera off"
+
+    def set_profile(self, profile: str) -> None:
+        with self._lock:
+            from dataclasses import replace
+            s = replace(self.b.manager.settings, profile=profile)
+            s.validate()
+            (self.b.apply_settings or self.b.manager.apply_settings)(s)
+            self.b.controller.settings = s
 
     # ----- status -----
 
@@ -534,15 +542,17 @@ def build_node_class():
             super().__init__("buddy_vision")
             p = self._param
             from buddy_core.vision.vision_factory import build_vision
-            from buddy_core.vision.vision_settings import VisionSettings
 
-            settings = VisionSettings(profile=str(p("profile", "balanced")))
             built = build_vision(
-                data_dir=str(p("data_dir", "")) or None,
-                settings=settings, models_dir=str(p("models_dir", "")) or None,
+                data_dir=str(p("data_dir", "")) or None, settings=None,
+                models_dir=str(p("models_dir", "")) or None,
                 in_memory=bool(p("in_memory", False)))
             self.core = VisionNodeCore(
                 built, max_process_hz=float(p("max_process_hz", 10.0)))
+            profile = str(p("profile", ""))
+
+            if profile:                 # empty keeps the saved choice
+                self.core.set_profile(profile)
             self._latest = None
             self._latest_t = 0.0
             self._max_age = float(p("max_frame_age_s", 1.0))
