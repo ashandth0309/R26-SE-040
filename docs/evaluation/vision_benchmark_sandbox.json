@@ -1,0 +1,123 @@
+{
+  "machine": {
+    "machine": "x86_64",
+    "system": "Linux-6.18.44-fc-v139-x86_64-with-glibc2.39",
+    "python": "3.13.16",
+    "cpu_count": 2,
+    "device_tree_model": null,
+    "cpu_temp_c": null,
+    "is_raspberry_pi": false,
+    "opencv": "5.0.0"
+  },
+  "test_image": "skimage astronaut (portrait)",
+  "threads": 2,
+  "stages": {
+    "face_detect_320": {
+      "n": 10,
+      "mean_ms": 4.769199600104912,
+      "p50_ms": 4.648479000024963,
+      "p95_ms": 5.332794999958423,
+      "max_ms": 5.332794999958423
+    },
+    "face_embed": {
+      "n": 10,
+      "mean_ms": 16.37389700017593,
+      "p50_ms": 15.497559999857913,
+      "p95_ms": 21.53727500081004,
+      "max_ms": 21.53727500081004
+    },
+    "expression": {
+      "n": 10,
+      "mean_ms": 21.066546900055982,
+      "p50_ms": 20.607420000487764,
+      "p95_ms": 25.54283600056806,
+      "max_ms": 25.54283600056806
+    },
+    "object_detect": {
+      "n": 10,
+      "mean_ms": 28.38212829983604,
+      "p50_ms": 28.94813599959889,
+      "p95_ms": 29.40160899925104,
+      "max_ms": 29.40160899925104
+    },
+    "pose": {
+      "upright_one_pass": {
+        "n": 10,
+        "mean_ms": 20.095200700143323,
+        "p50_ms": 19.99397300005512,
+        "p95_ms": 27.970461000222713,
+        "max_ms": 27.970461000222713
+      },
+      "with_sideways_passes": {
+        "n": 3,
+        "mean_ms": 61.89408733340921,
+        "p50_ms": 60.628825000094366,
+        "p95_ms": 65.87898900033906,
+        "max_ms": 65.87898900033906
+      }
+    },
+    "object_embed": {
+      "n": 10,
+      "mean_ms": 8.543280099911499,
+      "p50_ms": 8.33878100002039,
+      "p95_ms": 10.402412000075856,
+      "max_ms": 10.402412000075856
+    }
+  },
+  "pipelines": [
+    {
+      "profile": "lightweight",
+      "frames": 2398,
+      "frames_per_second_processed": 299.6806058839897,
+      "frame": {
+        "n": 2398,
+        "mean_ms": 3.335310812345764,
+        "p50_ms": 0.05878799947822699,
+        "p95_ms": 20.406247999744664,
+        "max_ms": 53.407857999445696
+      },
+      "stage_runs": {
+        "faces": 2398,
+        "objects": 78
+      },
+      "cpu_seconds_per_wall_second": 1.8183621443573128,
+      "cpu_temp_c_before": null,
+      "cpu_temp_c_after": null,
+      "unavailable": {},
+      "note": "frames are fed as fast as they can be processed; the stack schedules stages by simulated time at 15 fps"
+    },
+    {
+      "profile": "balanced",
+      "frames": 815,
+      "frames_per_second_processed": 101.79664689183798,
+      "frame": {
+        "n": 815,
+        "mean_ms": 9.821206401230578,
+        "p50_ms": 5.857322999872849,
+        "p95_ms": 44.11085199990339,
+        "max_ms": 110.03271499976108
+      },
+      "stage_runs": {
+        "faces": 815,
+        "objects": 53,
+        "pose": 102,
+        "expression": 102
+      },
+      "cpu_seconds_per_wall_second": 1.9073929283712694,
+      "cpu_temp_c_before": null,
+      "cpu_temp_c_after": null,
+      "unavailable": {},
+      "note": "frames are fed as fast as they can be processed; the stack schedules stages by simulated time at 15 fps"
+    }
+  ],
+  "peak_rss_mb": 329.29296875,
+  "targets": {
+    "face_detect_p95_ms_max": 60.0,
+    "pipeline_frame_p95_ms_max": 150.0,
+    "pose_pass_p95_ms_max": 250.0,
+    "peak_rss_mb_max": 900.0,
+    "cpu_temp_c_max": 75.0
+  },
+  "targets_missed": [],
+  "note": "Measured on the machine above. Only a run where machine.is_raspberry_pi is true describes the robot. Detection quality is not measured here."
+}

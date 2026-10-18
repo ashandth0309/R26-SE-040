@@ -61,7 +61,8 @@ DATA_INVENTORY = (
 _WRITERS_ALLOWED = {"face_store.py", "object_teach.py", "object_memory.py",
                     "vision_settings.py", "models.py", "object_embedding.py",
                     "camera_service.py", "evaluation.py",
-                    "expression_eval.py", "object_eval.py", "resources.py"}
+                    "expression_eval.py", "object_eval.py", "resources.py",
+                    "benchmark.py"}
 _IMAGE_WRITE = re.compile(
     r"\b(imwrite|imencode|\.save\(|write_image|VideoWriter|tofile\()")
 
