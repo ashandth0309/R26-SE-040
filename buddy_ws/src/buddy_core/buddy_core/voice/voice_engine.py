@@ -32,6 +32,7 @@ from buddy_core.voice.command_router import (
 from buddy_core.voice.dialogue_manager import (
     ConversationContext,
     DialogueManager,
+    DialogueReply,
 )
 from buddy_core.voice.dsp import dbfs, envelope, rms, to_float
 from buddy_core.voice.echo import EchoGuard
@@ -49,6 +50,19 @@ from buddy_core.voice.voice_commands import (
 )
 
 FRAME_S = 0.02
+
+
+@dataclass(frozen=True)
+class GatewayAnswer:
+    """What an utterance gateway decided about one user utterance.
+
+    ``claimed`` means the gateway handled it and ``reply`` is what Buddy
+    should say instead of generating a conversational answer.
+    """
+
+    claimed: bool
+    reply: str = ""
+    intent: str = ""
 
 
 class InlineExecutor:
@@ -113,6 +127,8 @@ class VoiceEngine:
         action_gate: ActionGate | None = None,
         reply_filter: Callable[[str], str] | None = None,
         command_observer: Callable | None = None,
+        utterance_gateway: Callable[[str, float | None],
+                                    GatewayAnswer | None] | None = None,
     ) -> None:
         self.vad = vad
         self.wake_rec = wake_rec
@@ -135,6 +151,8 @@ class VoiceEngine:
         self.style_provider = style_provider
         self.reply_filter = reply_filter
         self.command_observer = command_observer
+        self.utterance_gateway = utterance_gateway
+        self.gateway_claims = 0
         self.executor = executor or InlineExecutor()
         self.action_gate = action_gate or ActionGate(clock=clock)
         self._gen = 0
@@ -577,7 +595,7 @@ class VoiceEngine:
 
             return
 
-        self._reply(gen.text)
+        self._reply(gen.text, gen.confidence)
 
     def _find_command(self, cmd: Transcript | None,
                       gen: Transcript | None
@@ -618,15 +636,41 @@ class VoiceEngine:
 
         return True
 
-    def _reply(self, text: str) -> None:
+    def _reply(self, text: str, confidence: float | None = None) -> None:
         """Ask dialogue for a reply on the executor, never blocking audio."""
 
         self._cancel_reply()
         self._gen += 1
-        future = self.executor.submit(
-            self.dialogue.respond, text, self.context)
+        future = self.executor.submit(self._respond, text, confidence)
         self._inflight = (future, self._gen)
         self._poll_reply()
+
+    def _respond(self, text: str, confidence: float | None
+                 ) -> DialogueReply:
+        """Runs on the executor: gateway first, then ordinary dialogue.
+
+        The gateway lets another module (the coordinator) answer requests
+        that are not conversation, such as "what is this?".  It runs here,
+        off the audio path, so a slow or missing gateway can never delay
+        hearing "stop".  It fails open: any problem means the normal
+        dialogue answers.
+        """
+
+        if self.utterance_gateway is not None:
+            try:
+                answer = self.utterance_gateway(text, confidence)
+            except Exception:
+                self.errors += 1
+                self._log("gateway_error")
+                answer = None
+
+            if answer is not None and answer.claimed and answer.reply:
+                self.gateway_claims += 1
+
+                return DialogueReply(answer.reply, "gateway",
+                                     intent=answer.intent)
+
+        return self.dialogue.respond(text, self.context)
 
     def _cancel_reply(self) -> None:
         """Forget any reply still being prepared."""

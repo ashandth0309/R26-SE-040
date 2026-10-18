@@ -17,8 +17,18 @@ Topics (names are parameters):
 * subscribes ``/emotion/observation``  facial-expression hint (name is an
   assumption; set the parameter to match the vision node)
 * subscribes ``/navigation/status``    feedback for spoken answers
+* subscribes ``/voice/say``            SpeechRequest; the only way other
+  modules make Buddy speak (this node owns the speaker)
 * service    ``/voice/mute``           std_srvs/SetBool; the only way to
   unmute
+* client     ``/coordinator/route_utterance``  optional (``enable_gateway``);
+  bounded and fails open, see ``RosUtteranceGateway``
+
+Integration: with the coordinator running, launch this node with
+``movement_topic`` and ``navigation_topic`` pointing at the coordinator's
+intake topics.  STOP is then also published directly on
+``direct_stop_topic`` / ``direct_nav_stop_topic`` so stopping never
+depends on the coordinator being alive.
 
 This file is UNVERIFIED under real ROS 2; tests use strict stubs.
 """
@@ -27,6 +37,8 @@ from __future__ import annotations
 
 import json
 import sys
+import threading
+import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -37,6 +49,7 @@ from buddy_interfaces.msg import (
     EmotionObservation,
     MovementCommand,
     SafetyState,
+    SpeechRequest,
     VoiceCommand,
 )
 from std_msgs.msg import String
@@ -50,17 +63,31 @@ from buddy_core.voice.engine_factory import (
     simulated_backends,
 )
 from buddy_core.voice.runner import EngineRunner
+from buddy_core.voice.speaker_manager import Priority
+from buddy_core.voice.voice_engine import GatewayAnswer
 
-NAV_STATE_NAMES = {0: "idle", 1: "active", 2: "done", 3: "rejected",
-                   4: "failed", 5: "paused"}
+# NavigationStatus.msg: IDLE=0 RUNNING=1 PAUSED=2 SUCCEEDED=3 FAILED=4
+# CANCELLED=5.  A test compares this table with the .msg file.
+NAV_STATE_NAMES = {0: "idle", 1: "active", 2: "paused", 3: "done",
+                   4: "failed", 5: "cancelled"}
+
+MOVE_STOP = 0
+NAV_STOP = 0
+DEFAULT_SAY_TTL_S = 5.0
 
 
 class RosMovementSink:
-    """Publishes ``MovementCommand`` to ``/movement/request``."""
+    """Publishes ``MovementCommand`` to ``/movement/request``.
 
-    def __init__(self, node: Node, publisher) -> None:
+    ``stop_publisher`` is an independent route straight to the safety
+    supervisor.  A STOP always goes there too, so it works even if the
+    coordinator that normally relays movement is down.
+    """
+
+    def __init__(self, node: Node, publisher, stop_publisher=None) -> None:
         self._node = node
         self._pub = publisher
+        self._stop_pub = stop_publisher
 
     def send_movement(self, command, linear, angular, valid_for_s,
                       emergency, sequence_id, source) -> None:
@@ -76,14 +103,20 @@ class RosMovementSink:
         msg.emergency = bool(emergency)
         self._pub.publish(msg)
 
+        if int(command) == MOVE_STOP and self._stop_pub is not None \
+                and self._stop_pub is not self._pub:
+            self._stop_pub.publish(msg)
+
 
 class RosNavigationSink:
     """Publishes ``NavigationCommand`` (from the navigation package)."""
 
-    def __init__(self, node: Node, publisher, msg_type) -> None:
+    def __init__(self, node: Node, publisher, msg_type,
+                 stop_publisher=None) -> None:
         self._node = node
         self._pub = publisher
         self._type = msg_type
+        self._stop_pub = stop_publisher
 
     def send_navigation(self, command, request_id, source, duration_s,
                         location_name) -> None:
@@ -95,6 +128,58 @@ class RosNavigationSink:
         msg.duration_s = float(duration_s)
         msg.location_name = location_name
         self._pub.publish(msg)
+
+        if int(command) == NAV_STOP and self._stop_pub is not None \
+                and self._stop_pub is not self._pub:
+            self._stop_pub.publish(msg)
+
+
+class RosUtteranceGateway:
+    """Asks the coordinator whether it will handle an utterance.
+
+    Called on the engine's executor thread, never on the audio path.  It
+    fails open: if the service is not up, errors, or does not answer
+    within ``timeout_s``, it returns None and the voice engine answers
+    the utterance as ordinary conversation.
+    """
+
+    def __init__(self, client, request_type, timeout_s: float) -> None:
+        self._client = client
+        self._type = request_type
+        self._timeout = timeout_s
+        self._seq = 0
+        self.timeouts = 0
+        self.unavailable = 0
+
+    def __call__(self, text: str, confidence: float | None):
+        if not self._client.service_is_ready():
+            self.unavailable += 1
+
+            return None
+
+        self._seq += 1
+        request = self._type.Request()
+        request.request_id = f"voice-{self._seq}"
+        request.text = text
+        request.confidence = float(confidence or 0.0)
+        request.speaker_id = ""
+        done = threading.Event()
+        future = self._client.call_async(request)
+        future.add_done_callback(lambda _f: done.set())
+
+        if not done.wait(self._timeout):
+            self.timeouts += 1
+            future.cancel()
+
+            return None
+
+        response = future.result()
+
+        if response is None:
+            return None
+
+        return GatewayAnswer(bool(response.claimed), str(response.reply),
+                             str(response.intent))
 
 
 def _default_config_path() -> str:
@@ -144,8 +229,13 @@ class VoiceCompanionNode(Node):
                 "/movement/request.")
 
         movement_topic = p("movement_topic", "/movement/request")
+        direct_stop_topic = p("direct_stop_topic", "/movement/request")
         self._movement_pub = self.create_publisher(
             MovementCommand, movement_topic, 10)
+        self._stop_pub = self._movement_pub \
+            if direct_stop_topic == movement_topic \
+            else self.create_publisher(
+                MovementCommand, direct_stop_topic, 10)
         self._command_pub = self.create_publisher(
             VoiceCommand, p("voice_command_topic", "/voice/command"), 10)
         self._status_pub = self.create_publisher(
@@ -157,10 +247,14 @@ class VoiceCompanionNode(Node):
         self._publish_commands = bool(p("publish_voice_command", True))
         self.executor_pool = ThreadPoolExecutor(
             max_workers=1, thread_name_prefix="voice_reply")
+        self.gateway = self._make_gateway()
+        self.say_dropped = {"stale": 0, "quiet": 0}
         self.companion = build_companion(
-            settings, backends, RosMovementSink(self, self._movement_pub),
+            settings, backends,
+            RosMovementSink(self, self._movement_pub, self._stop_pub),
             nav_sink, executor=self.executor_pool,
-            command_observer=self._on_command)
+            command_observer=self._on_command,
+            utterance_gateway=self.gateway)
         self.runner = EngineRunner(self.companion)
 
         self.create_subscription(
@@ -169,6 +263,8 @@ class VoiceCompanionNode(Node):
         self.create_subscription(
             EmotionObservation, p("emotion_topic", "/emotion/observation"),
             self._on_emotion, 10)
+        self.create_subscription(
+            SpeechRequest, p("say_topic", "/voice/say"), self._on_say, 10)
         self.create_service(SetBool, p("mute_service", "/voice/mute"),
                             self._on_mute)
         self.create_timer(float(p("status_period_s", 1.0)),
@@ -213,15 +309,40 @@ class VoiceCompanionNode(Node):
 
             return None
 
-        pub = self.create_publisher(
-            NavigationCommand, self._param(
-                "navigation_topic", "/navigation/command"), 10)
+        nav_topic = self._param("navigation_topic", "/navigation/command")
+        nav_stop_topic = self._param(
+            "direct_nav_stop_topic", "/navigation/command")
+        pub = self.create_publisher(NavigationCommand, nav_topic, 10)
+        stop_pub = pub if nav_stop_topic == nav_topic \
+            else self.create_publisher(
+                NavigationCommand, nav_stop_topic, 10)
         self.create_subscription(
             NavigationStatus, self._param(
                 "navigation_status_topic", "/navigation/status"),
             self._on_nav_status, 10)
 
-        return RosNavigationSink(self, pub, NavigationCommand)
+        return RosNavigationSink(self, pub, NavigationCommand, stop_pub)
+
+    def _make_gateway(self):
+        if not self._param("enable_gateway", False):
+            return None
+
+        try:
+            from buddy_interfaces.srv import RouteUtterance
+        except ImportError:
+            self.get_logger().warn(
+                "enable_gateway requested but RouteUtterance is not "
+                "installed; the gateway stays off")
+
+            return None
+
+        client = self.create_client(
+            RouteUtterance, self._param(
+                "gateway_service", "/coordinator/route_utterance"))
+
+        return RosUtteranceGateway(
+            client, RouteUtterance,
+            float(self._param("gateway_timeout_s", 3.0)))
 
     # ----- callbacks (hand work to the engine thread) -----
 
@@ -237,15 +358,50 @@ class VoiceCompanionNode(Node):
             lambda: self.companion.emotion.observe_vision(
                 expression, conf))
 
+    def _on_say(self, msg) -> None:
+        """Speak a request from another module through the one speaker."""
+
+        text = str(msg.text).strip()
+
+        if not text:
+            return
+
+        priority = Priority(min(max(int(msg.priority), 0), 3))
+        ttl = float(msg.ttl_s) or DEFAULT_SAY_TTL_S
+        received = time.monotonic()
+        interrupt = bool(msg.interrupt) and priority <= Priority.HIGH
+
+        def speak() -> None:
+            engine = self.companion.engine
+
+            if time.monotonic() - received > ttl:
+                self.say_dropped["stale"] += 1
+
+                return
+
+            # "Let's be quiet" silences everything except safety speech.
+            if engine.quiet_mode and priority > Priority.HIGH:
+                self.say_dropped["quiet"] += 1
+
+                return
+
+            if interrupt:
+                self.companion.speaker.cancel_low_priority()
+
+            engine.say(text, priority)
+
+        self.runner.submit(speak)
+
     def _on_nav_status(self, msg) -> None:
         # Field names mirror the navigation package; read defensively
         # because they are unverified against this branch.
         request_id = str(getattr(msg, "request_id", ""))
         state = NAV_STATE_NAMES.get(int(getattr(msg, "state", -1)),
                                     "unknown")
+        detail = str(getattr(msg, "reason", ""))
         self.runner.submit(
             lambda: self.companion.router.on_navigation_status(
-                request_id, state))
+                request_id, state, detail))
 
     def _on_mute(self, request, response):
         muted = bool(request.data)

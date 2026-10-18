@@ -503,13 +503,14 @@ class CommandRouter:
         mapping = {
             "active": CommandState.ACTIVE,
             "done": CommandState.DONE,
+            "cancelled": CommandState.DONE,
             "rejected": CommandState.REJECTED,
             "failed": CommandState.REJECTED,
         }
         tracked.state = mapping.get(state, tracked.state)
         tracked.detail = detail
 
-        if state in ("done", "rejected", "failed"):
+        if state in ("done", "cancelled", "rejected", "failed"):
             self._nav_goal_active = False
 
     # ----- periodic -----

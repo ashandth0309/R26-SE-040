@@ -169,6 +169,7 @@ def build_companion(
     rng: random.Random | None = None,
     memory: CompanionMemoryManager | None = None,
     command_observer: Callable | None = None,
+    utterance_gateway: Callable | None = None,
 ) -> Companion:
     """Wire every component together."""
 
@@ -281,7 +282,8 @@ def build_companion(
         utterance_observer=observer, style_provider=emotion.style,
         executor=executor, action_gate=ActionGate(clock=clock),
         reply_filter=personality.finish,
-        command_observer=command_observer)
+        command_observer=command_observer,
+        utterance_gateway=utterance_gateway)
     bind_engine(controls, engine)
     engine.tick_hooks.append(connectivity.tick)
 

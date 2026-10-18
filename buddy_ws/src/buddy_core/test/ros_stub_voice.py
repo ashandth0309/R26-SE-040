@@ -102,6 +102,54 @@ class StubParam:
         self.value = value
 
 
+class StubFuture:
+    def __init__(self, result=None, done=True):
+        self._result, self._done, self._callbacks = result, done, []
+        self.cancelled = False
+
+    def done(self):
+        return self._done
+
+    def result(self):
+        return self._result
+
+    def cancel(self):
+        self.cancelled = True
+
+    def add_done_callback(self, cb):
+        if self._done:
+            cb(self)
+        else:
+            self._callbacks.append(cb)
+
+    def complete(self, result):
+        self._result, self._done = result, True
+
+        for cb in self._callbacks:
+            cb(self)
+
+
+class StubClient:
+    """Service client whose answers a test controls."""
+
+    def __init__(self, srv_type, name):
+        self.srv_type, self.name = srv_type, name
+        self.ready = True
+        self.requests = []
+        self.responder = None       # callable(request) -> response | None
+
+    def service_is_ready(self):
+        return self.ready
+
+    def call_async(self, request):
+        self.requests.append(request)
+
+        if self.responder is None:
+            return StubFuture(done=False)
+
+        return StubFuture(self.responder(request))
+
+
 class Node:
     overrides = {}
     existing_nodes = []
@@ -112,6 +160,7 @@ class Node:
         self.name = name
         self.params = {}
         self.pubs, self.subs, self.timers, self.services = {}, {}, {}, {}
+        self.clients = {}
         self._logger = StubLogger()
         self.destroyed = False
         Node.instances.append(self)
@@ -136,6 +185,12 @@ class Node:
 
     def create_service(self, srv_type, name, cb):
         self.services[name] = (srv_type, cb)
+
+    def create_client(self, srv_type, name):
+        client = StubClient(srv_type, name)
+        self.clients[name] = client
+
+        return client
 
     def get_logger(self):
         return self._logger
@@ -227,7 +282,7 @@ def install():
     msgs = types.ModuleType("buddy_interfaces.msg")
 
     for name in ("MovementCommand", "SafetyState", "EmotionObservation",
-                 "VoiceCommand"):
+                 "VoiceCommand", "SpeechRequest"):
         setattr(msgs, name, make_msg(name))
 
     pkg = types.ModuleType("buddy_interfaces")

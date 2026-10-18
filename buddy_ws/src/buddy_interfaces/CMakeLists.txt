@@ -21,6 +21,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/VisionPerson.msg"
   "msg/VisionPeople.msg"
   "msg/VisionEvent.msg"
+  "msg/SpeechRequest.msg"
 
   "srv/SetRobotMode.srv"
   "srv/EmergencyStop.srv"
@@ -29,6 +30,7 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/IdentifyObject.srv"
   "srv/TeachObject.srv"
   "srv/WhereIs.srv"
+  "srv/RouteUtterance.srv"
 
   "action/FollowPerson.action"
   "action/ApproachCaller.action"

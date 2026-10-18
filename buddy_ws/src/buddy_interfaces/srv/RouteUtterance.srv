@@ -1,0 +1,21 @@
+# Ask the coordinator whether it will handle a finished utterance.
+#
+# The voice node calls this once per recognised user utterance that is not
+# a motion, stop or sleep command, before it generates a conversational
+# reply.  The call is bounded (a few seconds) and fails open: if the
+# coordinator is missing or slow the voice node answers normally, so a
+# coordinator failure never silences Buddy or touches the stop path.
+#
+# claimed=true means the coordinator handled it (a vision question, an
+# object-teaching step, a refused approach...) and reply is what Buddy
+# should say. claimed=false means "answer it as ordinary conversation".
+
+string request_id
+string text
+float32 confidence
+string speaker_id
+---
+bool claimed
+string reply
+string intent
+uint8 error_code

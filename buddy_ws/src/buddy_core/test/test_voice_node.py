@@ -43,7 +43,8 @@ def test_node_builds_with_expected_interfaces(vn):
     node = vn.VoiceCompanionNode()
     assert set(node.pubs) >= {"/movement/request", "/voice/command",
                               "/voice/status"}
-    assert set(node.subs) == {"/safety_state", "/emotion/observation"}
+    assert set(node.subs) == {"/safety_state", "/emotion/observation",
+                              "/voice/say"}
     assert "/voice/mute" in node.services
     assert "/movement/safe" not in node.pubs
     assert "/navigation/command" not in node.pubs
