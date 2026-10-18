@@ -476,7 +476,7 @@ def hush(seed=0, amp=0.002):
 
 class Rig:
     def __init__(self, router_cfg=None, turn_cfg=None, dialogue=None,
-                 awake=False):
+                 awake=False, **engine_kw):
         self.clock = Clock()
         self.log = OrderLog()
         self.sink = OrderSink(self.log)
@@ -501,7 +501,7 @@ class Rig:
             guard=self.guard, turn=self.turn, dialogue=self.dialogue,
             backchannel=BackchannelManager(rng=random.Random(1)),
             config=EngineConfig(), known_locations=("kitchen",),
-            clock=self.clock)
+            clock=self.clock, **engine_kw)
         self.frame_no = 0
         self.run_silence(1.0)
 

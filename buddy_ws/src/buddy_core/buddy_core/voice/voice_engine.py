@@ -18,10 +18,12 @@ from __future__ import annotations
 import time
 from collections import deque
 from collections.abc import Callable
+from concurrent.futures import Future
 from dataclasses import dataclass
 
 import numpy as np
 
+from buddy_core.voice.action_gate import ActionGate
 from buddy_core.voice.backchannel import BackchannelManager
 from buddy_core.voice.command_router import (
     CommandRouter,
@@ -47,6 +49,25 @@ from buddy_core.voice.voice_commands import (
 )
 
 FRAME_S = 0.02
+
+
+class InlineExecutor:
+    """Runs work immediately on the caller's thread (tests, simple use).
+
+    Production uses a thread so a slow model cannot stall the audio loop.
+    """
+
+    def submit(self, fn, *args) -> Future:
+        """Run ``fn`` now and return a finished future."""
+
+        future: Future = Future()
+
+        try:
+            future.set_result(fn(*args))
+        except Exception as exc:
+            future.set_exception(exc)
+
+        return future
 
 
 @dataclass(frozen=True)
@@ -88,6 +109,8 @@ class VoiceEngine:
         emotion_hint: Callable[[], str | None] = lambda: None,
         utterance_observer: Callable[[np.ndarray], None] | None = None,
         style_provider: Callable[[], SpeechStyle] | None = None,
+        executor=None,
+        action_gate: ActionGate | None = None,
     ) -> None:
         self.vad = vad
         self.wake_rec = wake_rec
@@ -108,6 +131,10 @@ class VoiceEngine:
         self.emotion_hint = emotion_hint
         self.utterance_observer = utterance_observer
         self.style_provider = style_provider
+        self.executor = executor or InlineExecutor()
+        self.action_gate = action_gate or ActionGate(clock=clock)
+        self._gen = 0
+        self._inflight: tuple[Future, int] | None = None
 
         self.muted = False
         self.quiet_mode = False
@@ -254,6 +281,8 @@ class VoiceEngine:
         """Highest-priority path.  Order is deliberate."""
 
         result = self.router.stop(reason)
+        self.action_gate.pending = None
+        self._cancel_reply()
         self.speaker.cancel_all()
         self._abort_user_turn()
         self.turn.stop()
@@ -339,6 +368,10 @@ class VoiceEngine:
         self._maybe_backchannel(now, pause)
 
     def _start_user_turn(self, now: float) -> None:
+        if self.turn.state is TurnState.PROCESSING:
+            self._cancel_reply()
+            self.turn.nothing_to_say()
+
         self._wake_context = self.turn.wants_wake_word
         self._user_active = True
         self._stop_fired = False
@@ -508,6 +541,10 @@ class VoiceEngine:
             return
 
         parsed = self._find_command(cmd, gen)
+        confirmed = self.action_gate.confirm(text)
+
+        if confirmed is not None:
+            parsed = (confirmed, primary)
 
         if parsed is not None:
             command, source = parsed
@@ -566,18 +603,58 @@ class VoiceEngine:
         return True
 
     def _reply(self, text: str) -> None:
+        """Ask dialogue for a reply on the executor, never blocking audio."""
+
+        self._cancel_reply()
+        self._gen += 1
+        future = self.executor.submit(
+            self.dialogue.respond, text, self.context)
+        self._inflight = (future, self._gen)
+        self._poll_reply()
+
+    def _cancel_reply(self) -> None:
+        """Forget any reply still being prepared."""
+
+        self._gen += 1
+
+        if self._inflight is not None:
+            self._inflight[0].cancel()
+            self._inflight = None
+
+    def _poll_reply(self) -> None:
+        if self._inflight is None:
+            return
+
+        future, gen = self._inflight
+
+        if not future.done():
+            return
+
+        self._inflight = None
+
+        if gen != self._gen or self.turn.state is not TurnState.PROCESSING:
+            self._log("stale_reply_dropped")
+
+            return
+
         try:
-            reply = self.dialogue.respond(text, self.context)
+            reply = future.result()
         except Exception:
             self.errors += 1
-            self._log("dialogue_error", text)
+            self._log("dialogue_error")
             self.turn.error()
 
             return
 
+        text = reply.text
+        question = self.action_gate.propose(reply.suggested_action)
+
+        if question:
+            text = f"{text} {question}"
+
         style = self.style_provider() if self.style_provider else None
 
-        if not self.say(reply.text, Priority.NORMAL, style):
+        if not self.say(text, Priority.NORMAL, style):
             self.turn.nothing_to_say()
 
     # ----- timer -----
@@ -585,6 +662,7 @@ class VoiceEngine:
     def tick(self) -> None:
         """Advance timers.  Call about every 50 ms."""
 
+        self._poll_reply()
         self.speaker.tick()
         self.router.tick()
         self.turn.tick()
