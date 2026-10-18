@@ -1,0 +1,15 @@
+# Python packages for the vision engine (Raspberry Pi 4, ARM64).
+# Versions are NOT pinned: pin them after the first verified Pi install.
+# Camera (Pi Camera Module 2) comes from apt, not pip:
+#   sudo apt install python3-picamera2 python3-opencv
+numpy
+opencv-python-headless   # skip if python3-opencv from apt is used
+onnxruntime
+pyyaml
+
+# Needed once, to build the object-feature model from the MobileNetV2 download:
+onnx
+
+# Optional (evaluation only, not needed on the robot)
+scikit-learn
+scikit-image
