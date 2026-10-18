@@ -34,6 +34,7 @@ setup(
         'safety_supervisor = buddy_core.safety.safety_node:main',
         'motor_executor = buddy_core.motors.motor_node:main',
         'voice_companion = buddy_core.voice.voice_node:main',
+        'vision_camera = buddy_core.vision.camera_node:main',
     ],
 },
 )
