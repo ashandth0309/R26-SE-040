@@ -59,8 +59,18 @@ class SafetySupervisor:
         left_blocked: bool = False,
         right_blocked: bool = False,
         obstacle_data_available: bool = True,
+        front_valid: bool = True,
+        rear_valid: bool = True,
+        left_valid: bool = True,
+        right_valid: bool = True,
     ) -> SafetyDecision:
-        """Return whether the requested movement is currently safe."""
+        """Return whether the requested movement is currently safe.
+
+        ``*_valid`` says whether the sensors covering that side produced a
+        usable reading.  A side with no valid reading is *unknown*, not
+        clear: ``*_blocked`` is False there only because nothing could be
+        measured, so movement toward it is refused.
+        """
 
         if command not in self.VALID_COMMANDS:
             return SafetyDecision(
@@ -86,6 +96,21 @@ class SafetySupervisor:
             return SafetyDecision(
                 False,
                 "Obstacle data is unavailable.",
+            )
+
+        unknown = self._unknown_side(
+            command,
+            front_valid=front_valid,
+            rear_valid=rear_valid,
+            left_valid=left_valid,
+            right_valid=right_valid,
+        )
+
+        if unknown is not None:
+            return SafetyDecision(
+                False,
+                f"{unknown} sensors have no valid reading; "
+                "the path cannot be confirmed clear.",
             )
 
         if command == self.COMMAND_FORWARD and front_blocked:
@@ -122,3 +147,34 @@ class SafetySupervisor:
             True,
             "Movement request accepted.",
         )
+
+    def _unknown_side(
+        self,
+        command: int,
+        *,
+        front_valid: bool,
+        rear_valid: bool,
+        left_valid: bool,
+        right_valid: bool,
+    ) -> str | None:
+        """Name the side ``command`` moves toward if it is unmeasured."""
+
+        if command == self.COMMAND_FORWARD and not front_valid:
+            return "Front"
+
+        if command == self.COMMAND_BACKWARD and not rear_valid:
+            return "Rear"
+
+        if command in (
+            self.COMMAND_TURN_LEFT,
+            self.COMMAND_ROTATE_LEFT,
+        ) and not left_valid:
+            return "Left"
+
+        if command in (
+            self.COMMAND_TURN_RIGHT,
+            self.COMMAND_ROTATE_RIGHT,
+        ) and not right_valid:
+            return "Right"
+
+        return None

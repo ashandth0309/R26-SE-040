@@ -80,6 +80,8 @@ class StubLogger:
     def warn(self, text):
         self.lines.append(("warn", text))
 
+    warning = warn
+
     def error(self, text):
         self.lines.append(("error", text))
 

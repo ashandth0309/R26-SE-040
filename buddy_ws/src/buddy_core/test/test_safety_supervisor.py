@@ -127,3 +127,61 @@ def test_unknown_command_is_rejected(supervisor):
     decision = supervisor.evaluate(255)
 
     assert decision.allowed is False
+
+
+# ---- unknown (unmeasured) sides must not be treated as clear ----------
+#
+# Regression for the legacy permissive behaviour: the obstacle node sets
+# ``*_blocked`` only when the side has a valid reading, so a side whose
+# sensors all failed used to look "not blocked" and motion was allowed.
+
+
+@pytest.mark.parametrize(
+    ("command", "kwargs"),
+    [
+        (SafetySupervisor.COMMAND_FORWARD, {"front_valid": False}),
+        (SafetySupervisor.COMMAND_BACKWARD, {"rear_valid": False}),
+        (SafetySupervisor.COMMAND_TURN_LEFT, {"left_valid": False}),
+        (SafetySupervisor.COMMAND_ROTATE_LEFT, {"left_valid": False}),
+        (SafetySupervisor.COMMAND_TURN_RIGHT, {"right_valid": False}),
+        (SafetySupervisor.COMMAND_ROTATE_RIGHT, {"right_valid": False}),
+    ],
+)
+def test_motion_toward_unmeasured_side_is_refused(
+    supervisor,
+    command,
+    kwargs,
+):
+    decision = supervisor.evaluate(command, **kwargs)
+
+    assert decision.allowed is False
+    assert "no valid reading" in decision.reason
+
+
+def test_unmeasured_side_behind_does_not_block_forward(supervisor):
+    decision = supervisor.evaluate(
+        SafetySupervisor.COMMAND_FORWARD,
+        rear_valid=False,
+        left_valid=False,
+        right_valid=False,
+    )
+
+    assert decision.allowed is True
+
+
+def test_stop_is_allowed_even_with_every_side_unmeasured(supervisor):
+    decision = supervisor.evaluate(
+        SafetySupervisor.COMMAND_STOP,
+        front_valid=False,
+        rear_valid=False,
+        left_valid=False,
+        right_valid=False,
+    )
+
+    assert decision.allowed is True
+
+
+def test_callers_that_omit_validity_keep_the_old_behaviour(supervisor):
+    decision = supervisor.evaluate(SafetySupervisor.COMMAND_FORWARD)
+
+    assert decision.allowed is True

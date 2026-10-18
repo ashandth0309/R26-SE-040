@@ -173,6 +173,10 @@ class SafetySupervisorNode(Node):
             left_blocked=status.left_blocked,
             right_blocked=status.right_blocked,
             obstacle_data_available=True,
+            front_valid=status.front_valid,
+            rear_valid=status.rear_valid,
+            left_valid=status.left_valid,
+            right_valid=status.right_valid,
         )
 
     def _publish_stop(self, reason: str) -> None:
