@@ -1,0 +1,28 @@
+# Voice companion engine settings (Ashandth_Voice). Every key is optional.
+profile: balanced        # lightweight | balanced | enhanced
+
+audio:
+  preferred_inputs: []   # substrings of device names; empty = auto-discover
+  preferred_output: null
+  max_microphones: 2
+  allow_virtual_devices: false
+
+microphones:
+  switch_margin_db: 3.0
+  min_dwell_s: 3.0
+  fusion: "off"          # "off" or "sum" (sum only for a validated stereo device)
+  fusion_geometry_validated: false
+
+vad:
+  start_margin_db: 9.0
+  stop_margin_db: 5.0
+  hangover_ms: 450
+
+speaker:
+  max_volume: 0.8
+  default_volume: 0.6
+  max_queue: 6
+
+echo:
+  guard_after_s: 0.35
+  barge_in_enabled: true
