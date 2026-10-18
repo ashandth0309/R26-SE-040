@@ -87,6 +87,12 @@ CREATE TABLE IF NOT EXISTS negatives(
     dim INTEGER NOT NULL,
     added REAL NOT NULL
 );
+CREATE TABLE IF NOT EXISTS kv(
+    person_id TEXT NOT NULL REFERENCES people(person_id) ON DELETE CASCADE,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+    PRIMARY KEY(person_id, key)
+);
 CREATE TABLE IF NOT EXISTS audit(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ts REAL NOT NULL,
@@ -313,6 +319,27 @@ class FaceProfileStore:
                                              person_id))
             self._db.commit()
 
+    # ----- small per-person state (cooldowns, counters) -----
+
+    def kv_get(self, person_id: str, key: str, default=None):
+        with self._lock:
+            row = self._db.execute(
+                "SELECT value FROM kv WHERE person_id=? AND key=?",
+                (person_id, key)).fetchone()
+
+        return json.loads(row[0]) if row else default
+
+    def kv_set(self, person_id: str, key: str, value) -> None:
+        with self._lock:
+            if not self._exists(person_id):
+                raise StoreError("unknown person")
+
+            self._db.execute(
+                "INSERT INTO kv(person_id,key,value) VALUES(?,?,?) "
+                "ON CONFLICT(person_id,key) DO UPDATE SET value=excluded."
+                "value", (person_id, key, json.dumps(value)))
+            self._db.commit()
+
     # ----- corrections -----
 
     def add_negative(self, person_id: str, vec: np.ndarray,
@@ -367,6 +394,8 @@ class FaceProfileStore:
                              (person_id,))
             self._db.execute("DELETE FROM negatives WHERE person_id=?",
                              (person_id,))
+            self._db.execute("DELETE FROM kv WHERE person_id=?",
+                             (person_id,))
             self._db.execute("DELETE FROM people WHERE person_id=?",
                              (person_id,))
             # The trail keeps that a deletion happened, not who.
@@ -382,7 +411,8 @@ class FaceProfileStore:
             n = self._db.execute(
                 "SELECT COUNT(*) FROM people").fetchone()[0]
 
-            for table in ("embeddings", "negatives", "people", "audit"):
+            for table in ("embeddings", "negatives", "kv", "people",
+                          "audit"):
                 self._db.execute(f"DELETE FROM {table}")
 
             self._audit("deleted_all")
