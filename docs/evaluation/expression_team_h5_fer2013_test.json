@@ -1,0 +1,228 @@
+{
+  "labels": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "confusion": [
+    [
+      353,
+      0,
+      41,
+      87,
+      141,
+      105,
+      3
+    ],
+    [
+      76,
+      0,
+      4,
+      13,
+      5,
+      13,
+      0
+    ],
+    [
+      198,
+      0,
+      213,
+      173,
+      187,
+      219,
+      34
+    ],
+    [
+      58,
+      0,
+      29,
+      1550,
+      78,
+      51,
+      8
+    ],
+    [
+      73,
+      0,
+      33,
+      180,
+      773,
+      171,
+      3
+    ],
+    [
+      159,
+      0,
+      65,
+      224,
+      322,
+      474,
+      3
+    ],
+    [
+      38,
+      0,
+      282,
+      113,
+      60,
+      26,
+      312
+    ]
+  ],
+  "per_class": {
+    "angry": {
+      "precision": 0.36963350785340315,
+      "recall": 0.48356164383561645,
+      "f1": 0.41899109792284867,
+      "support": 730
+    },
+    "disgust": {
+      "precision": null,
+      "recall": 0.0,
+      "f1": null,
+      "support": 111
+    },
+    "fear": {
+      "precision": 0.3193403298350825,
+      "recall": 0.2080078125,
+      "f1": 0.2519219396806623,
+      "support": 1024
+    },
+    "happy": {
+      "precision": 0.6623931623931624,
+      "recall": 0.8737316798196166,
+      "f1": 0.7535245503159941,
+      "support": 1774
+    },
+    "neutral": {
+      "precision": 0.49361430395913153,
+      "recall": 0.6269261962692619,
+      "f1": 0.5523401214719542,
+      "support": 1233
+    },
+    "sad": {
+      "precision": 0.4475920679886686,
+      "recall": 0.38011226944667204,
+      "f1": 0.41110147441457073,
+      "support": 1247
+    },
+    "surprise": {
+      "precision": 0.859504132231405,
+      "recall": 0.37545126353790614,
+      "f1": 0.5226130653266331,
+      "support": 831
+    }
+  },
+  "accuracy": 0.5287769784172662,
+  "macro_f1": 0.4850820415221105,
+  "group_labels": [
+    "positive",
+    "neutral",
+    "negative",
+    "surprise"
+  ],
+  "group_confusion": [
+    [
+      1550,
+      78,
+      138,
+      8
+    ],
+    [
+      180,
+      773,
+      277,
+      3
+    ],
+    [
+      497,
+      655,
+      1920,
+      40
+    ],
+    [
+      113,
+      60,
+      346,
+      312
+    ]
+  ],
+  "group_per_class": {
+    "positive": {
+      "precision": 0.6623931623931624,
+      "recall": 0.8737316798196166,
+      "f1": 0.7535245503159941,
+      "support": 1774
+    },
+    "neutral": {
+      "precision": 0.49361430395913153,
+      "recall": 0.6269261962692619,
+      "f1": 0.5523401214719542,
+      "support": 1233
+    },
+    "negative": {
+      "precision": 0.7161506900410295,
+      "recall": 0.6169665809768637,
+      "f1": 0.6628689798032108,
+      "support": 3112
+    },
+    "surprise": {
+      "precision": 0.859504132231405,
+      "recall": 0.37545126353790614,
+      "f1": 0.5226130653266331,
+      "support": 831
+    }
+  },
+  "neutral_faces_called_negative": {
+    "count": 277,
+    "of": 1233,
+    "rate": 0.22465531224655313
+  },
+  "images_scored": 6950,
+  "no_face_found": {},
+  "calibration": {
+    "temperature_fit_on_half": 0.75,
+    "ece_held_out_before": 0.06714400421786484,
+    "ece_held_out_after": 0.016487533923444694,
+    "confidence_vs_accuracy": {
+      "0.5": {
+        "share_of_images": 0.2902158273381295,
+        "accuracy_when_above": 0.8463063956370848
+      },
+      "0.6": {
+        "share_of_images": 0.2070503597122302,
+        "accuracy_when_above": 0.9047949965253649
+      },
+      "0.7": {
+        "share_of_images": 0.15856115107913668,
+        "accuracy_when_above": 0.9428312159709619
+      },
+      "0.8": {
+        "share_of_images": 0.12359712230215827,
+        "accuracy_when_above": 0.9685681024447031
+      },
+      "0.9": {
+        "share_of_images": 0.08460431654676259,
+        "accuracy_when_above": 0.9727891156462585
+      }
+    }
+  },
+  "setup": {
+    "model": "emotion_model.h5",
+    "preprocessing": "48x48 grayscale, x0.00392156862745098",
+    "class_order_assumed": [
+      "angry",
+      "disgust",
+      "fear",
+      "happy",
+      "neutral",
+      "sad",
+      "surprise"
+    ],
+    "note": "class order assumed alphabetical (Keras directory order); the repo does not record it for this file"
+  }
+}

@@ -1,0 +1,228 @@
+{
+  "labels": [
+    "angry",
+    "disgust",
+    "fear",
+    "happy",
+    "neutral",
+    "sad",
+    "surprise"
+  ],
+  "confusion": [
+    [
+      196,
+      121,
+      23,
+      60,
+      173,
+      68,
+      65
+    ],
+    [
+      15,
+      54,
+      1,
+      13,
+      4,
+      16,
+      3
+    ],
+    [
+      49,
+      100,
+      64,
+      128,
+      255,
+      163,
+      194
+    ],
+    [
+      9,
+      9,
+      9,
+      1603,
+      50,
+      12,
+      28
+    ],
+    [
+      8,
+      57,
+      1,
+      250,
+      754,
+      79,
+      45
+    ],
+    [
+      38,
+      73,
+      9,
+      114,
+      494,
+      368,
+      45
+    ],
+    [
+      4,
+      9,
+      27,
+      88,
+      32,
+      12,
+      644
+    ]
+  ],
+  "per_class": {
+    "angry": {
+      "precision": 0.6144200626959248,
+      "recall": 0.2776203966005666,
+      "f1": 0.38243902439024396,
+      "support": 706
+    },
+    "disgust": {
+      "precision": 0.1276595744680851,
+      "recall": 0.5094339622641509,
+      "f1": 0.20415879017013233,
+      "support": 106
+    },
+    "fear": {
+      "precision": 0.47761194029850745,
+      "recall": 0.06715634837355719,
+      "f1": 0.11775528978840846,
+      "support": 953
+    },
+    "happy": {
+      "precision": 0.7105496453900709,
+      "recall": 0.9319767441860465,
+      "f1": 0.8063380281690141,
+      "support": 1720
+    },
+    "neutral": {
+      "precision": 0.4279228149829739,
+      "recall": 0.6314907872696818,
+      "f1": 0.510148849797023,
+      "support": 1194
+    },
+    "sad": {
+      "precision": 0.5125348189415042,
+      "recall": 0.32252410166520595,
+      "f1": 0.39591178052716514,
+      "support": 1141
+    },
+    "surprise": {
+      "precision": 0.62890625,
+      "recall": 0.7892156862745098,
+      "f1": 0.7000000000000001,
+      "support": 816
+    }
+  },
+  "accuracy": 0.5550030138637734,
+  "macro_f1": 0.4452502518345696,
+  "group_labels": [
+    "positive",
+    "neutral",
+    "negative",
+    "surprise"
+  ],
+  "group_confusion": [
+    [
+      1603,
+      50,
+      39,
+      28
+    ],
+    [
+      250,
+      754,
+      145,
+      45
+    ],
+    [
+      315,
+      926,
+      1358,
+      307
+    ],
+    [
+      88,
+      32,
+      52,
+      644
+    ]
+  ],
+  "group_per_class": {
+    "positive": {
+      "precision": 0.7105496453900709,
+      "recall": 0.9319767441860465,
+      "f1": 0.8063380281690141,
+      "support": 1720
+    },
+    "neutral": {
+      "precision": 0.4279228149829739,
+      "recall": 0.6314907872696818,
+      "f1": 0.510148849797023,
+      "support": 1194
+    },
+    "negative": {
+      "precision": 0.8519447929736512,
+      "recall": 0.46730901582931866,
+      "f1": 0.6035555555555555,
+      "support": 2906
+    },
+    "surprise": {
+      "precision": 0.62890625,
+      "recall": 0.7892156862745098,
+      "f1": 0.7000000000000001,
+      "support": 816
+    }
+  },
+  "neutral_faces_called_negative": {
+    "count": 145,
+    "of": 1194,
+    "rate": 0.12144053601340034
+  },
+  "images_scored": 6636,
+  "no_face_found": {
+    "angry": 24,
+    "disgust": 5,
+    "fear": 71,
+    "happy": 54,
+    "neutral": 39,
+    "sad": 106,
+    "surprise": 15
+  },
+  "calibration": {
+    "temperature_fit_on_half": 3.85,
+    "ece_held_out_before": 0.32142517849240737,
+    "ece_held_out_after": 0.026539884752618197,
+    "confidence_vs_accuracy": {
+      "0.5": {
+        "share_of_images": 0.9505726341169379,
+        "accuracy_when_above": 0.572289156626506
+      },
+      "0.6": {
+        "share_of_images": 0.884418324291742,
+        "accuracy_when_above": 0.5924348270574203
+      },
+      "0.7": {
+        "share_of_images": 0.8144966847498493,
+        "accuracy_when_above": 0.6162812210915819
+      },
+      "0.8": {
+        "share_of_images": 0.7408077154912598,
+        "accuracy_when_above": 0.6458502847843776
+      },
+      "0.9": {
+        "share_of_images": 0.6436106088004823,
+        "accuracy_when_above": 0.6864902833060174
+      }
+    }
+  },
+  "setup": {
+    "model": "opencv_zoo facial_expression_recognition_mobilefacenet_2022july",
+    "detector": "YuNet 2023mar",
+    "preprocessing": "48x48 gray -> 192x192 bicubic, replicate-pad 64px, YuNet landmarks, 112x112 alignment",
+    "detector_threshold": 0.5
+  }
+}
