@@ -47,7 +47,7 @@ def sitting(x=300.0, top=200.0):
         P.L_ANKLE: (x - 25, top + 330), P.R_ANKLE: (x + 25, top + 330)})
 
 
-def lying(y=380.0, left=100.0):
+def lying(y=450.0, left=100.0):
     # head at left, feet at right, body horizontal
     return make({
         P.NOSE: (left, y), P.L_SHOULDER: (left + 60, y - 25),
@@ -76,3 +76,26 @@ def upper_body_only(x=300.0, top=100.0):
         P.L_KNEE: (x - 20, top + 320), P.R_KNEE: (x + 20, top + 320),
         P.L_ANKLE: (x - 20, top + 440), P.R_ANKLE: (x + 20, top + 440)},
         hidden=(P.L_KNEE, P.R_KNEE, P.L_ANKLE, P.R_ANKLE))
+
+
+def blend(a: P.Pose, b: P.Pose, alpha: float) -> P.Pose:
+    xy = (1 - alpha) * a.xy + alpha * b.xy
+    vis = np.minimum(a.visibility, b.visibility)
+    ok = vis > 0.3
+    pts = xy[ok]
+
+    return P.Pose(xy.astype(np.float32), vis, 0.9, 0,
+                  (float(pts[:, 0].min()), float(pts[:, 1].min()),
+                   float(pts[:, 0].max()), float(pts[:, 1].max())))
+
+
+def transition(a, b, t0, duration, fps=10):
+    """Frames easing from pose a to pose b over `duration` seconds."""
+
+    n = max(1, int(duration * fps))
+
+    return [(t0 + i / fps, blend(a, b, (i + 1) / n)) for i in range(n)]
+
+
+def hold(pose, t0, seconds, fps=10):
+    return [(t0 + i / fps, pose) for i in range(int(seconds * fps))]
