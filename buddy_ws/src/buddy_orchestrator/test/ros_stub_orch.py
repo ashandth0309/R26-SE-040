@@ -124,7 +124,6 @@ _NAMES = ("buddy_interfaces", "buddy_interfaces.msg",
 
 
 def install():
-    saved = {n: sys.modules.get(n) for n in _NAMES}
     mods = {}
 
     def module(name, **attrs):

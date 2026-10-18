@@ -8,7 +8,8 @@ import pytest
 HERE = Path(__file__).resolve()
 SRC = HERE.parents[2]
 
-for p in (SRC / "buddy_orchestrator", SRC / "buddy_core"):
+for p in (SRC / "buddy_orchestrator", SRC / "buddy_core",
+          SRC / "buddy_navigation", SRC / "buddy_core" / "test"):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 

@@ -142,11 +142,11 @@ def test_vision_client_not_ready_means_unavailable(node):
 def test_vision_client_answer_is_used(node):
     node.subs["/vision/status"][1](stub.StringMsg(
         '{"camera_ok": true, "camera_enabled": true}'))
-    I = ns.srvs["IdentifyObject"]
+    ident = ns.srvs["IdentifyObject"]
     client = node.clients["/vision/identify_object"]
 
     def respond(_req):
-        r = I.Response()
+        r = ident.Response()
         r.success, r.text = True, "I think that's a mug."
 
         return r

@@ -6,3 +6,5 @@ init_timeout_s: 10.0
 # Stays false until a person-distance source is validated on the robot.
 # With false, "come here" is refused on real hardware.
 person_distance_validated: false
+# Route used when a spoken "start patrol" names none. Empty = refuse.
+default_patrol_route: ""

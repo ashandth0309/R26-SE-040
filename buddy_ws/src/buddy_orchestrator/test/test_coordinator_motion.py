@@ -17,8 +17,8 @@ def test_estop_refuses_and_announces_once(rig):
     rig.healthy(estop=True)
     rig.healthy(estop=True)
     assert rig.c.robot.state is RobotState.EMERGENCY_STOP
-    assert not rig.c.on_voice_navigation(NavRequest("start_patrol",
-                                                    request_id="r1"))
+    assert not rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="r1"))
     assert rig.nav[-1].kind == "stop"
     assert rig.texts.count("Emergency stop is active, so I can't move.") \
         >= 1
@@ -64,7 +64,8 @@ def test_stale_inputs_refuse_motion(rig):
 
 
 def test_losing_status_while_moving_stops_and_degrades(rig):
-    rig.c.on_voice_navigation(NavRequest("start_patrol", request_id="p"))
+    rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
     rig.healthy(nav_state="running", rid="p", cmd="start_patrol")
     assert rig.c.robot.state is RobotState.PATROL_ACTIVE
     rig.advance(5.0)                         # silence from every node
@@ -96,13 +97,14 @@ def test_motion_disabled_refused(rig):
 
 def test_patrol_needs_trusted_pose(rig):
     rig.healthy(pose=False)
-    assert not rig.c.on_voice_navigation(NavRequest("start_patrol",
-                                                    request_id="a"))
+    assert not rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="a"))
     assert any("where I am" in t for t in rig.texts)
 
 
 def test_busy_while_navigating(rig):
-    rig.c.on_voice_navigation(NavRequest("start_patrol", request_id="p"))
+    rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
     rig.healthy(nav_state="running", rid="p", cmd="start_patrol")
     assert not rig.c.on_voice_navigation(NavRequest("go_to_location",
                                                     request_id="g"))
@@ -116,7 +118,8 @@ def test_safety_not_allowing_movement_refuses(rig):
 
 
 def test_patrol_result_is_announced(rig):
-    rig.c.on_voice_navigation(NavRequest("start_patrol", request_id="p"))
+    rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
     rig.healthy(nav_state="running", rid="p", cmd="start_patrol")
     rig.c.on_nav_status(NavStatusIn(
         "succeeded", request_id="p", motion_enabled=True,
@@ -139,12 +142,12 @@ def test_raw_movement_relayed_and_blocks_navigation_start(rig):
     assert rig.c.on_voice_movement(m)
     assert rig.c.on_voice_movement(m)        # a repeat keeps it alive
     assert rig.relayed == [m, m]
-    assert not rig.c.on_voice_navigation(NavRequest("start_patrol",
-                                                    request_id="p"))
+    assert not rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
     rig.advance(2.0)
     rig.healthy()
-    assert rig.c.on_voice_navigation(NavRequest("start_patrol",
-                                                request_id="p"))
+    assert rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
 
 
 def test_raw_movement_refused_under_estop_publishes_stop(rig):
@@ -156,7 +159,8 @@ def test_raw_movement_refused_under_estop_publishes_stop(rig):
 
 
 def test_raw_movement_refused_while_navigating(rig):
-    rig.c.on_voice_navigation(NavRequest("start_patrol", request_id="p"))
+    rig.c.on_voice_navigation(NavRequest(
+        "start_patrol", route_id="loop", request_id="p"))
     rig.healthy(nav_state="running", rid="p", cmd="start_patrol")
     assert not rig.c.on_voice_movement(MoveIn(1, source="voice"))
 
@@ -194,3 +198,35 @@ def test_state_machine_never_violated(rig):
         rig.advance(5.0)
         rig.healthy()
     assert rig.c.status()["state_violations"] == 0
+
+
+def test_patrol_without_route_uses_the_configured_default(rig):
+    rig.c.cfg.default_patrol_route = "demo_loop"
+    assert rig.c.on_voice_navigation(NavRequest("start_patrol",
+                                                request_id="p"))
+    assert rig.nav[-1].route_id == "demo_loop"
+
+
+def test_patrol_without_route_or_default_is_refused_in_words(rig):
+    assert not rig.c.on_voice_navigation(NavRequest("start_patrol",
+                                                    request_id="p"))
+    assert any("patrol route" in t for t in rig.texts)
+    assert rig.nav == []
+
+
+def test_an_explicit_route_is_never_overridden(rig):
+    rig.c.cfg.default_patrol_route = "demo_loop"
+    rig.c.on_voice_navigation(NavRequest("start_patrol", route_id="mine",
+                                         request_id="p"))
+    assert rig.nav[-1].route_id == "mine"
+
+
+def test_request_reported_idle_means_navigation_refused_it(rig):
+    rig.c.on_voice_navigation(NavRequest("go_to_location",
+                                         location_name="nowhere",
+                                         request_id="g"))
+    rig.c.on_nav_status(NavStatusIn(
+        "idle", request_id="g", reason="No goal.", motion_enabled=True,
+        pose_trusted=True, sensors_healthy=True))
+    assert "I couldn't start that." in rig.texts
+    assert "g" not in rig.c.pending

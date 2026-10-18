@@ -89,9 +89,17 @@ def navigation_nodes(profile: str) -> list[dict]:
 
 
 def coordinator_node(profile: str, *, vision: bool) -> dict:
+    params = {}
+
+    if profile == "simulation":
+        # The simulation config defines this route; the physical config
+        # defines none, so on the robot a spoken patrol is refused until
+        # a route is configured.
+        params["default_patrol_route"] = "demo_loop"
+
     return _spec("buddy_orchestrator", "buddy_coordinator",
                  "buddy_coordinator", profile=profile,
-                 enable_vision=vision,
+                 enable_vision=vision, **params,
                  config_file=share("buddy_orchestrator",
                                    "config/orchestrator.yaml"))
 

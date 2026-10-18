@@ -33,7 +33,7 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
+from dataclasses import dataclass, replace
 
 from buddy_orchestrator import hardware
 from buddy_orchestrator.contracts import (
@@ -87,6 +87,8 @@ SAY = {
               "agrees."),
     "ask_name": "What would you like to call it?",
     "approach_no": "I can see you, but I can't approach safely yet.",
+    "no_route": "I don't have a patrol route set up yet.",
+    "not_started": "I couldn't start that.",
 }
 
 APPROACH_REFUSALS = {
@@ -126,6 +128,10 @@ FALL_KINDS = frozenset({"fall_suspected", "fall_alert",
 class CoordinatorConfig:
     #: Navigation kinds whose result is announced when they finish.
     announce_nav_kinds: tuple = ("start_patrol", "go_to_location")
+    #: The voice node cannot name a route, and navigation refuses an empty
+    #: one, so the coordinator fills this in.  Empty means "no route is
+    #: configured", and a spoken patrol request is refused honestly.
+    default_patrol_route: str = ""
     raw_motion_grace_s: float = 0.6
     init_timeout_s: float = 10.0
     #: True only after a person-distance source has been validated on
@@ -258,9 +264,15 @@ class BuddyCoordinator:
                 ConversationState.PROCESSING)
 
     def _conv_to(self, target: ConversationState) -> None:
-        if not self.conversation.go(target, "coordinator"):
-            self.conversation.go(ConversationState.LISTENING, "recover")
-            self.conversation.go(target, "coordinator")
+        """Move the conversation axis, stepping through LISTENING when the
+        table has no direct edge (voice status can lag the real turn)."""
+
+        c = self.conversation
+
+        if not c.can(target):
+            c.go(ConversationState.LISTENING, "resync")
+
+        c.go(target, "coordinator")
 
     # ------------------------------------------------------------------
     # stopping
@@ -405,7 +417,13 @@ class BuddyCoordinator:
 
             if pending.announce:
                 self._announce_nav_result(pending, s)
-        elif s.state in ("cancelled", "idle"):
+        elif s.state == "idle":
+            # Navigation reports this id as idle without it ever running:
+            # it refused the request (it only logs the reason).
+            del self.pending[s.request_id]
+            self._note(f"navigation did not start {pending.kind}")
+            self._say(Kind.STATUS, SAY["not_started"])
+        elif s.state == "cancelled":
             del self.pending[s.request_id]
 
     def _announce_nav_result(self, p: PendingNav, s: NavStatusIn) -> None:
@@ -467,6 +485,15 @@ class BuddyCoordinator:
             self.stop_all("voice stop")
 
             return True
+
+        if req.kind == "start_patrol" and not req.route_id:
+            if not self.cfg.default_patrol_route:
+                self.counters.nav_refused += 1
+                self._say(Kind.STATUS, SAY["no_route"])
+
+                return False
+
+            req = replace(req, route_id=self.cfg.default_patrol_route)
 
         if req.kind == "resume" and self.estop:
             self.counters.nav_refused += 1
@@ -657,7 +684,7 @@ class BuddyCoordinator:
             return RouteAnswer(False, error=Err.UNAVAILABLE)
         finally:
             if self.conversation.state is ConversationState.VISION_REQUEST:
-                self._conv_to(ConversationState.PROCESSING)
+                self._conv_to(ConversationState.LISTENING)
 
     def _claim(self, reply: str, intent: str,
                error: Err = Err.OK) -> RouteAnswer:

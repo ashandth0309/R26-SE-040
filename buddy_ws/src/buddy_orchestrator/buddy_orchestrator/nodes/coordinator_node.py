@@ -213,7 +213,8 @@ class CoordinatorNode(Node):
         cfg = CoordinatorConfig(
             person_distance_validated=bool(
                 p("person_distance_validated", False)),
-            init_timeout_s=float(p("init_timeout_s", 10.0)))
+            init_timeout_s=float(p("init_timeout_s", 10.0)),
+            default_patrol_route=str(p("default_patrol_route", "")))
 
         if self._names().count("buddy_coordinator") > 1:
             raise RuntimeError("another buddy_coordinator is running")
