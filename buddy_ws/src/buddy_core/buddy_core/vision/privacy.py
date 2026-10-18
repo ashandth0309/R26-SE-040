@@ -58,11 +58,12 @@ DATA_INVENTORY = (
 #   models, object_embedding: downloaded / derived model files
 #   camera_service: the camera lock file (no image data)
 #   evaluation, expression_eval, object_eval: JSON reports
+#   eval_report: Markdown report from those JSON files
 _WRITERS_ALLOWED = {"face_store.py", "object_teach.py", "object_memory.py",
                     "vision_settings.py", "models.py", "object_embedding.py",
                     "camera_service.py", "evaluation.py",
                     "expression_eval.py", "object_eval.py", "resources.py",
-                    "benchmark.py"}
+                    "benchmark.py", "eval_report.py"}
 _IMAGE_WRITE = re.compile(
     r"\b(imwrite|imencode|\.save\(|write_image|VideoWriter|tofile\()")
 

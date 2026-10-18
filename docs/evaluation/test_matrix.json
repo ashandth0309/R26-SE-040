@@ -1,0 +1,472 @@
+{
+  "schema": 1,
+  "note": "Evidence levels: mock = scripted fakes; synthetic_logic = scripted skeletons/scores; real_model_smoke = a real model on a handful of public images (not an accuracy figure); dataset_measured = measured on a named public dataset (not the Pi camera); static_check = source-code scan; stub_only = ROS stubs; tool_only = evaluation harness exists, no data; hardware_required = cannot be measured without the robot. No area has a real-camera result.",
+  "real_camera_results": "none",
+  "areas": [
+    {
+      "id": 1,
+      "name": "Camera acquisition",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_camera.py::test_mock_camera_produces_moving_deterministic_frames",
+        "test_vision_camera.py::test_video_file_source_replays_and_loops",
+        "test_vision_camera.py::test_picamera2_adapter_with_a_fake_driver",
+        "test_vision_camera.py::test_streams_frames_with_increasing_seq_and_timestamps",
+        "test_vision_camera.py::test_disabled_at_start_never_opens_the_camera"
+      ],
+      "measured": "Logic with a mock source, a video-file source and a fake Picamera2 driver.",
+      "not_verified": "Real Pi Camera Module 2 capture, format, exposure and frame rate.",
+      "manual_procedure": "On the Pi: python -m buddy_core.vision.camera_node with backend picamera2; confirm /camera/image_raw with ros2 topic hz."
+    },
+    {
+      "id": 2,
+      "name": "Shared frame stream",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_camera.py::test_every_subscriber_gets_the_frame_and_slow_one_drops_old",
+        "test_vision_camera.py::test_latest_skips_stale_frames_and_counts_them",
+        "test_vision_camera.py::test_overload_does_not_block_the_camera",
+        "test_vision_camera.py::test_unsubscribed_consumer_stops_receiving"
+      ],
+      "measured": "Every consumer sees the same read-only frame; a slow consumer never blocks the camera.",
+      "not_verified": "Behaviour under real Pi CPU load with all stages running.",
+      "manual_procedure": "Run the vision node plus a second image subscriber on the Pi and compare frame rates."
+    },
+    {
+      "id": 3,
+      "name": "Camera disconnection",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_camera.py::test_disconnect_recovers_with_backoff",
+        "test_vision_camera.py::test_stalled_stream_is_reopened",
+        "test_vision_camera.py::test_unexpected_backend_exception_triggers_reconnect",
+        "test_vision_camera.py::test_open_failures_back_off_exponentially_and_cap",
+        "test_vision_scenarios.py::test_h_camera_failure_clears_state_and_vision_actions_stop",
+        "test_vision_scenarios.py::test_h_other_functions_keep_working_and_camera_can_recover",
+        "test_vision_scenarios.py::test_h_user_switching_the_camera_off_is_not_reported_as_failure"
+      ],
+      "measured": "Scripted failures: reconnect with backoff, vision state cleared, voice hint cleared, one report, recovery.",
+      "not_verified": "Unplugging the real ribbon cable or USB camera; a fall check in progress when the camera dies is dropped, not escalated.",
+      "manual_procedure": "With the robot idle, disconnect the camera and watch /vision/events for camera_lost, then reconnect."
+    },
+    {
+      "id": 4,
+      "name": "Multiple people",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_faces.py::test_two_people_crossing_do_not_swap_ids",
+        "test_vision_faces.py::test_two_different_people_across_frames_are_never_merged",
+        "test_vision_enroll.py::test_two_people_in_view_blocks_start_and_collection",
+        "test_vision_enroll.py::test_a_different_person_stepping_in_aborts_enrollment",
+        "test_vision_proactive.py::test_people_have_independent_cooldowns"
+      ],
+      "measured": "Tracker identity, enrollment safety and per-person cooldowns with scripted detections.",
+      "not_verified": "Crowded scenes, occlusion by other people, identity swaps on a real camera.",
+      "manual_procedure": "Record a consented clip with two people crossing; run identity_eval and count swaps."
+    },
+    {
+      "id": 5,
+      "name": "Unknown person",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_faces.py::test_empty_gallery_is_unknown_not_a_guess",
+        "test_vision_faces.py::test_enrolled_person_is_recognised_and_stranger_is_unknown",
+        "test_vision_faces.py::test_no_face_is_different_from_unknown_person",
+        "test_vision_enroll.py::test_a_stranger_is_never_enrolled_by_looking_at_them",
+        "test_vision_scenarios.py::test_g_unknown_visitor_is_not_named_enrolled_or_read"
+      ],
+      "measured": "Strangers stay unnamed, are never enrolled, never have expression read, nothing is written to disk.",
+      "not_verified": "Real false-accept rate of strangers against an enrolled gallery (no multi-person dataset in the sandbox).",
+      "manual_procedure": "Run identity_eval on a consented folder with enrolled and stranger images; read the false-accept row."
+    },
+    {
+      "id": 6,
+      "name": "Face recognition confidence",
+      "evidence": "real_model_smoke",
+      "tests": [
+        "test_vision_faces.py::test_close_to_two_people_is_uncertain_and_not_named",
+        "test_vision_faces.py::test_score_between_floor_and_accept_is_uncertain",
+        "test_vision_faces.py::test_one_noisy_frame_cannot_name_or_unname_someone",
+        "test_vision_faces.py::test_sface_same_person_scores_above_accept_under_changes",
+        "test_vision_faces.py::test_sface_two_different_public_domain_people_score_below_accept",
+        "test_vision_eval.py::test_far_frr_and_eer_by_hand",
+        "test_vision_eval.py::test_identification_counts_the_dangerous_cases_separately"
+      ],
+      "measured": "Real SFace on two public-domain people (one same-person pair, one different-person pair). That is a smoke test, not an accuracy figure.",
+      "not_verified": "Thresholds are uncalibrated; no FAR/FRR/EER measured on real data.",
+      "manual_procedure": "python -m buddy_core.vision.evaluation identity --help; run it on a consented, multi-person capture set from the Pi camera."
+    },
+    {
+      "id": 7,
+      "name": "Consent-based enrollment",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_enroll.py::test_no_person_without_consent_from_the_subject",
+        "test_vision_enroll.py::test_full_happy_path_saves_only_after_final_yes",
+        "test_vision_enroll.py::test_refusal_at_consent_saves_nothing",
+        "test_vision_enroll.py::test_consent_given_on_behalf_of_the_subject_is_refused",
+        "test_vision_enroll.py::test_decline_at_final_confirmation_discards_samples",
+        "test_vision_enroll.py::test_timeouts_end_enrollment_without_saving",
+        "test_vision_enroll.py::test_delete_person_removes_biometrics_from_the_file"
+      ],
+      "measured": "Dialogue and storage rules with scripted faces.",
+      "not_verified": "Spoken consent through the real voice engine and microphone.",
+      "manual_procedure": "Say the enrollment phrases to the robot and confirm nothing is saved until the final yes."
+    },
+    {
+      "id": 8,
+      "name": "Recognition with and without glasses",
+      "evidence": "tool_only",
+      "tests": [
+        "test_vision_eval.py::test_identity_cli_runs_on_a_folder_and_flags_small_samples"
+      ],
+      "measured": "None. The folder-based identity evaluation exists and flags small samples.",
+      "not_verified": "No glasses/no-glasses data exists in the sandbox, so nothing is measured or claimed.",
+      "manual_procedure": "Capture consented images of the same person with and without glasses; run identity_eval and compare per-condition rows."
+    },
+    {
+      "id": 9,
+      "name": "Lighting changes",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_faces.py::test_quality_flags_dark_bright_blurry_small_and_cut_faces",
+        "test_vision_faces.py::test_poor_quality_faces_are_not_embedded",
+        "test_vision_faces.py::test_sface_same_person_scores_above_accept_under_changes",
+        "test_vision_expression.py::test_conditions_flag_lighting_pose_and_possible_occlusion",
+        "test_vision_expression.py::test_poor_conditions_never_feed_the_smoother"
+      ],
+      "measured": "Synthetic brightness/contrast changes and quality gates. Poor frames are excluded from recognition and expression.",
+      "not_verified": "Real room lighting, backlight, night, IR; accuracy per lighting condition.",
+      "manual_procedure": "Capture the same consented person in bright, dim and backlit rooms and run identity_eval per folder."
+    },
+    {
+      "id": 10,
+      "name": "Head-angle changes",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_faces.py::test_head_turn_is_flagged_from_landmarks",
+        "test_vision_enroll.py::test_needs_variety_of_poses_unless_target_reached",
+        "test_vision_expression.py::test_conditions_flag_lighting_pose_and_possible_occlusion"
+      ],
+      "measured": "Landmark-based head-turn flag and pose-variety requirement at enrollment.",
+      "not_verified": "Recognition and expression accuracy at real yaw/pitch angles.",
+      "manual_procedure": "Capture consented images at 0, 30, 60 degrees yaw and compare scores."
+    },
+    {
+      "id": 11,
+      "name": "Facial-expression smoothing",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_expression.py::test_nothing_is_claimed_from_too_few_frames",
+        "test_vision_expression.py::test_steady_smile_becomes_confirmed_positive_after_time",
+        "test_vision_expression.py::test_one_odd_frame_does_not_change_the_call",
+        "test_vision_expression.py::test_sustained_change_replaces_the_call_only_after_a_hold",
+        "test_vision_expression.py::test_stale_track_resets_instead_of_remembering_an_old_mood",
+        "test_vision_expression.py::test_flickering_between_expressions_is_rate_limited"
+      ],
+      "measured": "Temporal smoothing logic on scripted score sequences.",
+      "not_verified": "Behaviour on a real face video; the time constants were chosen, not tuned on data.",
+      "manual_procedure": "Record a consented clip of changing expressions and inspect the smoothed state timeline."
+    },
+    {
+      "id": 12,
+      "name": "Emotion prediction uncertainty",
+      "evidence": "dataset_measured",
+      "tests": [
+        "test_vision_expression.py::test_competing_strong_expressions_are_unknown_not_a_guess",
+        "test_vision_expression.py::test_flat_scores_never_become_a_negative_call",
+        "test_vision_expression.py::test_ece_is_zero_when_confidence_matches_accuracy",
+        "test_vision_expression.py::test_temperature_fit_softens_an_overconfident_model",
+        "test_vision_expression.py::test_summarise_counts_neutral_called_negative"
+      ],
+      "measured": "FER2013 test set (cross-dataset, NOT the Pi camera): zoo model 55.5% accuracy, macro-F1 0.445, ECE 0.32 (0.027 after temperature scaling). Confusion matrices and per-class precision/recall in docs/evaluation/test_matrix.md.",
+      "not_verified": "Not representative of the Pi camera, home lighting or this household. Skin tone, age, glasses and occlusion are not labelled in FER2013, so none of those slices were evaluated.",
+      "manual_procedure": "python -m buddy_core.vision.expression_eval --help; run on consented, labelled captures from the robot."
+    },
+    {
+      "id": 13,
+      "name": "Audio/visual disagreement",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_multimodal.py::test_person_says_sad_while_smiling_their_words_win",
+        "test_vision_multimodal.py::test_face_and_voice_disagree_gives_conflict_with_no_label",
+        "test_vision_multimodal.py::test_face_alone_is_weak_and_needs_confirmation",
+        "test_vision_multimodal.py::test_no_combination_exceeds_its_cap",
+        "test_vision_multimodal.py::test_voice_engine_does_not_act_on_a_face_hint_alone",
+        "test_vision_multimodal.py::test_voice_engine_uses_face_only_to_support_a_stated_feeling"
+      ],
+      "measured": "Fusion rules tested against the real voice EmotionFusion class.",
+      "not_verified": "Real voice features from a real microphone together with a real face.",
+      "manual_procedure": "Say 'I'm fine' with a neutral face and with a frown, with the robot running; confirm the stated words win."
+    },
+    {
+      "id": 14,
+      "name": "Repeated-event suppression",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_expression.py::test_constant_negative_expression_gives_one_event_not_hundreds",
+        "test_vision_expression.py::test_neutral_baseline_is_not_news",
+        "test_vision_enroll.py::test_greets_once_after_absence_and_not_every_frame",
+        "test_vision_gestures.py::test_cooldown_prevents_repeat_events",
+        "test_vision_fall.py::test_alert_cooldown_prevents_repeats",
+        "test_vision_node_core.py::test_greeting_is_marked_so_it_is_not_repeated"
+      ],
+      "measured": "Greeting, expression, gesture and fall-alert repetition limits.",
+      "not_verified": "Long real-world sessions.",
+      "manual_procedure": "Leave the robot running with a person in view for 30 minutes and count events."
+    },
+    {
+      "id": 15,
+      "name": "Proactive interaction cooldown",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_proactive.py::test_decline_sets_long_cooldown_and_no_repeat",
+        "test_vision_proactive.py::test_second_decline_same_day_waits_longer",
+        "test_vision_proactive.py::test_daily_limit_and_gap",
+        "test_vision_proactive.py::test_cooldown_survives_a_new_manager_via_backend",
+        "test_vision_proactive.py::test_never_offers_when_blocked",
+        "test_vision_scenarios.py::test_f_decline_is_respected_for_the_whole_cooldown"
+      ],
+      "measured": "Cooldown, daily limit and persistence across restarts.",
+      "not_verified": "Whether the chosen cooldowns feel right to real users.",
+      "manual_procedure": "A user study with consenting participants."
+    },
+    {
+      "id": 16,
+      "name": "User refusal",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_proactive.py::test_silence_counts_as_no",
+        "test_vision_proactive.py::test_stop_asking_calls_back_and_blocks_for_long",
+        "test_vision_proactive.py::test_space_request_uses_space_cooldown",
+        "test_vision_proactive.py::test_unclear_answer_is_not_acceptance",
+        "test_vision_scenarios.py::test_f_stop_asking_is_remembered_for_a_long_time"
+      ],
+      "measured": "Refusal phrases, silence and 'stop asking' handling.",
+      "not_verified": "Speech recognition of refusals on real audio.",
+      "manual_procedure": "Say no / leave me alone / stop asking to the running robot."
+    },
+    {
+      "id": 17,
+      "name": "Object recognition",
+      "evidence": "real_model_smoke",
+      "tests": [
+        "test_vision_objects.py::test_real_detector_finds_cup_on_sample_image",
+        "test_vision_objects.py::test_real_detector_removes_people_by_default",
+        "test_vision_objects.py::test_stabilizer_needs_repeated_sightings",
+        "test_vision_objects.py::test_flicker_never_confirms",
+        "test_vision_objects.py::test_score_image_counts_tp_fp_fn_and_confusion",
+        "test_vision_objects.py::test_evaluate_folder_with_scripted_detector",
+        "test_vision_object_teach.py::test_real_embedder_separates_same_and_different_objects",
+        "test_vision_object_teach.py::test_recognizer_match_uncertain_unknown_and_class_hint"
+      ],
+      "measured": "Real NanoDet on one sample image. No home-object dataset exists here. A false 'sheep' appeared on a microscope photo, so false positives are real.",
+      "not_verified": "Detection and taught-object precision/recall in a real home. Match thresholds are uncalibrated.",
+      "manual_procedure": "python -m buddy_core.vision.object_eval --help on a labelled folder (labels.json) of home objects."
+    },
+    {
+      "id": 18,
+      "name": "New object enrollment",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_object_teach.py::test_full_teach_flow_stores_only_after_yes",
+        "test_vision_object_teach.py::test_saying_no_discards_everything",
+        "test_vision_object_teach.py::test_face_in_crop_refuses_to_learn",
+        "test_vision_object_teach.py::test_duplicate_object_is_detected_and_can_add_samples",
+        "test_vision_object_teach.py::test_correction_blocks_that_look_for_that_object",
+        "test_vision_scenarios.py::test_d_teach_pen_stores_only_after_yes_then_recognises_with_confidence",
+        "test_vision_scenarios.py::test_d_declining_the_save_stores_nothing"
+      ],
+      "measured": "Teach, confirm, duplicate and correction flows with a stand-in embedder.",
+      "not_verified": "Teaching with a real hand-held object and the real MobileNetV2 features on the Pi.",
+      "manual_procedure": "Teach three household objects, then ask 'what is this?' under changed lighting and report hits and misses."
+    },
+    {
+      "id": 19,
+      "name": "Object memory retrieval",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_object_memory.py::test_off_by_default_records_and_answers_nothing",
+        "test_vision_object_memory.py::test_where_is_reports_place_and_age_without_promising",
+        "test_vision_object_memory.py::test_old_sighting_is_marked_possibly_moved",
+        "test_vision_object_memory.py::test_people_and_unknown_kinds_are_never_recorded",
+        "test_vision_object_memory.py::test_forget_one_all_purge_and_disable",
+        "test_vision_object_memory.py::test_scene_memory_teach_and_recognise"
+      ],
+      "measured": "Memory rules and honest 'last seen' wording. Off by default.",
+      "not_verified": "Accuracy of place recognition in a real home.",
+      "manual_procedure": "Enable object memory, move an object, and ask where it is."
+    },
+    {
+      "id": 20,
+      "name": "Fall detection",
+      "evidence": "synthetic_logic",
+      "tests": [
+        "test_vision_fall.py::test_rapid_fall_asks_then_alerts_when_nobody_answers",
+        "test_vision_fall.py::test_person_says_ok_cancels_and_no_alert_follows",
+        "test_vision_fall.py::test_help_request_alerts_immediately",
+        "test_vision_fall.py::test_view_dropout_while_lying_keeps_the_clock_running",
+        "test_vision_fall.py::test_slow_or_jittery_pose_rate_still_confirms_lying",
+        "test_vision_scenarios.py::test_e_fall_asks_first_and_only_alerts_without_an_answer",
+        "test_vision_scenarios.py::test_e_silence_escalates_through_the_configured_security_event"
+      ],
+      "measured": "Logic on scripted skeletons only. No fall recording, real or staged, exists here.",
+      "not_verified": "Sensitivity to real falls, thresholds, pose-model accuracy on lying people. Not a medical or safety device.",
+      "manual_procedure": "Staged, supervised soft-mat falls with consent, recorded and replayed through pose + FallDetector."
+    },
+    {
+      "id": 21,
+      "name": "False fall detections",
+      "evidence": "synthetic_logic",
+      "tests": [
+        "test_vision_fall.py::test_slow_lowering_is_resting_not_a_fall",
+        "test_vision_fall.py::test_quickly_sitting_down_is_not_a_fall",
+        "test_vision_fall.py::test_bending_over_and_back_is_not_a_fall",
+        "test_vision_fall.py::test_person_first_seen_lying_is_not_called_a_fall",
+        "test_vision_fall.py::test_small_drop_is_not_enough",
+        "test_vision_fall.py::test_rapid_arrival_on_furniture_waits_longer",
+        "test_vision_fall.py::test_vanishing_during_fast_descent_is_flagged_but_never_alerts",
+        "test_vision_activity.py::test_labels_never_include_sleeping_or_medical_words"
+      ],
+      "measured": "Scripted look-alike movements. The real false-alarm rate is unmeasured.",
+      "not_verified": "Pets, laundry, yoga, napping on a sofa, shadows, real pose errors.",
+      "manual_procedure": "Run 24 h of consented ordinary home video through the pipeline and count fall_suspected events."
+    },
+    {
+      "id": 22,
+      "name": "Gesture recognition",
+      "evidence": "synthetic_logic",
+      "tests": [
+        "test_vision_gestures.py::test_raised_hand_needs_hold_and_reports_side",
+        "test_vision_gestures.py::test_brief_arm_lift_is_ignored",
+        "test_vision_gestures.py::test_wave_detected_by_side_to_side_motion",
+        "test_vision_gestures.py::test_slow_drift_is_not_a_wave",
+        "test_vision_gestures.py::test_pointing_needs_straight_steady_extended_arm",
+        "test_vision_gestures.py::test_gestures_have_no_motion_fields"
+      ],
+      "measured": "Whole-arm gestures on scripted skeletons. Hand-shape gestures are not implemented.",
+      "not_verified": "Real waving, pointing, clothing, distance, pose-model error.",
+      "manual_procedure": "Record consented volunteers doing each gesture and rest; report per-gesture precision/recall."
+    },
+    {
+      "id": 23,
+      "name": "Person-follow request cancellation",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_follow.py::test_stop_conditions",
+        "test_vision_follow.py::test_max_duration_and_navigation_degradation_and_end",
+        "test_vision_follow.py::test_low_confidence_target_counts_as_lost",
+        "test_vision_approach.py::test_cancel_conditions",
+        "test_vision_approach.py::test_person_lost_timeout_and_degraded_cancel"
+      ],
+      "measured": "Cancellation logic against a mock navigation adapter.",
+      "not_verified": "The real navigation stack. Follow and approach are not wired to ROS.",
+      "manual_procedure": "After navigation is validated: wheels-off-ground test, then supervised tests with an emergency stop in hand."
+    },
+    {
+      "id": 24,
+      "name": "Unsafe approach refusal",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_approach.py::test_default_hardware_capabilities_refuse_everything",
+        "test_vision_approach.py::test_each_missing_capability_blocks",
+        "test_vision_approach.py::test_emergency_stop_blocks",
+        "test_vision_approach.py::test_request_refusals",
+        "test_vision_approach.py::test_stop_distance_never_below_minimum",
+        "test_vision_follow.py::test_default_config_refuses_on_hardware",
+        "test_vision_follow.py::test_default_navigation_capabilities_refuse_even_if_enabled",
+        "test_vision_follow.py::test_each_capability_is_required"
+      ],
+      "measured": "With real-hardware capabilities (no distance sensor), every request is refused.",
+      "not_verified": "Safe approach itself. Buddy cannot be said to approach people safely until navigation and distance safety are validated.",
+      "manual_procedure": "Not applicable until navigation validation exists."
+    },
+    {
+      "id": 25,
+      "name": "Loss of target tracking",
+      "evidence": "mock",
+      "tests": [
+        "test_vision_follow.py::test_never_switches_to_another_person",
+        "test_vision_follow.py::test_track_id_switch_is_followed_only_by_matching_identity",
+        "test_vision_follow.py::test_low_confidence_target_counts_as_lost",
+        "test_vision_approach.py::test_person_lost_timeout_and_degraded_cancel",
+        "test_vision_faces.py::test_brief_occlusion_keeps_id_and_marks_lost",
+        "test_vision_faces.py::test_person_who_leaves_for_long_gets_a_new_session_id"
+      ],
+      "measured": "Lost-target timeouts and identity lock with scripted tracks.",
+      "not_verified": "Real occlusion and re-identification.",
+      "manual_procedure": "Walk behind furniture on camera and review the track log."
+    },
+    {
+      "id": 26,
+      "name": "ROS 2 topic compatibility",
+      "evidence": "stub_only",
+      "tests": [
+        "test_vision_vision_node.py::test_interfaces_match_the_documented_names",
+        "test_vision_vision_node.py::test_services_fill_strict_responses",
+        "test_vision_vision_node.py::test_fall_alert_reaches_security_topic_and_events",
+        "test_vision_vision_node.py::test_node_has_no_motion_or_navigation_interface",
+        "test_vision_multimodal.py::test_message_fields_match_the_real_message_definition",
+        "test_vision_node_core.py::test_image_conversion"
+      ],
+      "measured": "Stubs generated from the repo's .msg/.srv files with strict fields. rclpy was never available.",
+      "not_verified": "Everything under real ROS 2 (QoS, build, colcon, discovery). Topic names other than /emotion/observation are assumptions.",
+      "manual_procedure": "colcon build; ros2 run buddy_core vision_node; ros2 topic echo each topic; ros2 service call each service."
+    },
+    {
+      "id": 27,
+      "name": "Camera coexistence with voice integration",
+      "evidence": "stub_only",
+      "tests": [
+        "test_vision_node.py::test_node_interfaces_match_the_camera_contract",
+        "test_vision_node.py::test_refuses_second_camera_owner",
+        "test_vision_camera.py::test_second_owner_is_refused",
+        "test_vision_scenarios.py::test_h_vision_node_has_no_voice_or_motion_dependency",
+        "test_vision_multimodal.py::test_voice_engine_does_not_act_on_a_face_hint_alone"
+      ],
+      "measured": "One camera owner enforced by node name and lock file; vision node has no dependency on voice or motion code.",
+      "not_verified": "Camera node vs Yohan's camera_node (same topic and node name) was never run together; voice and vision running together on the Pi.",
+      "manual_procedure": "Start voice_companion and vision_node together; say stop while a person is in view; check both stay responsive."
+    },
+    {
+      "id": 28,
+      "name": "Offline operation",
+      "evidence": "static_check",
+      "tests": [
+        "test_vision_models.py::test_real_manifest_is_pinned_and_licensed",
+        "test_vision_models.py::test_tampered_file_is_rejected",
+        "test_vision_privacy.py::test_vision_package_never_imports_motion_or_audio_output",
+        "test_vision_matrix.py::test_runtime_vision_code_has_no_network_imports"
+      ],
+      "measured": "Only the model download tool (models.py) imports a network library. Models are checked by SHA-256 from local files.",
+      "not_verified": "A full run with the network physically disconnected on the Pi.",
+      "manual_procedure": "Pull the network cable, start the vision node, and confirm all stages load from local files."
+    },
+    {
+      "id": 29,
+      "name": "Raspberry Pi CPU and memory limits",
+      "evidence": "hardware_required",
+      "tests": [
+        "test_vision_benchmark.py::test_machine_info_never_claims_a_pi_here",
+        "test_vision_benchmark.py::test_targets_are_flagged_when_missed",
+        "test_vision_benchmark.py::test_short_end_to_end_run_produces_a_labelled_report",
+        "test_vision_context.py::test_frame_budget_skips_optional_stages_but_never_faces",
+        "test_vision_context.py::test_timings_are_measured_not_invented"
+      ],
+      "measured": "Sandbox x86 numbers exist and are labelled is_raspberry_pi=false. No Pi number exists.",
+      "not_verified": "All Pi CPU, memory, temperature and FPS figures.",
+      "manual_procedure": "python -m buddy_core.vision.benchmark --out benchmark_results/pi.json on the Pi; only a file with machine.is_raspberry_pi true counts."
+    },
+    {
+      "id": 30,
+      "name": "End-to-end conversational latency",
+      "evidence": "hardware_required",
+      "tests": [
+        "test_vision_scenarios.py::test_a_sustained_subdued_face_leads_to_a_question_then_conversation"
+      ],
+      "measured": "The data flow works in order with fakes. No latency was measured.",
+      "not_verified": "Camera to spoken reply latency, which also depends on the voice engine and speaker.",
+      "manual_procedure": "Time from a person's reply to speech start on the Pi, over 20 trials, reporting median and worst case."
+    }
+  ]
+}
