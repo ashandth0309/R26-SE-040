@@ -76,10 +76,13 @@ class FaceTrackingPipeline:
     def __init__(self, detector: FaceDetector,
                  embedder: FaceEmbedder | None = None,
                  gallery: Callable[[], dict[str, np.ndarray]] | None = None,
-                 config: PipelineConfig | None = None) -> None:
+                 config: PipelineConfig | None = None,
+                 negatives: Callable[[], dict[str, np.ndarray]] | None
+                 = None) -> None:
         self.cfg = config or PipelineConfig()
         self.detector, self.embedder = detector, embedder
         self.gallery = gallery or (lambda: {})
+        self.negatives = negatives or (lambda: {})
         # A face is only "hidden" after it has been missed for clearly
         # longer than the gap between detection passes.
         self.cfg.tracker.lost_after_s = max(
@@ -140,7 +143,8 @@ class FaceTrackingPipeline:
             if emb is None:
                 continue
 
-            ident.add(match(emb, gallery, self.cfg.match)
+            ident.add(match(emb, gallery, self.cfg.match,
+                            self.negatives())
                       if gallery else MatchResult(
                           IdentityState.UNKNOWN, None, None, None, None),
                       now)

@@ -35,6 +35,7 @@ class MatchConfig:
     floor: float = 0.363     # below this nobody is even a candidate
     margin: float = 0.08     # best must beat the runner-up person by this
     top_k: int = 3           # templates averaged per person
+    negative_sim: float = 0.70  # probe this close to a 'not X' face
 
 
 @dataclass(frozen=True)
@@ -57,13 +58,29 @@ def person_score(templates: np.ndarray, probe: np.ndarray,
 
 
 def match(probe: np.ndarray, gallery: dict[str, np.ndarray],
-          cfg: MatchConfig = MatchConfig()) -> MatchResult:
-    """Compare one embedding with every enrolled person."""
+          cfg: MatchConfig = MatchConfig(),
+          negatives: dict[str, np.ndarray] | None = None) -> MatchResult:
+    """Compare one embedding with every enrolled person.
+
+    ``negatives`` holds faces the user said are NOT a given person; a probe
+    very close to one of them can never be matched to that person.
+    """
 
     if not gallery:
         return UNKNOWN_RESULT
 
     probe = l2_normalize(probe)
+
+    if negatives:
+        gallery = {
+            pid: t for pid, t in gallery.items()
+            if pid not in negatives or
+            float(np.max(np.asarray(negatives[pid], np.float32).reshape(
+                -1, probe.size) @ probe)) < cfg.negative_sim}
+
+        if not gallery:
+            return UNKNOWN_RESULT
+
     scores = {pid: person_score(np.asarray(t, np.float32).reshape(
         -1, probe.size), probe, cfg.top_k) for pid, t in gallery.items()
         if len(t)}
