@@ -94,6 +94,10 @@ def test_pointing_needs_straight_steady_extended_arm():
     gr2 = GestureRecognizer()
     assert "pointing" not in names(run(gr2, [(i / 10, bent)
                                              for i in range(15)]))
+    crooked = arms(REST[0], (470, 170), rel=(380, 250))   # far but bent
+    gr4 = GestureRecognizer()
+    assert "pointing" not in names(run(gr4, [(i / 10, crooked)
+                                             for i in range(15)]))
     short = arms(REST[0], (350, 170), rel=(340, 168))
     gr3 = GestureRecognizer()
     assert "pointing" not in names(run(gr3, [(i / 10, short)
