@@ -33,6 +33,7 @@ setup(
         'obstacle_sensor = buddy_core.sensors.obstacle_node:main',
         'safety_supervisor = buddy_core.safety.safety_node:main',
         'motor_executor = buddy_core.motors.motor_node:main',
+        'voice_companion = buddy_core.voice.voice_node:main',
     ],
 },
 )

@@ -7,9 +7,13 @@ from pathlib import Path
 from typing import Any
 
 from buddy_core.voice.audio_manager import ManagerConfig
+from buddy_core.voice.backchannel import BackchannelConfig
+from buddy_core.voice.command_router import RouterConfig
 from buddy_core.voice.echo import EchoConfig
 from buddy_core.voice.speaker_manager import SpeakerConfig
+from buddy_core.voice.turn_manager import TurnConfig
 from buddy_core.voice.vad import VadConfig
+from buddy_core.voice.voice_engine import EngineConfig
 
 
 @dataclass
@@ -23,8 +27,56 @@ class AudioSettings:
 
 
 @dataclass
+class ModelSettings:
+    """Model locations.  Binaries are never committed; set on the robot."""
+
+    vosk_model_path: str = ""
+    piper_model_path: str = ""
+    aplay_device: str | None = None
+
+
+@dataclass
+class MemorySettings:
+    """Where companion memory lives."""
+
+    enabled: bool = True
+    db_path: str = "~/.buddy/companion.db"
+    export_dir: str = "~/.buddy/exports"
+
+
+@dataclass
+class OnlineSettings:
+    """Online features.  Everything is off by default."""
+
+    cloud_enabled: bool = False
+    local_llm: bool = False
+    local_llm_model: str = "llama3.2:1b"
+    local_llm_url: str = "http://127.0.0.1:11434"
+    cloud_base_url: str = ""
+    cloud_model: str = ""
+    cloud_api_key_env: str = "BUDDY_LLM_API_KEY"
+
+
+@dataclass
+class FeatureSettings:
+    """Feature switches the profiles set."""
+
+    emotion_audio: bool = True
+    backchannel: bool = True
+    proactive: bool = True
+
+
+@dataclass
+class NavigationSettings:
+    """Navigation hand-off.  Off until the navigation package is merged."""
+
+    enabled: bool = False
+    locations: list[str] = field(default_factory=list)
+
+
+@dataclass
 class VoiceSettings:
-    """All Phase 2 settings in one place."""
+    """All voice companion settings in one place."""
 
     profile: str = "balanced"
     audio: AudioSettings = field(default_factory=AudioSettings)
@@ -32,6 +84,17 @@ class VoiceSettings:
     mics: ManagerConfig = field(default_factory=ManagerConfig)
     speaker: SpeakerConfig = field(default_factory=SpeakerConfig)
     echo: EchoConfig = field(default_factory=EchoConfig)
+    models: ModelSettings = field(default_factory=ModelSettings)
+    memory: MemorySettings = field(default_factory=MemorySettings)
+    online: OnlineSettings = field(default_factory=OnlineSettings)
+    features: FeatureSettings = field(default_factory=FeatureSettings)
+    navigation: NavigationSettings = field(
+        default_factory=NavigationSettings)
+    router: RouterConfig = field(default_factory=RouterConfig)
+    turn: TurnConfig = field(default_factory=TurnConfig)
+    backchannel: BackchannelConfig = field(default_factory=BackchannelConfig)
+    engine: EngineConfig = field(default_factory=EngineConfig)
+    personality_path: str = ""
 
 
 def _apply(target: Any, values: dict) -> Any:
@@ -91,5 +154,43 @@ def load_settings(path: str | Path | None = None) -> VoiceSettings:
     settings.mics = _apply(settings.mics, data.get("microphones", {}))
     settings.speaker = _apply(settings.speaker, data.get("speaker", {}))
     settings.echo = _apply(settings.echo, data.get("echo", {}))
+
+    for name in ("models", "memory", "online", "features", "navigation",
+                 "router", "turn", "backchannel", "engine"):
+        setattr(settings, name,
+                _apply(getattr(settings, name), data.get(name, {})))
+
+    settings.personality_path = str(data.get("personality_path", ""))
+
+    return apply_profile(settings)
+
+
+PROFILES = ("lightweight", "balanced", "enhanced")
+
+
+def apply_profile(settings: VoiceSettings) -> VoiceSettings:
+    """Set feature switches for the chosen profile.
+
+    * lightweight: fewest CPU-heavy features.
+    * balanced: local features, no language model.
+    * enhanced: balanced plus the local language model if configured.
+
+    CPU and memory cost of each has NOT been measured on the Pi.
+    """
+
+    profile = settings.profile
+
+    if profile == "lightweight":
+        settings.features.emotion_audio = False
+        settings.features.backchannel = False
+        settings.features.proactive = False
+        settings.online.local_llm = False
+        settings.online.cloud_enabled = False
+    elif profile == "enhanced":
+        settings.features.emotion_audio = True
+        settings.features.backchannel = True
+        settings.features.proactive = True
+    elif profile != "balanced":
+        settings.profile = "balanced"
 
     return settings

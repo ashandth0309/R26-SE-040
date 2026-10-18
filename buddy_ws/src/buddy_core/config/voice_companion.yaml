@@ -26,3 +26,42 @@ speaker:
 echo:
   guard_after_s: 0.35
   barge_in_enabled: true
+
+models:                  # set on the robot; binaries are never committed
+  vosk_model_path: ""
+  piper_model_path: ""
+  aplay_device: null     # null = derive from the discovered output device
+
+memory:
+  enabled: true
+  db_path: "~/.buddy/companion.db"
+  export_dir: "~/.buddy/exports"
+
+features:                # profile "lightweight" turns these off
+  emotion_audio: true
+  backchannel: true
+  proactive: true
+
+online:                  # everything here is OFF by default
+  cloud_enabled: false
+  local_llm: false
+  local_llm_model: "llama3.2:1b"
+  local_llm_url: "http://127.0.0.1:11434"
+  cloud_base_url: ""     # OpenAI-compatible endpoint; key comes from env
+  cloud_model: ""
+  cloud_api_key_env: "BUDDY_LLM_API_KEY"
+
+navigation:              # enable only after the navigation package merges
+  enabled: false
+  locations: []
+
+router:
+  move_speed: 0.20
+  turn_speed: 0.60
+  max_motion_s: 8.0
+  min_motion_confidence: 0.60
+
+turn:
+  awake_timeout_s: 60.0
+
+personality_path: ""

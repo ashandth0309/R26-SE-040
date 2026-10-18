@@ -209,6 +209,7 @@ class CommandRouter:
         self._active: _Active | None = None
         self._nav_goal_active = False
         self.tracked: dict[str, TrackedCommand] = {}
+        self.inhibited = False
         self.last_stop_time: float | None = None
         self.publish_errors = 0
 
@@ -231,6 +232,18 @@ class CommandRouter:
         """The motion currently being published."""
 
         return self._active.command if self._active else None
+
+    def set_inhibited(self, inhibited: bool) -> None:
+        """Outside veto (emergency stop active): no new motion.
+
+        Stop remains possible.  Clearing the veto does not resume
+        anything by itself.
+        """
+
+        if inhibited and not self.inhibited:
+            self.stop("external inhibit")
+
+        self.inhibited = inhibited
 
     def set_motion_enabled(self, enabled: bool) -> None:
         """Turn voice motion on or off (stop is always possible)."""
@@ -359,6 +372,13 @@ class CommandRouter:
     # ----- motion -----
 
     def _motion(self, kind: VoiceCommand) -> RouteResult:
+        if self.inhibited:
+            return RouteResult(
+                RouteStatus.MOTION_DISABLED,
+                ack="I can't move right now.",
+                reason="external inhibit",
+            )
+
         if not self.config.motion_enabled:
             return RouteResult(
                 RouteStatus.MOTION_DISABLED,
@@ -429,7 +449,7 @@ class CommandRouter:
                 reason="navigation disabled",
             )
 
-        if not self.config.motion_enabled and kind in (
+        if (not self.config.motion_enabled or self.inhibited) and kind in (
             VoiceCommand.PATROL, VoiceCommand.GO_TO, VoiceCommand.RESUME,
         ):
             return RouteResult(

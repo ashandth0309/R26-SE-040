@@ -603,3 +603,31 @@ def build_sources(
         )
 
     return sources
+
+
+class FrameChunker:
+    """Re-block audio into exact fixed-size frames for the VAD."""
+
+    def __init__(self, size: int = 320) -> None:
+        self.size = size
+        self._carry = np.zeros(0, np.int16)
+
+    def push(self, samples: np.ndarray) -> list[np.ndarray]:
+        """Add samples; return every complete frame now available."""
+
+        if self._carry.size:
+            samples = np.concatenate([self._carry, samples])
+
+        count = samples.size // self.size
+        frames = [
+            samples[i * self.size:(i + 1) * self.size].copy()
+            for i in range(count)
+        ]
+        self._carry = samples[count * self.size:].copy()
+
+        return frames
+
+    def clear(self) -> None:
+        """Drop buffered audio."""
+
+        self._carry = np.zeros(0, np.int16)

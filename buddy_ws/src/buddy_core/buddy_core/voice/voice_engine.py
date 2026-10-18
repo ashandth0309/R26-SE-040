@@ -111,6 +111,8 @@ class VoiceEngine:
         style_provider: Callable[[], SpeechStyle] | None = None,
         executor=None,
         action_gate: ActionGate | None = None,
+        reply_filter: Callable[[str], str] | None = None,
+        command_observer: Callable | None = None,
     ) -> None:
         self.vad = vad
         self.wake_rec = wake_rec
@@ -131,6 +133,8 @@ class VoiceEngine:
         self.emotion_hint = emotion_hint
         self.utterance_observer = utterance_observer
         self.style_provider = style_provider
+        self.reply_filter = reply_filter
+        self.command_observer = command_observer
         self.executor = executor or InlineExecutor()
         self.action_gate = action_gate or ActionGate(clock=clock)
         self._gen = 0
@@ -162,6 +166,12 @@ class VoiceEngine:
         turn.on_transition = self._on_transition
 
     # ----- bookkeeping -----
+
+    @property
+    def last_speech_time(self) -> float:
+        """Clock time of the most recent speech frame heard."""
+
+        return self._last_speech
 
     def _log(self, kind: str, detail: str = "") -> None:
         self.events.append((self._clock(), kind, detail))
@@ -553,6 +563,12 @@ class VoiceEngine:
                 confidence=source.confidence,
             )
 
+            if self.command_observer is not None:
+                try:
+                    self.command_observer(command, result, source)
+                except Exception:
+                    self.errors += 1
+
             if self._speak_route_result(result):
                 return
 
@@ -647,6 +663,10 @@ class VoiceEngine:
             return
 
         text = reply.text
+
+        if self.reply_filter and reply.source not in ("safety", "control"):
+            text = self.reply_filter(text)
+
         question = self.action_gate.propose(reply.suggested_action)
 
         if question:
