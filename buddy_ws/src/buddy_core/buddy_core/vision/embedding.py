@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import zlib
 from typing import Protocol
 
 import cv2
@@ -64,6 +65,7 @@ class HashEmbedder:
     def embed(self, image, det):
         self.calls += 1
         label = self.labels.get(int(round(det.x)), f"anon{int(det.x)}")
-        rng = np.random.default_rng(abs(hash(label)) % (2 ** 32))
+        seed = zlib.crc32(label.encode())     # stable across processes
+        rng = np.random.default_rng(seed)
 
         return l2_normalize(rng.standard_normal(self.dim))
