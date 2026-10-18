@@ -56,6 +56,8 @@ DEFAULT_SETTINGS = {
     "proactive": False,          # may Buddy start check-ins
     "quiet": False,              # prefers little interaction
     "recognition": True,         # False: do not match this person at all
+    "expression": False,         # may Buddy read this person's expression
+    "approach": False,           # may Buddy be asked to come to this person
     "preferred_greeting": "",
     "max_checkins_per_day": 2,
 }
