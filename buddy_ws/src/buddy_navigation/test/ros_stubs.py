@@ -449,10 +449,12 @@ def install(extra_messages=()) -> None:
 def _add_extra_messages(extra_messages) -> None:
     for full_name in extra_messages:
         package, name = full_name.split("/")
-        module = sys.modules.setdefault(
-            f"{package}.msg",
-            _module(f"{package}.msg"),
+        # Create modules only when missing: ``setdefault(key, _module(..))``
+        # would build (and register) a fresh module on every iteration and
+        # drop the messages added before it.
+        module = sys.modules.get(f"{package}.msg") or _module(
+            f"{package}.msg"
         )
         setattr(module, name, message_class(full_name))
-        sys.modules.setdefault(package, _module(package))
-        setattr(sys.modules[package], "msg", module)
+        parent = sys.modules.get(package) or _module(package)
+        setattr(parent, "msg", module)

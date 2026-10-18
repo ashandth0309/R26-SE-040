@@ -31,6 +31,9 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'navigation_node = buddy_navigation.nodes.navigation_node:main',
+            'camera_node = buddy_navigation.nodes.camera_node:main',
+            'sim_node = buddy_navigation.nodes.sim_node:main',
         ],
     },
 )
