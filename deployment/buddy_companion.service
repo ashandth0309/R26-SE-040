@@ -1,0 +1,29 @@
+# BUDDY with the voice companion engine. NOT enabled by default and NOT yet
+# tested on the robot. Do not run together with buddy.service.
+[Unit]
+Description=BUDDY Robot with Voice Companion Engine
+After=network.target sound.target
+Wants=network.target
+Conflicts=buddy.service
+
+[Service]
+Type=simple
+User=ashandth
+Group=ashandth
+WorkingDirectory=/home/ashandth/R26-SE-040
+
+# Model locations: keep the binaries outside git.
+Environment=BUDDY_VOSK_MODEL=/home/ashandth/models/vosk-model-small-en-us-0.15
+Environment=BUDDY_PIPER_MODEL=/home/ashandth/models/piper/en_US-lessac-medium.onnx
+Environment=HOME=/home/ashandth
+Environment=PYTHONUNBUFFERED=1
+# Optional cloud key goes in an EnvironmentFile with mode 600, never here:
+# EnvironmentFile=-/home/ashandth/.buddy/cloud.env
+
+ExecStart=/home/ashandth/R26-SE-040/scripts/start_buddy_companion.sh
+
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

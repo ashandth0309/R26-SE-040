@@ -187,3 +187,16 @@ mobile/buddy_app/android/build/
 
 mobile/buddy_app/ios/Pods/
 mobile/buddy_app/ios/build/
+
+
+# ============================================================
+# Voice companion runtime files (never commit models or user data)
+# ============================================================
+
+*.onnx
+*.onnx.json
+*.gguf
+vosk-model-*/
+.buddy/
+buddy_exports/
+benchmark_results/

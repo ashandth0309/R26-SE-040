@@ -1,0 +1,15 @@
+# Python packages for the voice companion engine (Raspberry Pi 4, ARM64).
+# Versions are NOT pinned: pin them after the first verified Pi install.
+# System packages first:
+#   sudo apt install portaudio19-dev libasound2-dev alsa-utils
+numpy
+pyyaml
+sounddevice
+vosk
+piper-tts
+
+# Optional
+scipy            # better resampling; a numpy fallback exists
+scikit-learn     # only for the existing ml_brain intent model
+webrtcvad        # alternative speech detector (VadConfig.use_webrtc)
+speexdsp         # echo cancellation adapter (unverified)
