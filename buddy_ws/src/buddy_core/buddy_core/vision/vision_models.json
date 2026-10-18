@@ -65,6 +65,14 @@
       "bytes": 4099621,
       "licence": "Apache-2.0",
       "description": "MediaPipe hand landmarks"
+    },
+    "object_embedder_source": {
+      "file": "image_classification_mobilenetv2_2022apr.onnx",
+      "url": "https://media.githubusercontent.com/media/opencv/opencv_zoo/47534e27c9851bb1128ccc0102f1145e27f23f98/models/image_classification_mobilenet/image_classification_mobilenetv2_2022apr.onnx",
+      "sha256": "c0c3f76d93fa3fd6580652a45618618a220fced18babf65774ed169de0432ad5",
+      "bytes": 13964571,
+      "licence": "Apache-2.0",
+      "description": "MobileNetV2 ImageNet classifier; cut at global pooling to give 1280-d features for taught objects"
     }
   }
 }
