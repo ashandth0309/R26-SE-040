@@ -301,7 +301,10 @@ class ObstacleAssessor:
                     bx = math.cos(phi) * px + math.sin(phi) * py
                     by = -math.sin(phi) * px + math.cos(phi) * py
 
-                    if abs(bx) <= expanded_length and abs(by) <= expanded_width:
+                    if (
+                        abs(bx) <= expanded_length
+                        and abs(by) <= expanded_width
+                    ):
                         swept = True
                         break
 
