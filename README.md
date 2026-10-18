@@ -209,6 +209,18 @@ Stop
 
 ---
 
+## Autonomous Navigation and Patrol (work in progress)
+
+The mapping, obstacle-avoidance, navigation and security-patrol component
+lives in `buddy_ws/src/buddy_navigation` (with message definitions in
+`buddy_nav_interfaces`). It reuses the existing safety supervisor and motor
+executor, ships with motion disabled by default, and is validated so far in
+simulation and unit tests only. See
+[docs/yohan_mapping_navigation.md](docs/yohan_mapping_navigation.md) for the
+architecture, simulation instructions, test results and limitations.
+
+---
+
 ## Validation Status
 
 ### Physically Validated
