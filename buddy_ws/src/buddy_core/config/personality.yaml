@@ -1,0 +1,9 @@
+# Buddy personality. Values 0 to 1 unless noted. All keys optional.
+name: Buddy
+warmth: 0.7
+playfulness: 0.4
+verbosity: 0.5        # lower = shorter replies
+opener_chance: 0.25   # chance of a light opener such as "Sure."
+max_sentences: 3
+repeat_threshold: 0.8 # replies this similar to a recent one are avoided
+history: 6

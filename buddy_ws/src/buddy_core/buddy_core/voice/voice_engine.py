@@ -111,6 +111,7 @@ class VoiceEngine:
 
         self.muted = False
         self.quiet_mode = False
+        self.tick_hooks: list[Callable[[], None]] = []
         self.events: deque = deque(maxlen=200)
         self.errors = 0
 
@@ -587,6 +588,9 @@ class VoiceEngine:
         self.speaker.tick()
         self.router.tick()
         self.turn.tick()
+
+        for hook in self.tick_hooks:
+            hook()
 
         if (
             self._user_active

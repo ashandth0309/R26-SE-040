@@ -107,6 +107,7 @@ class SpeakerManager:
         self._failures = 0
         self._blocked_until = 0.0
         self.muted = False
+        self.floor = Priority.LOW
         self.backend_failed = False
         self.dropped = 0
 
@@ -149,7 +150,7 @@ class SpeakerManager:
     ) -> int | None:
         """Queue speech.  Returns an id, or None if it was not accepted."""
 
-        if self.muted or samples.size == 0:
+        if self.muted or samples.size == 0 or priority > self.floor:
             return None
 
         if samples.size / rate > self.config.max_utterance_s:
@@ -234,6 +235,19 @@ class SpeakerManager:
 
         if self._current and self._current.priority is Priority.LOW:
             self._interrupt_current()
+
+    def set_floor(self, floor: Priority) -> None:
+        """Only accept utterances at this priority or more urgent.
+
+        ``Priority.CRITICAL`` allows only safety acknowledgements.
+        """
+
+        self.floor = floor
+
+        if floor < Priority.LOW:
+            self._heap = [i for i in self._heap
+                          if i.utterance.priority <= floor]
+            heapq.heapify(self._heap)
 
     def mute(self, muted: bool = True) -> None:
         """Mute speech output entirely (privacy / silence mode)."""
