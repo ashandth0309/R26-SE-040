@@ -1,0 +1,5 @@
+# "Where did I leave my <name>?" (only works if object memory is on)
+string name
+---
+bool found
+string text

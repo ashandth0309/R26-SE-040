@@ -51,16 +51,60 @@ class DiagnosticArray:
         self.status = []
 
 
-_EXTRA = ("sensor_msgs", "sensor_msgs.msg", "diagnostic_msgs",
+SRV_DIR = base.MSG_DIR.parent / "srv"
+
+
+def make_srv(name):
+    """Request/Response classes from a real ``.srv`` file (strict slots)."""
+
+    text = (SRV_DIR / f"{name}.srv").read_text()
+    req_text, res_text = text.split("---")
+
+    def side(label, body):
+        fields = []
+
+        for line in body.splitlines():
+            line = line.split("#")[0].strip()
+
+            if line:
+                left, right = line.split(None, 1)
+                fields.append((right.strip(), left))
+
+        def init(self, **kw):
+            for fname, ftype in fields:
+                d = base._DEFAULTS[ftype]
+                setattr(self, fname, d() if callable(d) else d)
+
+            for k, v in kw.items():
+                setattr(self, k, v)
+
+        return type(label, (), {"__slots__": tuple(f for f, _ in fields),
+                                "__init__": init})
+
+    return type(name, (), {"Request": side("Request", req_text),
+                           "Response": side("Response", res_text)})
+
+
+_EXTRA = ("buddy_interfaces.srv", "sensor_msgs", "sensor_msgs.msg",
+          "diagnostic_msgs",
           "diagnostic_msgs.msg")
 
 
-def install(extra_msgs=()):
+def install(extra_msgs=(), srvs=()):
+    base._DEFAULTS.update({"string[]": list, "VisionObject[]": list,
+                           "VisionPerson[]": list})
     msgs = base.install()
 
     for name in extra_msgs:
         setattr(msgs, name, base.make_msg(name))
 
+    srv_mod = types.ModuleType("buddy_interfaces.srv")
+
+    for name in srvs:
+        setattr(srv_mod, name, make_srv(name))
+
+    sys.modules["buddy_interfaces"].srv = srv_mod
+    sys.modules["buddy_interfaces.srv"] = srv_mod
     sm = types.ModuleType("sensor_msgs")
     smm = types.ModuleType("sensor_msgs.msg")
     smm.Image = Image

@@ -73,6 +73,7 @@ class PersonContext:
     motion: str | None = None
     fall_state: str | None = None
     gestures: tuple[str, ...] = ()
+    estimate: object | None = None      # raw ExpressionEstimate (opt-in)
 
 
 @dataclass(frozen=True)
@@ -563,7 +564,7 @@ class VisualContextManager:
                     getattr(act, "posture", None),
                     getattr(act, "motion", None), fall,
                     self._body_gest.get(body, ()) if body is not None
-                    else ()))
+                    else (), est))
 
         for key in [k for k, t in self._known_people.items()
                     if k not in present_keys and now - t > 5.0]:

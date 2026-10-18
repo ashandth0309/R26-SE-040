@@ -1,0 +1,8 @@
+# "What is this?" about the object being held up.
+---
+bool success
+string kind
+string text
+string name
+string label
+bool offer_teach

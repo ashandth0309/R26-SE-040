@@ -183,8 +183,14 @@ class FallDetector:
         return float(np.hypot(*(np.mean(hp, 0) - np.mean(sh, 0))))
 
     def _lying_confirmed(self, tr: _T, now: float) -> bool:
-        recent = [lab for t, lab, _ in tr.hist
-                  if now - t <= self.cfg.lying_confirm_s]
+        # The window grows with the sampling gap, so a slower pose rate (or
+        # a little jitter at 2 Hz) still gets its 3 samples instead of
+        # silently never confirming.
+        times = [t for t, _, _ in tr.hist][-5:]
+        gaps = [b - a for a, b in zip(times, times[1:]) if b > a]
+        gap = sum(gaps) / len(gaps) if gaps else 0.0
+        window = max(self.cfg.lying_confirm_s, 2.2 * gap)
+        recent = [lab for t, lab, _ in tr.hist if now - t <= window]
 
         if len(recent) < 3:
             return False

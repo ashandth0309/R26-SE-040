@@ -1,0 +1,9 @@
+# Teach, correct or forget an object by name.
+# action: start | answer | cancel | forget | forget_all | list | correct
+string action
+string text
+---
+bool ok
+string reply
+string phase
+bool saved

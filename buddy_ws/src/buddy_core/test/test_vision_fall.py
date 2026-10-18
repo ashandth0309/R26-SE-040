@@ -207,3 +207,18 @@ def test_no_images_or_identity_in_events():
         assert set(e.__dict__) == {"kind", "track_id", "t", "severity",
                                    "reasons", "needs_voice_check",
                                    "details"}
+
+
+def test_slow_or_jittery_pose_rate_still_confirms_lying():
+    """Pose at 0.55 s, 1 s or 1.5 s must not silently never confirm."""
+
+    for step in (0.55, 1.0, 1.5):
+        frames, last = [], -9.0
+
+        for t, pose in fall_frames():
+            if t - last >= step - 1e-9:
+                frames.append((t, pose))
+                last = t
+
+        assert kinds(run(FallDetector(), frames)) == [
+            "fall_suspected", "fall_alert"], step

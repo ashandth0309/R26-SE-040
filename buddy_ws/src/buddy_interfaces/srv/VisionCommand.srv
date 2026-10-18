@@ -1,0 +1,9 @@
+# Spoken settings and privacy requests, e.g. "don't greet me",
+# "what do you know about me", "turn off the camera".
+# person_id is the recognised speaker if the caller knows it, else empty
+# and Buddy uses the person it currently recognises.
+string text
+string person_id
+---
+bool handled
+string reply

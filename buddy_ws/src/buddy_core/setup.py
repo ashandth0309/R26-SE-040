@@ -36,6 +36,7 @@ setup(
         'motor_executor = buddy_core.motors.motor_node:main',
         'voice_companion = buddy_core.voice.voice_node:main',
         'vision_camera = buddy_core.vision.camera_node:main',
+        'vision_node = buddy_core.vision.vision_node:main',
     ],
 },
 )
