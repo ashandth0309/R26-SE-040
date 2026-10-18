@@ -4,7 +4,57 @@ from __future__ import annotations
 
 import time
 from collections import deque
+from dataclasses import dataclass
+from enum import Enum
 from statistics import median
+
+
+class UltrasonicStatus(str, Enum):
+    """Outcome of one status-aware ultrasonic measurement.
+
+    The legacy ``read_distance_m`` API collapses every failure into
+    ``None``.  These values keep the failure modes apart because they have
+    different safety meaning:
+
+    * ``OK``: a distance inside the configured range was measured.
+    * ``CLEAR``: the module started a measurement but no echo returned
+      within the configured range.  Nothing was detected, but a soft or
+      steeply angled obstacle can also produce this result.
+    * ``TOO_CLOSE``: the echo pulse was shorter than the minimum range.
+      An obstacle is present and closer than the sensor can resolve.
+    * ``NO_RESPONSE``: the echo line never went high after the trigger
+      pulse.  Wiring, power or module fault (or a module variant that
+      does not raise echo when nothing is detected).
+    * ``STUCK_HIGH``: the echo line was already high before triggering and
+      did not settle.  Wiring or module fault.
+    * ``ERROR``: the GPIO backend raised an exception.  Only produced by
+      ``UltrasonicArrayScanner``, never by ``measure`` itself.
+    """
+
+    OK = "ok"
+    CLEAR = "clear"
+    TOO_CLOSE = "too_close"
+    NO_RESPONSE = "no_response"
+    STUCK_HIGH = "stuck_high"
+    ERROR = "error"
+
+
+@dataclass(frozen=True)
+class UltrasonicMeasurement:
+    """Result of one ``UltrasonicSensor.measure`` call."""
+
+    status: UltrasonicStatus
+    raw_distance_m: float | None
+    filtered_distance_m: float | None
+    pulse_seconds: float | None
+    started_monotonic: float
+    finished_monotonic: float
+
+    @property
+    def has_distance(self) -> bool:
+        """Return whether a distance was actually measured."""
+
+        return self.status is UltrasonicStatus.OK
 
 
 class UltrasonicSensor:
@@ -133,6 +183,107 @@ class UltrasonicSensor:
         self._samples.append(distance)
 
         return float(median(self._samples))
+
+    def measure(
+        self,
+        *,
+        idle_settle_seconds: float = 0.045,
+    ) -> UltrasonicMeasurement:
+        """Take one measurement and report why it succeeded or failed.
+
+        Unlike ``read_distance_m`` this does not discard the failure
+        reason.  Only ``OK`` readings enter the median filter, exactly as
+        in ``read_distance_m``, so ``filtered_distance_m`` is the same
+        value the legacy API would have returned.
+
+        Worst-case duration is bounded by
+        ``idle_settle_seconds + 2 * timeout_seconds``.
+        """
+
+        started = time.monotonic()
+
+        # A healthy module holds echo LOW between measurements.  A line
+        # that stays HIGH would otherwise look like an endless echo and be
+        # misread as "nothing in range".
+        if bool(self._gpio.read(self.echo_pin)):
+            settle_deadline = started + idle_settle_seconds
+
+            while bool(self._gpio.read(self.echo_pin)):
+                if time.monotonic() >= settle_deadline:
+                    return UltrasonicMeasurement(
+                        UltrasonicStatus.STUCK_HIGH,
+                        None,
+                        None,
+                        None,
+                        started,
+                        time.monotonic(),
+                    )
+
+        self._gpio.write(self.trigger_pin, False)
+        time.sleep(0.000002)
+
+        self._gpio.write(self.trigger_pin, True)
+        time.sleep(0.00001)
+        self._gpio.write(self.trigger_pin, False)
+
+        echo_start = self._wait_for_state(True)
+
+        if echo_start is None:
+            return UltrasonicMeasurement(
+                UltrasonicStatus.NO_RESPONSE,
+                None,
+                None,
+                None,
+                started,
+                time.monotonic(),
+            )
+
+        echo_end = self._wait_for_state(False)
+        finished = time.monotonic()
+
+        if echo_end is None:
+            return UltrasonicMeasurement(
+                UltrasonicStatus.CLEAR,
+                None,
+                None,
+                None,
+                started,
+                finished,
+            )
+
+        pulse_seconds = echo_end - echo_start
+        distance_m = pulse_seconds * self.SPEED_OF_SOUND_MPS / 2.0
+
+        if distance_m < self.minimum_distance_m:
+            return UltrasonicMeasurement(
+                UltrasonicStatus.TOO_CLOSE,
+                distance_m,
+                None,
+                pulse_seconds,
+                started,
+                finished,
+            )
+
+        if distance_m > self.maximum_distance_m:
+            return UltrasonicMeasurement(
+                UltrasonicStatus.CLEAR,
+                None,
+                None,
+                pulse_seconds,
+                started,
+                finished,
+            )
+
+        self._samples.append(distance_m)
+
+        return UltrasonicMeasurement(
+            UltrasonicStatus.OK,
+            distance_m,
+            float(median(self._samples)),
+            pulse_seconds,
+            started,
+            finished,
+        )
 
     @property
     def has_samples(self) -> bool:
