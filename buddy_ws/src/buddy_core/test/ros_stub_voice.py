@@ -105,6 +105,7 @@ class StubParam:
 class Node:
     overrides = {}
     existing_nodes = []
+    existing_publishers = {}
     instances = []
 
     def __init__(self, name):
@@ -143,7 +144,13 @@ class Node:
         return StubClock()
 
     def get_node_names(self):
-        return list(Node.existing_nodes)
+        # Like rclpy, the graph includes this node itself.
+        return [*Node.existing_nodes, self.name]
+
+    def count_publishers(self, topic):
+        return Node.existing_publishers.get(topic, 0) + sum(
+            1 for n in Node.instances
+            if n is not self and topic in n.pubs)
 
     def destroy_node(self):
         self.destroyed = True

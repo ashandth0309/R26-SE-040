@@ -36,6 +36,24 @@ class CameraNode(Node):
         self.declare_parameter("fps", 10.0)
         self.declare_parameter("device_index", 0)
         self.declare_parameter("frame_id", "camera_link")
+        self.declare_parameter("allow_coexist", False)
+
+        # Only one process may own the camera.  The integrated system uses
+        # the shared vision camera node (buddy_core vision_camera); this
+        # one is for standalone navigation bring-up only.
+        if not bool(self.get_parameter("allow_coexist").value):
+            names = list(self.get_node_names())
+
+            if names.count("buddy_camera") > 1:
+                raise RuntimeError(
+                    "another 'buddy_camera' node is running; only one "
+                    "process may own the camera. Use the shared camera "
+                    "node, or set allow_coexist:=true for a mock test.")
+
+            if self.count_publishers("/camera/image_raw") > 0:
+                raise RuntimeError(
+                    "/camera/image_raw already has a publisher; refusing "
+                    "to start a second camera owner.")
 
         config = CameraConfig(
             backend=str(self.get_parameter("backend").value),

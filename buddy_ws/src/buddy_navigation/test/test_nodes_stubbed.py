@@ -232,3 +232,29 @@ def test_sim_node_obeys_safe_movement_commands_only():
         node.fire_timers(module.DT)
 
     assert node.robot.pose.x > 0.5
+
+
+def test_camera_node_refuses_to_start_beside_another_camera_owner():
+    module = importlib.import_module("buddy_navigation.nodes.camera_node")
+    stub_node = module.Node
+
+    try:
+        stub_node.graph_nodes = ("buddy_camera",)
+
+        with pytest.raises(RuntimeError, match="only one"):
+            module.CameraNode()
+    finally:
+        stub_node.graph_nodes = ()
+
+
+def test_camera_node_refuses_when_the_image_topic_already_has_a_publisher():
+    module = importlib.import_module("buddy_navigation.nodes.camera_node")
+    stub_node = module.Node
+
+    try:
+        stub_node.graph_publishers = {"/camera/image_raw": 1}
+
+        with pytest.raises(RuntimeError, match="already has a publisher"):
+            module.CameraNode()
+    finally:
+        stub_node.graph_publishers = None

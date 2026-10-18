@@ -62,8 +62,10 @@ class CameraNode(Node):
         )
         self._frame_id = str(p("frame_id", "camera_link"))
 
+        # The graph lists this node too, so a second entry means another
+        # camera owner is running.
         if not p("allow_coexist", False) and \
-                "buddy_camera" in self._other_nodes():
+                self._other_nodes().count("buddy_camera") > 1:
             raise RuntimeError(
                 "a 'buddy_camera' node is already running; only one "
                 "process may own the camera")

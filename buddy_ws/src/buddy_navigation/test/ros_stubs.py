@@ -311,6 +311,16 @@ class StubNode:
     def get_logger(self):
         return self.logger
 
+    # Graph queries.  Like rclpy, the node graph includes this node.
+    graph_nodes = ()
+    graph_publishers = None
+
+    def get_node_names(self):
+        return [*type(self).graph_nodes, self.node_name]
+
+    def count_publishers(self, topic):
+        return dict(type(self).graph_publishers or {}).get(topic, 0)
+
     def create_publisher(self, msg_type, topic, qos):
         publisher = StubPublisher(topic, msg_type)
         self.publishers[topic] = publisher
