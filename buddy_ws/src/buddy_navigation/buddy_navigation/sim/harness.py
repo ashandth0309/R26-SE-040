@@ -73,6 +73,9 @@ class SimHarness:
         self.coordinator = NavigationCoordinator(
             self.assessor, self.nav_config
         )
+        # Anything with the coordinator's tick signature (e.g. a patrol
+        # manager wrapping it) can be installed here.
+        self.controller = self.coordinator
         self.robot = MockRobot(self.world, footprint, self.start)
         self.supervisor = SafetySupervisor()
         self.local_map = LocalObstacleMap()
@@ -170,7 +173,7 @@ class SimHarness:
 
     def _control(self) -> None:
         states = self.monitor.snapshot(self.now)
-        request, self.feedback = self.coordinator.tick(
+        request, self.feedback = self.controller.tick(
             self.now,
             states,
             pose=self.robot.pose,

@@ -72,8 +72,8 @@ class NavigationConfig:
     goal_timeout_s: float = 60.0
     blocked_timeout_s: float = 3.0
     waypoint_tolerance_m: float = 0.10
-    align_tolerance_rad: float = 0.20
-    realign_tolerance_rad: float = 0.45
+    align_tolerance_rad: float = 0.10
+    realign_tolerance_rad: float = 0.25
     no_progress_timeout_s: float = 8.0
     min_progress_m: float = 0.05
 
@@ -306,14 +306,6 @@ class NavigationCoordinator:
         wx, wy = goal.waypoints[run.index]
         distance = math.hypot(wx - pose.x, wy - pose.y)
 
-        if distance < run.best_distance - cfg.min_progress_m:
-            run.best_distance = distance
-            run.progress_time = now
-        elif now - run.progress_time > cfg.no_progress_timeout_s:
-            self._finish(NavState.FAILED, "No progress towards waypoint.")
-
-            return None
-
         error = angle_difference(
             math.atan2(wy - pose.y, wx - pose.x),
             pose.yaw,
@@ -327,6 +319,19 @@ class NavigationCoordinator:
         )
         run.rotating = abs(error) > threshold
         run.distance_remaining = distance
+
+        # Progress is judged only while driving.  Turning on the spot makes
+        # no distance progress by design; the overall goal timeout still
+        # bounds it.
+        if run.rotating:
+            run.progress_time = now
+        elif distance < run.best_distance - cfg.min_progress_m:
+            run.best_distance = distance
+            run.progress_time = now
+        elif now - run.progress_time > cfg.no_progress_timeout_s:
+            self._finish(NavState.FAILED, "No progress towards waypoint.")
+
+            return None
 
         if run.rotating:
             code = (
