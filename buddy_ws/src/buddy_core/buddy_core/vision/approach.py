@@ -39,6 +39,7 @@ class NavCapabilities:
     obstacle_avoidance_ok: bool = False
     movement_allowed: bool = False       # safety supervisor
     emergency_stop_active: bool = True
+    follow_validated: bool = False       # following tested on this robot
 
 
 @dataclass(frozen=True)
