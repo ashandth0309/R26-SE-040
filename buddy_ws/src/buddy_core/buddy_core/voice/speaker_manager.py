@@ -102,8 +102,8 @@ class SpeakerManager:
         self._counter = itertools.count(1)
         self._current: Utterance | None = None
         self._current_end = 0.0
-        self._on_start = on_start
-        self._on_finish = on_finish
+        self.on_start = on_start
+        self.on_finish = on_finish
         self._failures = 0
         self._blocked_until = 0.0
         self.muted = False
@@ -215,8 +215,8 @@ class SpeakerManager:
         except Exception:
             pass
 
-        if self._on_finish is not None:
-            self._on_finish(item, False)
+        if self.on_finish is not None:
+            self.on_finish(item, False)
 
     def cancel_all(self) -> None:
         """Stop talking now and clear the queue."""
@@ -264,8 +264,8 @@ class SpeakerManager:
             else:
                 done, self._current = self._current, None
 
-                if self._on_finish is not None:
-                    self._on_finish(done, True)
+                if self.on_finish is not None:
+                    self.on_finish(done, True)
 
         if now < self._blocked_until or not self._heap:
             return
@@ -286,8 +286,8 @@ class SpeakerManager:
             if self._failures > self.config.max_start_failures:
                 self._handle_backend_failure(now)
 
-            if self._on_finish is not None:
-                self._on_finish(item, False)
+            if self.on_finish is not None:
+                self.on_finish(item, False)
 
             return
 
@@ -295,8 +295,8 @@ class SpeakerManager:
         self._current = item
         self._current_end = now + item.samples.size / item.rate + 1.0
 
-        if self._on_start is not None:
-            self._on_start(item)
+        if self.on_start is not None:
+            self.on_start(item)
 
     def _handle_backend_failure(self, now: float) -> None:
         self._failures = 0

@@ -491,7 +491,7 @@ def test_speaker_priority_order():
     sm.say("low-prio chat", pcm(0.5), RATE, priority=Priority.NORMAL)
     sm.say("answer", pcm(0.3), RATE, priority=Priority.HIGH)
     order = []
-    sm._on_start = lambda u: order.append(u.text)
+    sm.on_start = lambda u: order.append(u.text)
     for _ in range(60):
         clock.advance(0.1)
         sm.tick()

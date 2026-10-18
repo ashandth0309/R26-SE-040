@@ -36,6 +36,9 @@ class Recognizer(Protocol):
     def partial(self) -> str:
         """Current partial text."""
 
+    def finalize(self) -> Transcript | None:
+        """Force the end of the utterance and return what was heard."""
+
     def reset(self) -> None:
         """Discard internal state."""
 
@@ -83,7 +86,16 @@ class VoskRecognizer:
         if not self._rec.AcceptWaveform(pcm16):
             return None
 
-        data = json.loads(self._rec.Result())
+        return self._parse(self._rec.Result())
+
+    def finalize(self) -> Transcript | None:
+        try:
+            return self._parse(self._rec.FinalResult())
+        except Exception:
+            return None
+
+    def _parse(self, raw: str) -> Transcript | None:
+        data = json.loads(raw)
         text = str(data.get("text", "")).strip()
 
         if not text or text == "[unk]":
@@ -106,8 +118,13 @@ class VoskRecognizer:
 class ScriptedRecognizer:
     """Test double: returns queued transcripts, one per ``accept`` call."""
 
-    def __init__(self, results: list[Transcript | None] | None = None):
+    def __init__(
+        self,
+        results: list[Transcript | None] | None = None,
+        finals: list[Transcript | None] | None = None,
+    ):
         self.results = list(results or [])
+        self.finals = list(finals or [])
         self.fed = 0
         self.resets = 0
         self._partial = ""
@@ -128,5 +145,17 @@ class ScriptedRecognizer:
     def partial(self) -> str:
         return self._partial
 
+    def set_partial(self, text: str) -> None:
+        """Set what ``partial`` reports."""
+
+        self._partial = text
+
+    def finalize(self) -> Transcript | None:
+        if self.finals:
+            return self.finals.pop(0)
+
+        return None
+
     def reset(self) -> None:
         self.resets += 1
+        self._partial = ""

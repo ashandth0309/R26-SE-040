@@ -126,6 +126,11 @@ class EchoGuard:
 
         self._playback_db = dbfs(rms(frame))
 
+    def playback_level_db(self, level_db: float) -> None:
+        """Feed the playback level when it is already known in dB."""
+
+        self._playback_db = level_db
+
     @property
     def blocked(self) -> bool:
         """True when the recogniser must not receive microphone audio."""
