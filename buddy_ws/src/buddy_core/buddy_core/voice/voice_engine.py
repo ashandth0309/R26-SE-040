@@ -86,6 +86,8 @@ class VoiceEngine:
         style: SpeechStyle | None = None,
         clock: Callable[[], float] = time.monotonic,
         emotion_hint: Callable[[], str | None] = lambda: None,
+        utterance_observer: Callable[[np.ndarray], None] | None = None,
+        style_provider: Callable[[], SpeechStyle] | None = None,
     ) -> None:
         self.vad = vad
         self.wake_rec = wake_rec
@@ -104,6 +106,8 @@ class VoiceEngine:
         self.style = style or SpeechStyle()
         self._clock = clock
         self.emotion_hint = emotion_hint
+        self.utterance_observer = utterance_observer
+        self.style_provider = style_provider
 
         self.muted = False
         self.quiet_mode = False
@@ -121,6 +125,7 @@ class VoiceEngine:
         self._cmd_texts: list[Transcript] = []
         self._gen_texts: list[Transcript] = []
         self._wake_texts: list[Transcript] = []
+        self._utt_audio: list[np.ndarray] = []
         self._playback_env: np.ndarray | None = None
         self._playback_t0 = 0.0
 
@@ -237,6 +242,7 @@ class VoiceEngine:
         self._cmd_texts.clear()
         self._gen_texts.clear()
         self._wake_texts.clear()
+        self._utt_audio.clear()
         self._reset_recognizers()
 
     def _reset_recognizers(self) -> None:
@@ -340,12 +346,18 @@ class VoiceEngine:
         self._cmd_texts.clear()
         self._gen_texts.clear()
         self._wake_texts.clear()
+        self._utt_audio.clear()
         self._reset_recognizers()
         self.backchannel.on_user_resumed()
         self.turn.user_started()
 
     def _feed(self, frame: np.ndarray) -> None:
         data = frame.tobytes()
+
+        # Held in memory for this utterance only; see _end_user_turn.
+        if self.utterance_observer and not self._wake_context \
+                and len(self._utt_audio) < 1000:
+            self._utt_audio.append(frame)
 
         if self._wake_context:
             result = self.wake_rec.accept(data)
@@ -443,8 +455,22 @@ class VoiceEngine:
 
             return
 
+        self._observe_utterance()
         self.turn.user_ended(True)
         self._handle_awake_text(cmd, gen)
+
+    def _observe_utterance(self) -> None:
+        """Give the utterance audio to the observer, then discard it."""
+
+        audio, self._utt_audio = self._utt_audio, []
+
+        if not self.utterance_observer or not audio:
+            return
+
+        try:
+            self.utterance_observer(np.concatenate(audio))
+        except Exception:
+            self.errors += 1
 
     def _handle_sleeping_text(self, heard: Transcript | None) -> None:
         if heard is None:
@@ -548,7 +574,9 @@ class VoiceEngine:
 
             return
 
-        if not self.say(reply.text, Priority.NORMAL):
+        style = self.style_provider() if self.style_provider else None
+
+        if not self.say(reply.text, Priority.NORMAL, style):
             self.turn.nothing_to_say()
 
     # ----- timer -----
