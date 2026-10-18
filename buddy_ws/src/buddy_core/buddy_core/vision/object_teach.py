@@ -37,6 +37,12 @@ def norm_name(name: str) -> str:
     return re.sub(r"\s+", " ", n).strip()
 
 
+def _display(name: str) -> str:
+    """Name as spoken back: 'my pen' is remembered as 'pen'."""
+
+    return re.sub(r"^(?i:my|the|a|an)\s+", "", name.strip())
+
+
 _SCHEMA = """
 PRAGMA secure_delete=ON;
 CREATE TABLE IF NOT EXISTS objects(
@@ -92,7 +98,7 @@ class ObjectStore:
             oid = f"object_{int(time.time())}_{self._n}"
             now = time.time()
             self._db.execute("INSERT INTO objects VALUES(?,?,?,?,?)",
-                             (oid, name.strip(), key, class_hint, now))
+                             (oid, _display(name), key, class_hint, now))
             self.add_samples(oid, vecs)
 
             return oid
@@ -609,6 +615,8 @@ class Identification:
     name: str | None = None
     label: str | None = None
     offer_teach: bool = False
+    confidence: float = 0.0      # cosine similarity (or detector score for
+    #                              "generic"); NOT a calibrated probability
 
 
 def identify(bgr, dets, embedder, recognizer: ObjectRecognizer,
@@ -633,13 +641,16 @@ def identify(bgr, dets, embedder, recognizer: ObjectRecognizer,
     m = recognizer.match(v, t.label)
 
     if m.state == "match":
-        return Identification("taught", f"I think this is your {m.name}.",
-                              m.name, t.label)
+        return Identification(
+            "taught", f"I think this is your {m.name}. It looks about "
+            f"{round(m.score * 100)} percent similar to what you showed me.",
+            m.name, t.label, False, float(m.score))
 
     if m.state == "uncertain":
         return Identification(
-            "uncertain", f"It might be your {m.name}, but I am not sure.",
-            m.name, t.label, True)
+            "uncertain", f"It might be your {m.name}, but I am not sure. "
+            f"It looks about {round(m.score * 100)} percent similar.",
+            m.name, t.label, True, float(m.score))
 
     if t.label and t.source == "detector":
         score = max((d.score for d in dets if d.label == t.label),
@@ -648,7 +659,7 @@ def identify(bgr, dets, embedder, recognizer: ObjectRecognizer,
         if score >= min_generic_score:
             return Identification(
                 "generic", f"It looks like a {t.label}. I don't know if "
-                "it is one of yours.", None, t.label, True)
+                "it is one of yours.", None, t.label, True, float(score))
 
     return Identification(
         "unknown", "I'm not sure what this is. Would you like to teach me?",

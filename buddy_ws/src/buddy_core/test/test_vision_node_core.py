@@ -196,7 +196,7 @@ def test_fall_question_sets_awaiting_reply_and_okay_clears_it():
     assert ev and ev["needs_voice_check"]
     assert "okay" in ev["suggested_text"].lower()
     assert core.awaiting_reply() and core.status()["awaiting_reply"]
-    handled, text = core.command("I'm okay")
+    handled, text, _p = core.command("I'm okay")
     assert handled and text
     assert not core.awaiting_reply()
     assert core.take_deferred().events[0]["kind"] == "fall_recovered"
@@ -216,7 +216,7 @@ def test_fall_alert_publishes_one_security_event_without_an_image():
 def test_help_reply_alerts_immediately_through_deferred_events():
     core, c = fall_core()
     run_until(core, c, "fall_suspected")
-    handled, _t = core.command("help")
+    handled, _t, _p = core.command("help")
     d = core.take_deferred()
     assert handled
     assert any(e["kind"] == "fall_alert" for e in d.events)
@@ -237,13 +237,13 @@ def test_proactive_offer_is_a_question_and_marks_awaiting_reply():
 
 def test_settings_command_goes_through_the_controller():
     core, _c = core_for()
-    handled, text = core.command("turn off the camera")
+    handled, text, _p = core.command("turn off the camera")
     assert handled and text
 
 
 def test_unrelated_speech_is_not_handled():
     core, _c = core_for()
-    assert core.command("what is the weather") == (False, "")
+    assert core.command("what is the weather") == (False, "", True)
 
 
 def test_identify_without_objects_stage_is_honest():

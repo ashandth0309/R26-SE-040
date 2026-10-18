@@ -30,6 +30,7 @@ import json
 import threading
 import time
 from dataclasses import dataclass, field
+from typing import NamedTuple
 
 import numpy as np
 
@@ -48,8 +49,15 @@ SPOKEN = {
 }
 
 
+class CommandResult(NamedTuple):
+    handled: bool
+    reply: str
+    pass_to_dialogue: bool
+
+
 @dataclass
 class Outputs:
+    frame: bool = False          # True only for output of a processed frame
     people: list[dict] = field(default_factory=list)
     objects: dict | None = None
     events: list[dict] = field(default_factory=list)
@@ -69,7 +77,7 @@ class VisionNodeCore:
     """All the logic of the node, testable without ROS."""
 
     def __init__(self, built: BuiltVision, max_process_hz: float = 10.0,
-                 clock=time.monotonic) -> None:
+                 clock=time.monotonic, stale_after_s: float = 2.0) -> None:
         self.b = built
         self._clock = clock
         self._min_dt = 1.0 / max_process_hz if max_process_hz > 0 else 0.0
@@ -81,6 +89,9 @@ class VisionNodeCore:
         self._emotion_time: dict[str, float] = {}
         self._teach: TeachSession | None = None
         self._deferred = Outputs()
+        self._stale_after = stale_after_s
+        self._last_frame_t = clock()
+        self.camera_ok = True
         self.frames_in = 0
         self.frames_dropped = 0
         self.safety = {"emergency": False, "movement_allowed": True}
@@ -109,6 +120,12 @@ class VisionNodeCore:
         with self._lock:
             now = self._clock()
             self.frames_in += 1
+            self._last_frame_t = now
+
+            if not self.camera_ok:
+                self.camera_ok = True
+                self._deferred.events.append(_ev(
+                    "camera_restored", "info", text=""))
 
             if now - self._last_proc < self._min_dt:
                 self.frames_dropped += 1
@@ -122,10 +139,40 @@ class VisionNodeCore:
 
             return self._outputs(ctx, now)
 
+    def check_camera(self, now: float | None = None) -> None:
+        """Call about once a second.  If frames stop arriving, drop all
+        perception state, clear the voice side's last emotion hint and
+        report it.  Vision-dependent actions then have nothing to act on.
+        A user who switched the camera off is not a failure.
+        """
+
+        with self._lock:
+            now = self._clock() if now is None else now
+
+            if not self.b.manager.settings.camera_enabled or \
+                    not self.camera_ok:
+                return
+
+            if now - self._last_frame_t <= self._stale_after:
+                return
+
+            self.camera_ok = False
+            self.b.manager.reset()
+            self._ctx, self._last_image = None, None
+
+            if self._teach is not None and self._teach.active:
+                self._teach.cancel("Okay, never mind.")
+
+            self._clear_emotions(self._deferred, "camera_lost")
+            self._deferred.events.append(_ev(
+                "camera_lost", "warn",
+                text="My camera isn't working right now, so I can't see.",
+                data={"silent_for_s": round(now - self._last_frame_t, 1)}))
+
     # ----- output assembly -----
 
     def _outputs(self, ctx: VisualContext, now: float) -> Outputs:
-        out = Outputs()
+        out = Outputs(frame=True)
 
         if ctx.paused:
             self._clear_emotions(out, "camera_off")
@@ -271,30 +318,48 @@ class VisionNodeCore:
                         self.b.controller.awaiting_confirmation or
                         (self._teach is not None and self._teach.active))
 
-    def command(self, text: str, person_id: str = "") -> tuple[bool, str]:
+    def command(self, text: str, person_id: str = "") -> CommandResult:
+        """A spoken utterance that may be addressed to vision.
+
+        ``handled`` means vision produced (or consumed) something;
+        ``pass_to_dialogue`` tells the voice engine to also answer the
+        utterance normally, e.g. "Yes, today was difficult" after an offer.
+        """
+
         with self._lock:
             now = self._clock()
             reply = self.b.controller.handle(text, person_id or self._me(),
                                              now)
 
             if reply is not None:
-                return True, reply
+                return CommandResult(True, reply, False)
 
             events = self.b.manager.on_voice_reply(text, now)
 
             if self._teach is not None and self._teach.active:
-                return True, self._teach.answer(text).text
+                return CommandResult(True, self._teach.answer(text).text,
+                                     False)
 
-            if events:
-                for e in events:
-                    self._event(e, None, self._deferred)
+            events = [e for e in events if e.kind != "proactive_none"]
+            pass_on = False
+            texts = []
 
-                texts = [SPOKEN.get(e.kind, "") or e.data.get("text", "")
-                         for e in events]
+            for e in events:
+                self._event(e, None, self._deferred)
+                accepted = e.kind == "proactive_ack" and \
+                    e.data.get("state") == "conversation_active"
 
-                return True, " ".join(t for t in texts if t)
+                if accepted and len(text.split()) > 3:
+                    pass_on = True      # they said more: let voice answer
+                    continue
 
-            return False, ""
+                texts.append(SPOKEN.get(e.kind, "") or e.data.get("text", ""))
+
+            if not events:
+                return CommandResult(False, "", True)
+
+            return CommandResult(True, " ".join(t for t in texts if t),
+                                 pass_on)
 
     def take_deferred(self) -> Outputs:
         """Events caused by a spoken reply, to publish without a frame."""
@@ -312,7 +377,8 @@ class VisionNodeCore:
                     b.manager.c.objects is None:
                 return {"success": False, "kind": "unavailable",
                         "text": "I can't look at objects right now.",
-                        "name": "", "label": "", "offer_teach": False}
+                        "name": "", "label": "", "offer_teach": False,
+                        "confidence": 0.0}
 
             dets = [d for d in b.manager.c.objects.detect(self._last_image)
                     if d.label != "person"]
@@ -323,7 +389,8 @@ class VisionNodeCore:
 
             return {"success": True, "kind": r.kind, "text": r.text,
                     "name": r.name or "", "label": r.label or "",
-                    "offer_teach": r.offer_teach}
+                    "offer_teach": r.offer_teach,
+                    "confidence": float(r.confidence)}
 
     def teach_object(self, action: str, text: str) -> dict:
         with self._lock:
@@ -405,6 +472,7 @@ class VisionNodeCore:
 
             return {
                 "camera_enabled": m.settings.camera_enabled,
+                "camera_ok": self.camera_ok,
                 "profile": m.settings.profile,
                 "object_memory": m.settings.object_memory,
                 "frames_in": self.frames_in,
@@ -515,6 +583,7 @@ def build_node_class():
             self.create_service(SetBool, "/vision/enable", self._srv_enable)
             self.create_timer(
                 1.0 / max(1.0, float(p("max_process_hz", 10.0))), self._tick)
+            self.create_timer(0.5, self._watchdog)
             self.create_timer(1.0, self._publish_status)
             self._classes = (VisionObject, VisionPerson)
             self.get_logger().info(
@@ -558,6 +627,7 @@ def build_node_class():
                 return
 
             out = self.core.on_frame(img)
+            self._publish(self.core.take_deferred())
 
             if out is not None:
                 self._publish(out)
@@ -587,7 +657,8 @@ def build_node_class():
                 m.bbox_width, m.bbox_height = float(x2 - x1), float(y2 - y1)
                 people.people.append(m)
 
-            self.p_people.publish(people)
+            if out.frame:
+                self.p_people.publish(people)
 
             for d in out.recognized:
                 m = RecognizedPerson()
@@ -637,6 +708,10 @@ def build_node_class():
                 m.description = d["description"]
                 self.p_security.publish(m)
 
+        def _watchdog(self) -> None:
+            self.core.check_camera()
+            self._publish(self.core.take_deferred())
+
         def _publish_status(self) -> None:
             s = String()
             s.data = json.dumps(self.core.status())
@@ -645,8 +720,9 @@ def build_node_class():
         # ----- services -----
 
         def _srv_command(self, req, res):
-            res.handled, res.reply = self.core.command(req.text,
-                                                       req.person_id)
+            r = self.core.command(req.text, req.person_id)
+            res.handled, res.reply = r.handled, r.reply
+            res.pass_to_dialogue = r.pass_to_dialogue
             self._publish(self.core.take_deferred())
 
             return res
@@ -657,6 +733,7 @@ def build_node_class():
                 r["text"]
             res.name, res.label = r["name"], r["label"]
             res.offer_teach = r["offer_teach"]
+            res.confidence = float(r["confidence"])
 
             return res
 

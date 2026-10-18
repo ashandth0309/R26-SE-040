@@ -7,3 +7,4 @@ string person_id
 ---
 bool handled
 string reply
+bool pass_to_dialogue   # also answer the utterance normally (voice engine)

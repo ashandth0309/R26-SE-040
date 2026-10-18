@@ -138,7 +138,7 @@ def test_fall_alert_reaches_security_topic_and_events(node):
     core, c = fall_core()
     node.core = core
     run_until(core, c, "fall_suspected")
-    handled, _t = core.command("help")
+    handled, _t, _p = core.command("help")
     node._publish(core.take_deferred())
     sec = node.pubs["/security/event"].sent
     assert handled and len(sec) == 1

@@ -6,3 +6,4 @@ string text
 string name
 string label
 bool offer_teach
+float32 confidence   # similarity or detector score, not a probability
