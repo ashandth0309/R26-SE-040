@@ -1,0 +1,35 @@
+# SIMULATION profile: uses the labelled simulation presets.  Never run this
+# profile against the real robot.
+buddy_navigation:
+  profile: simulation
+  pose_source: sim
+
+  navigation:
+    allow_motion: true
+    max_linear_speed: 0.2
+    max_rotation_speed: 0.3
+    goal_timeout_s: 400.0
+
+  # Simple 6x6 teaching grid (not Buddy's real map); 1 m cells.
+  grid:
+    resolution_m: 1.0
+    rows:
+      - "......"
+      - ".##..."
+      - ".#..#."
+      - ".#.##."
+      - "...#.."
+      - "......"
+
+  locations:
+    start:  {x: 0.5, y: 0.5}
+    corner: {x: 5.5, y: 0.5}
+    far:    {x: 5.5, y: 5.5}
+
+  routes:
+    demo_loop:
+      repeat: false
+      points:
+        - {name: start,  x: 0.5, y: 0.5}
+        - {name: corner, x: 5.5, y: 0.5}
+        - {name: far,    x: 5.5, y: 5.5}

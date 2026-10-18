@@ -1,0 +1,50 @@
+# BUDDY navigation configuration (PHYSICAL profile).
+#
+# Every geometry value below is a PLACEHOLDER that has NOT been measured on
+# the robot.  Measure the chassis and sensor mounts, replace the numbers,
+# then set geometry_confirmed to true.  Until then the navigation node
+# keeps autonomous motion disabled, whatever allow_motion says.
+buddy_navigation:
+  profile: physical
+  geometry_confirmed: false
+
+  # Where the robot pose comes from.
+  #   none : no pose (current hardware has no encoders or IMU), so path and
+  #          patrol goals are refused; only timed demo motions are possible
+  #   odom : a trusted nav_msgs/Odometry on /odom (future)
+  pose_source: none
+
+  navigation:
+    allow_motion: false          # explicit opt-in, also needs geometry_confirmed
+    max_linear_speed: 0.2        # previously calibrated straight-line demo speed
+    max_rotation_speed: 0.3      # previously calibrated turn speed
+    default_timed_motion_s: 1.0
+    request_valid_for_s: 0.3
+    goal_timeout_s: 60.0
+    blocked_timeout_s: 3.0
+
+  # PLACEHOLDER body size in metres (length along robot x, width along y).
+  footprint:
+    length_m: 0.30
+    width_m: 0.20
+    margin_m: 0.05
+
+  # PLACEHOLDER mounting poses in the base frame: x forward, y left,
+  # yaw_deg counter-clockwise from forward.  Replace with measurements.
+  sensors:
+    - {name: front_left,  x_m:  0.13, y_m:  0.08, yaw_deg:   20.0, fov_deg: 30.0}
+    - {name: front_right, x_m:  0.13, y_m: -0.08, yaw_deg:  -20.0, fov_deg: 30.0}
+    - {name: rear_left,   x_m: -0.13, y_m:  0.08, yaw_deg:  160.0, fov_deg: 30.0}
+    - {name: rear_right,  x_m: -0.13, y_m: -0.08, yaw_deg: -160.0, fov_deg: 30.0}
+
+  # Strict by default: with four corner beams this will STOP rather than
+  # guess.  Lowering these is a deliberate safety decision, see the docs.
+  assessment:
+    stop_distance_m: 0.25
+    slow_distance_m: 0.60
+    required_coverage_linear: 1.0
+    required_coverage_rotation: 1.0
+
+  # Named locations and routes need a trusted pose to be used.
+  locations: {}
+  routes: {}
