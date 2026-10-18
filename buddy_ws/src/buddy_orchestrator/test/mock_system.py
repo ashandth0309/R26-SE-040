@@ -447,6 +447,9 @@ class _MoveSink:
         self.system.coord.on_voice_movement(m)
 
 
+CUP_DETECTION = ObjectDetection("cup", .9, (200, 150, 400, 350), "other")
+
+
 def person_detection():
     return ObjectDetection("person", .9, PERSON_BOX, "other")
 

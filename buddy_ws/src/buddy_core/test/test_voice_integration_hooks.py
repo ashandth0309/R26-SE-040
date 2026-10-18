@@ -14,7 +14,6 @@ import pytest
 
 import ros_stub_voice as stub
 from buddy_core.voice import command_router as cr
-from buddy_core.voice.dialogue_manager import DialogueReply
 from buddy_core.voice.stt import Transcript
 from buddy_core.voice.voice_commands import parse_command
 from buddy_core.voice.voice_engine import GatewayAnswer

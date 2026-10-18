@@ -65,6 +65,19 @@ PERSON_WORDS = frozenset({
     "girlfriend", "boyfriend", "baby", "kid", "child", "buddy's",
 })
 
+# Words that make "this is a ... X" a remark rather than a name for an
+# object in front of the camera ("that is a good idea").  A heuristic, so
+# it errs towards NOT starting the teaching flow: the user can always say
+# "remember this" and then give the name.
+ABSTRACT = frozenset({
+    "good", "bad", "great", "nice", "best", "worst", "terrible", "awful",
+    "lovely", "wonderful", "fine", "idea", "problem", "life", "day",
+    "time", "point", "way", "thing", "question", "answer", "issue",
+    "reason", "plan", "story", "joke", "mess", "mistake", "lie", "truth",
+    "job", "pity", "shame", "surprise", "disaster", "relief", "mood",
+    "moment", "feeling", "case", "deal", "rule", "game", "fact",
+})
+
 _WORD = re.compile(r"[a-z']+")
 _NAME = r"(?P<name>[a-z][a-z'-]*(?: [a-z][a-z'-]*){0,2})"
 _TIME_WORDS = frozenset({
@@ -151,6 +164,14 @@ def parse_vision_intent(text: str) -> VisionIntent | None:
             # and Buddy asks the person themselves.
             if any(w in PERSON_WORDS for w in words):
                 return VisionIntent(Intent.PERSON_INTRO, sentence, name)
+
+            if ABSTRACT.intersection(words):
+                return None
+
+            # "that is my pen" is usually pointing at something far away
+            # or talking; only "this is ..." means "the thing I hold".
+            if sentence.startswith("that is"):
+                return None
 
         if kind in (Intent.WHERE_IS, Intent.TEACH_OBJECT) and name:
             name = re.sub(r"^(?:my|a|an|the) ", "", name)

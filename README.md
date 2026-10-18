@@ -221,6 +221,27 @@ architecture, simulation instructions, test results and limitations.
 
 ---
 
+## Integrated System (`testing-integration`)
+
+Voice, vision and navigation run together under one coordinator
+(`buddy_orchestrator`). It owns no hardware: voice owns the microphones and
+speaker, one camera node owns the camera, one driver owns the ultrasonic
+sensors, and motion only reaches the motors through the safety supervisor.
+
+```bash
+ros2 launch buddy_orchestrator full_simulation.launch.py   # no hardware
+ros2 launch buddy_orchestrator full_offline.launch.py      # the robot
+```
+
+Other launch files: `full_hybrid`, `voice_only`, `vision_only`,
+`navigation_only`. **Status: software and mock-tested only; not yet built under
+ROS 2, run on the Raspberry Pi, or tested on the robot.** See
+`docs/buddy_final_integration.md`, `docs/buddy_integration_interfaces.md`,
+`docs/buddy_system_architecture.md`, `docs/buddy_testing_matrix.md`,
+`docs/buddy_deployment_guide.md` and `docs/buddy_known_limitations.md`.
+
+---
+
 ## Validation Status
 
 ### Physically Validated
