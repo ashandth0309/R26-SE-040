@@ -240,12 +240,15 @@ class BuddyCoordinator:
 
         return self.speech.say(kind, text, SOURCE)
 
+    @property
+    def quiet(self) -> bool:
+        return str(self.voice.get("silence_mode", "normal")) != "normal"
+
     def _sync_speech_context(self) -> None:
         c = self.speech.context
         c.shutting_down = self.robot.state is RobotState.SHUTTING_DOWN
         c.emergency_stop = self.robot.state is RobotState.EMERGENCY_STOP
-        c.quiet_mode = str(self.voice.get("silence_mode", "normal")) \
-            != "normal"
+        c.quiet_mode = self.quiet
         state = str(self.voice.get("state", ""))
         c.user_speaking = state == "USER_SPEAKING"
         c.buddy_speaking = state == "BUDDY_SPEAKING"
@@ -922,7 +925,7 @@ class BuddyCoordinator:
             recognized=recognized, invited=True, bearing_deg=bearing,
             bearing_confidence=0.7 if bearing is not None else 0.0,
             target_stamp=self._seen.get("people", now),
-            quiet_mode=self.speech.context.quiet_mode,
+            quiet_mode=self.quiet,
             emergency=self.estop))
 
         if not decision.allowed:
@@ -966,7 +969,7 @@ class BuddyCoordinator:
 
         state = ctl.update(
             now, person_visible=bool(people),
-            quiet_mode=self.speech.context.quiet_mode,
+            quiet_mode=self.quiet,
             emergency=self.estop)
 
         if state == "succeeded":

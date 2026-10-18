@@ -144,9 +144,12 @@ def parse_vision_intent(text: str) -> VisionIntent | None:
             return None
 
         if kind is Intent.TEACH_OBJECT:
-            head = name.split()[-1] if name else ""
+            words = name.split()
 
-            if head in PERSON_WORDS or name in PERSON_WORDS:
+            # "my friend Sam", "my mum": a person, not an object to teach.
+            # Erring this way is the safe direction: no object is saved
+            # and Buddy asks the person themselves.
+            if any(w in PERSON_WORDS for w in words):
                 return VisionIntent(Intent.PERSON_INTRO, sentence, name)
 
         if kind in (Intent.WHERE_IS, Intent.TEACH_OBJECT) and name:
