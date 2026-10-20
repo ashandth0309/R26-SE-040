@@ -50,6 +50,7 @@ from buddy_core.voice.engine_factory import (
     simulated_backends,
 )
 from buddy_core.voice.runner import EngineRunner
+from buddy_core.voice.buddy_object_voice_bridge import ObjectConversation
 
 NAV_STATE_NAMES = {0: "idle", 1: "active", 2: "done", 3: "rejected",
                    4: "failed", 5: "paused"}
@@ -161,6 +162,9 @@ class VoiceCompanionNode(Node):
             settings, backends, RosMovementSink(self, self._movement_pub),
             nav_sink, executor=self.executor_pool,
             command_observer=self._on_command)
+        # Object commands are handled only in ordinary dialogue, after STOP/motion.
+        self.companion.engine.dialogue = ObjectConversation(
+            self.companion.engine.dialogue)
         self.runner = EngineRunner(self.companion)
 
         self.create_subscription(

@@ -36,7 +36,7 @@ class ExprState(str, Enum):
 
 @dataclass
 class SmoothingConfig:
-    window_s: float = 2.0
+    window_s: float = 4.0
     min_frames: int = 4
     min_confidence: float = 0.55
     min_margin: float = 0.15
