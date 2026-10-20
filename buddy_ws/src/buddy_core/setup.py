@@ -1,3 +1,6 @@
+import os
+from glob import glob
+
 from setuptools import find_packages, setup
 
 package_name = 'buddy_core'
@@ -10,6 +13,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'launch'),
+            glob('launch/*.launch.py')),
     ],
     install_requires=['setuptools'],
     zip_safe=True,
@@ -30,6 +35,7 @@ setup(
         'obstacle_sensor = buddy_core.sensors.obstacle_node:main',
         'safety_supervisor = buddy_core.safety.safety_node:main',
         'motor_executor = buddy_core.motors.motor_node:main',
+        'head_tracking_node = buddy_core.head_tracking.ros_node:main',
     ],
 },
 )
