@@ -1,0 +1,75 @@
+# BUDDY intelligent head tracking (pan/tilt) - configuration template.
+#
+# SAFE BY DEFAULT: mock mode, sound localisation off, idle movement off.
+# Every number is a conservative STARTING VALUE, not a measured one.
+# Nothing here has been run on the robot.  Follow
+# docs/head_tracking_physical_validation.md before changing `hardware`.
+#
+# Servo limits, centre and channels are NOT set here: they come from the
+# existing `hardware.neck` section of config/buddy.yaml (NeckController).
+# Note: that section currently has tilt center_angle_deg == max_angle_deg,
+# so the head cannot tilt past centre in one direction.  Re-measure it.
+head_tracking:
+  tick_rate_hz: 30.0
+
+  hardware:
+    # Real servos move ONLY when ALL of these hold (see
+    # docs/head_tracking_architecture.md, "Hardware gating"):
+    #   mode: hardware, hardware_arm: true, calibration_confirmed: true,
+    #   pan_sign/tilt_sign set, buddy.yaml hardware.enabled: true,
+    #   hardware.simulation: false, hardware.neck.enabled: true,
+    #   and the environment variable BUDDY_HEAD_HARDWARE_ARMED=1.
+    mode: mock
+    hardware_arm: false
+    calibration_confirmed: false
+    # +1: a larger servo angle turns the view toward image RIGHT (pan) /
+    # DOWN (tilt).  Unknown until measured; required in hardware mode.
+    # pan_sign: 1
+    # tilt_sign: 1
+
+  motion:
+    max_velocity_pan_dps: 45.0
+    max_velocity_tilt_dps: 30.0
+    max_accel_dps2: 150.0
+    dead_zone_deg: 0.6
+    min_step_deg: 0.3
+    limit_margin_deg: 3.0          # stay this far inside calibrated limits
+    request_ttl_s: 0.6
+    neutral_after_s: 6.0           # no targets for this long -> neutral
+    release_on_emergency_stop: false
+    release_on_fault: true
+
+  face:
+    servo:
+      kp: 0.5
+      ki: 0.0
+      kd: 0.0
+      dead_zone: 0.08
+      smoothing_alpha: 0.5
+      max_step_deg: 6.0
+      horizontal_fov_deg: 60.0     # ASSUMED - measure the real camera
+      vertical_fov_deg: 45.0       # ASSUMED - measure the real camera
+    acquire_frames: 3
+    lost_hold_s: 1.5
+
+  hand:
+    hand_side: auto                # left | right | auto
+    prefer_fingertip: true         # no fingertip model exists yet
+    allow_wrist_fallback: true     # TEMPORARY: follows the WRIST
+    activation_gestures: [raised_hand]
+    deactivation_gestures: [both_hands_up]
+    max_active_s: 30.0
+
+  sound:
+    enabled: false                 # enable only after the mic check
+    # mic_spacing_m: 0.15          # MEASURE centre-to-centre distance
+    delay_offset_s: 0.0
+    swap_channels: false
+    mics_mounted_on: head          # head | body
+
+  state:
+    passive_face_tracking: true
+    return_to_neutral_on_loss: true
+
+  idle:
+    enabled: false
